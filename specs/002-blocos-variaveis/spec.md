@@ -29,8 +29,14 @@ aparece na declaração do Portugol (`idade: inteiro`) e na lista de variáveis.
 1. **Dado** um projeto novo, **Quando** o estudante cria a variável `idade` do tipo
    inteiro, **Então** o Portugol passa a ter uma seção `var` com `idade: inteiro`.
 2. **Dado** variáveis `a` e `b` do tipo inteiro e `nome` do tipo cadeia, **Quando**
-   o Portugol é gerado, **Então** as variáveis do mesmo tipo são declaradas juntas
-   (`a, b: inteiro`) e cada tipo aparece uma única vez.
+   o Portugol é gerado, **Então** cada variável é declarada na sua própria linha e as
+   do mesmo tipo ficam juntas, uma embaixo da outra:
+   ```
+   var
+       a: inteiro
+       b: inteiro
+       nome: cadeia
+   ```
 3. **Dado** um nome inválido (ex.: `2lugar`, `se`, `minha idade`), **Quando** o
    estudante tenta criar a variável, **Então** a criação é recusada com uma mensagem
    que explica a regra quebrada.
@@ -121,8 +127,8 @@ mudam; apagar uma variável em uso e verificar a confirmação.
   variável. Todas as comparações são feitas sem diferenciar maiúsculas/minúsculas.
   Um nome reservado é recusado com a mensagem amigável "este nome é reservado".
 - **FR-004**: Toda variável criada DEVE ser declarada na seção `var` do Portugol,
-  agrupada por tipo, na ordem inteiro, real, cadeia, lógico e, dentro do tipo, na
-  ordem de criação.
+  uma por linha (`nome: tipo`), agrupada por tipo, na ordem inteiro, real, cadeia,
+  lógico e, dentro do tipo, na ordem de criação.
 - **FR-005**: O editor DEVE oferecer o bloco "variável recebe valor", que gera
   `nome <- valor`.
 - **FR-006**: O editor DEVE oferecer o bloco de leitura de variável, encaixável em
