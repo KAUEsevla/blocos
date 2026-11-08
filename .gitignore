@@ -35,3 +35,6 @@ $RECYCLE.BIN/
 # Variáveis de ambiente locais
 .env
 .env.*
+
+# Claude Code (configuração local de cada pessoa)
+.claude/settings.local.json
