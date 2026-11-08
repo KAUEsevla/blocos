@@ -152,4 +152,4 @@ emenda a esta constituição.
 - Toda revisão de pull request DEVE verificar a conformidade com esta constituição,
   em especial os princípios NÃO NEGOCIÁVEIS (I e IV).
 
-**Versão**: 1.0.1 | **Ratificada**: 2026-11-08 | **Última emenda**: 2026-11-08
+**Versão**: 1.1.0 | **Ratificada**: 2026-11-08 | **Última emenda**: 2026-11-08
