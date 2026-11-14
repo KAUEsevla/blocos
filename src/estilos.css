@@ -1,0 +1,3 @@
+/* Estilos da tela (spec 001; research R-02). Interface, fora da cobertura. */
+*, *::before, *::after { box-sizing: border-box; }
+body { margin: 0; font-family: system-ui, sans-serif; }
