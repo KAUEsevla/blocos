@@ -1,0 +1,24 @@
+name: Testes
+
+# Suítes de unidade e de aceitação (meupia-core real via Pyodide) com cobertura mínima de 80%
+# (constitution, princípio IV; RNF-04, RNF-07). Marque este check como obrigatório na proteção da main.
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  testes:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm test -- --coverage

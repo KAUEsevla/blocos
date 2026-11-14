@@ -1,0 +1,19 @@
+{
+  "descricao": "Projeto novo gera o algoritmo vazio do cenário 1 e o Core o aceita",
+  "requisitos": ["RF-08", "RNF-07"],
+  "projeto": {
+    "formato": "meupia-blocos",
+    "versao": 1,
+    "nome": "MeuPrograma",
+    "variaveis": [],
+    "blocos": {
+      "blocks": {
+        "languageVersion": 0,
+        "blocks": [{ "type": "programa", "id": "programa", "x": 24, "y": 24, "deletable": false }]
+      }
+    }
+  },
+  "entrada": [],
+  "portugolEsperado": "algoritmo \"MeuPrograma\"\n\ninicio\nfim_algoritmo\n",
+  "saidaEsperada": ""
+}

@@ -38,3 +38,7 @@ $RECYCLE.BIN/
 
 # Claude Code (configuração local de cada pessoa)
 .claude/settings.local.json
+
+# Dependências e build
+node_modules/
+dist/

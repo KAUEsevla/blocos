@@ -1,0 +1,24 @@
+{
+  "descricao": "Variáveis dos quatro tipos são declaradas na ordem inteiro, real, cadeia, logico",
+  "requisitos": ["RF-08", "RNF-07"],
+  "projeto": {
+    "formato": "meupia-blocos",
+    "versao": 1,
+    "nome": "Ficha",
+    "variaveis": [
+      { "id": "v-ok", "nome": "ok", "tipo": "logico" },
+      { "id": "v-nome", "nome": "nome", "tipo": "cadeia" },
+      { "id": "v-idade", "nome": "idade", "tipo": "inteiro" },
+      { "id": "v-altura", "nome": "altura", "tipo": "real" }
+    ],
+    "blocos": {
+      "blocks": {
+        "languageVersion": 0,
+        "blocks": [{ "type": "programa", "id": "programa", "x": 24, "y": 24, "deletable": false }]
+      }
+    }
+  },
+  "entrada": [],
+  "portugolEsperado": "algoritmo \"Ficha\"\n\nvar\n    idade: inteiro\n    altura: real\n    nome: cadeia\n    ok: logico\n\ninicio\nfim_algoritmo\n",
+  "saidaEsperada": ""
+}

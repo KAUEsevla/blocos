@@ -1,0 +1,19 @@
+{
+  "descricao": "Aspas e barra invertida são removidas do nome do programa",
+  "requisitos": ["RF-08", "RNF-07"],
+  "projeto": {
+    "formato": "meupia-blocos",
+    "versao": 1,
+    "nome": "Meu \"Jogo\" \\ 1",
+    "variaveis": [],
+    "blocos": {
+      "blocks": {
+        "languageVersion": 0,
+        "blocks": [{ "type": "programa", "id": "programa", "x": 24, "y": 24, "deletable": false }]
+      }
+    }
+  },
+  "entrada": [],
+  "portugolEsperado": "algoritmo \"Meu Jogo  1\"\n\ninicio\nfim_algoritmo\n",
+  "saidaEsperada": ""
+}
