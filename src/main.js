@@ -7,16 +7,19 @@ import { gerarPortugol } from './portugol/gerador.js';
 import { criarWorkspace, recarregarBlocos, serializarBlocos, aoMudar } from './ui/workspace.js';
 import { aplicarAvisos } from './ui/avisos-ui.js';
 import { criarPainelSaida } from './ui/painel-saida.js';
+import { mostrarCodigo, copiarCodigo } from './ui/painel-portugol.js';
 import { ligarBarra, definirNome } from './ui/barra.js';
 import { confirmar } from './ui/confirmacao.js';
 import { TEXTOS } from './ui/textos.js';
 
-const painelPortugol = document.getElementById('codigo-portugol');
+const preCodigo = document.getElementById('codigo-portugol');
+const mensagemCopia = document.getElementById('mensagem-copia');
 const saida = criarPainelSaida(document.getElementById('saida'));
 
 // Projeto aberto (data-model): o nome vem do campo, os blocos do workspace.
 let projeto = projetoVazio();
 const ws = criarWorkspace(document.getElementById('area-blocos'), projeto.blocos);
+let ultimoCodigo = '';
 
 function projetoAtual() {
   return { ...projeto, blocos: serializarBlocos(ws) };
@@ -28,7 +31,8 @@ let referencia = assinaturaProjeto(projetoAtual());
 
 function atualizarPortugol() {
   const resultado = gerarPortugol(projetoAtual());
-  painelPortugol.textContent = resultado.codigo;
+  ultimoCodigo = resultado.codigo;
+  mostrarCodigo(preCodigo, resultado.codigo);
   aplicarAvisos(ws, resultado.avisos);
 }
 
@@ -57,6 +61,10 @@ ligarBarra({
     atualizarPortugol();
   },
   aoNovo: novoProjeto,
+});
+
+document.getElementById('botao-copiar').addEventListener('click', () => {
+  copiarCodigo(ultimoCodigo, { pre: preCodigo, mensagem: mensagemCopia });
 });
 
 aoMudar(ws, atualizarPortugol);
