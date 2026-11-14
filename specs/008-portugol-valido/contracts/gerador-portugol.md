@@ -1,15 +1,24 @@
 # Contrato: gerador de Portugol
 
-Módulo `src/portugol/gerador.js`. Núcleo puro: não importa `blockly`, não acessa DOM,
-relógio, `Math.random` nem estado global mutável.
+Núcleo puro em `src/portugol/`: não importa `blockly`, não acessa DOM, relógio,
+`Math.random` nem estado global mutável.
 
 ## API
 
 ```js
+// src/portugol/gerador.js
 gerarPortugol(projeto, registro = registroPadrao) → { codigo: string, avisos: Aviso[] }
+
+// src/portugol/nome-programa.js
 sanearNomePrograma(nome: unknown) → string
+
+// src/portugol/execucao.js
 verificarExecucao({ codigo, avisos }) → { permitida: boolean, motivo: string|null, avisos: Aviso[] }
+
+// src/portugol/avisos.js
 MARCADOR_AUSENTE === '???'
+
+// src/portugol/variaveis.js e src/portugol/emissor.js: auxiliares internos do gerador
 ```
 
 - `projeto` e `Aviso`: ver [data-model.md](../data-model.md).
@@ -18,6 +27,8 @@ MARCADOR_AUSENTE === '???'
 - Nunca lança exceção para projetos estruturalmente estranhos: tipo de bloco
   desconhecido gera o aviso "Bloco desconhecido: <type>" com `???` no lugar dele, e
   `blocos` ausente equivale a um programa sem comandos.
+- A seção `var` sai só de `projeto.variaveis`; uma chave `blocos.variables` (gravada
+  pelo `save()` do Blockly) é ignorada (ver data-model, "Origem das variáveis").
 - Não altera o objeto `projeto` recebido.
 
 ## Formato do texto

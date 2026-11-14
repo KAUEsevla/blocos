@@ -19,6 +19,15 @@ Forma em memória do projeto aberto, que é também o conteúdo do arquivo salvo
 nome/tipo/id das variáveis do workspace, e os blocos referenciam a variável pelo `id`
 (campo `VAR` com `{ id }`, como o Blockly serializa).
 
+O `Blockly.serialization.workspaces.save()` também grava a chave `blocos.variables`.
+Para evitar duas listas que podem ficar diferentes:
+
+- o gerador **ignora** `blocos.variables` e usa só `variaveis`;
+- a 011, ao salvar, copia as variáveis do workspace para `variaveis` e **remove**
+  `blocos.variables` do arquivo;
+- a 012, ao carregar, recria as variáveis do workspace a partir de `variaveis` e
+  ignora um `blocos.variables` que venha num arquivo editado à mão.
+
 ### Variavel
 
 | Campo | Tipo | Regras |
@@ -99,6 +108,10 @@ Ver [contracts/executor-core.md](contracts/executor-core.md).
 
 ## CasoAceitacao (arquivo em `tests/aceitacao/casos/*.json`)
 
+É o que a spec chama de **"Projeto de exemplo (aceitação)"**: projeto salvo + entrada
+digitada + saída esperada. Nos artefatos técnicos (data-model, contratos, tasks) o nome
+usado é "caso de aceitação".
+
 Schema em [contracts/caso-aceitacao.schema.json](contracts/caso-aceitacao.schema.json).
 
 | Campo | Tipo | Regras |
@@ -113,8 +126,13 @@ Schema em [contracts/caso-aceitacao.schema.json](contracts/caso-aceitacao.schema
 
 **Regras da suíte**:
 - Todo caso precisa gerar `avisos.length === 0`; um caso com aviso falha o teste.
-- A meta-verificação de SC-002 exige que cada `type` registrado no registro de blocos
-  apareça em pelo menos um `projeto` de algum caso.
+- A meta-verificação de SC-002 exige que cada par (tipo, variante) do registro de
+  blocos (`tiposRegistrados()` × `variantesDe(tipo)`) apareça em pelo menos um caso,
+  entre os blocos alcançáveis a partir do `programa` (blocos soltos não contam).
+- Todo caso com um bloco não `raiz` que tem `areas` de comandos precisa ter
+  `portugolEsperado`, para que a indentação real dos blocos aninhados seja conferida.
+
+Ver [contracts/registro-blocos.md](contracts/registro-blocos.md).
 
 ## Transições de estado
 

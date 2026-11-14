@@ -69,8 +69,8 @@ programas de até algumas centenas de blocos.
 | --- | --- | --- |
 | I. Ecossistema intocado | O Core é instalado do PyPI (`meupia-core==1.4.1`) e chamado só por `meuPia.compiler.main(arquivo, saida)`, igual ao Lab. Nenhum arquivo do meuPiá é copiado: o spike leu o pacote fora do repositório. A versão fica só em `src/config.js`; um teste verifica que ela não aparece em outro arquivo de código ou configuração. A lacuna "não há função que compile um texto sem arquivo" é resolvida no adapter (escreve `main.por` no FS virtual) e vira issue no repositório `meuPia/core` (R-09). | ✅ |
 | II. Portugol válido por construção | `gerarPortugol` é pura e determinística, sobre o projeto serializado. Estrutura e indentação de 4 espaços fixadas no contrato. Blocos incompletos geram aviso e marcador `???`, e a execução fica bloqueada (o texto com `???` nunca chega ao Core). | ✅ |
-| III. Spec primeiro e rastreabilidade | O plan parte da spec 008 (RF-08, RNF-07). As tasks citam RF-08/RNF-07 e, nas tasks de base, os RNF que atendem (RNF-02, RNF-04, RNF-06). Commits de task no formato `008/Txxx (RF-08): descrição` e de documentação no formato `docs(008) (RF-08): descrição` (constitution v1.1.0). | ✅ |
-| IV. Testes e cobertura | Cobertura v8 ≥ 80% em linhas e branches sobre `src/portugol/`, `src/blocos/`, `src/projeto/` e `src/core/`, com `src/ui/` e `src/main.js` excluídos na configuração. Aceitação com o Core real (sem mock). Relatório versionado em `cobertura/`. README atualizado por script. `thresholds` do Vitest falham a suíte abaixo de 80%. | ✅ |
+| III. Spec primeiro e rastreabilidade | O plan parte da spec 008 (RF-08, RNF-07). As tasks citam RF-08/RNF-07 e, nas tasks de base, os RNF que atendem (RNF-02, RNF-04, RNF-06). Commits de task no formato `008/Txxx (RF-08): descrição` e de documentação no formato `docs(008) (RF-08): descrição` (constitution v1.2.0). | ✅ |
+| IV. Testes e cobertura | Cobertura v8 ≥ 80% em linhas e branches sobre `src/portugol/`, `src/blocos/`, `src/projeto/` e `src/core/`, com só `src/ui/` e `src/main.js` (interface) excluídos na configuração; todo o adapter do Core, inclusive `motor-navegador.js`, é medido. Aceitação com o Core real (sem mock). Relatório versionado em `cobertura/`. README atualizado por script na linha e posição do modelo oficial (v1.2.0). `thresholds` do Vitest falham a suíte abaixo de 80%, e o workflow do GitHub Actions roda a suíte com cobertura em todo push e PR para a `main`. | ✅ |
 | V. pt-BR e foco no iniciante | Avisos em pt-BR no formato "Falta a condição do bloco se". Nomes de módulos, funções e mensagens em português. Erros do Core vêm do adapter já separados em mensagem e detalhe técnico. | ✅ |
 | VI. Simplicidade de PoC | Cinco dependências, todas justificadas (R-07). Sem backend, sem framework de UI, sem jsdom (o gerador não precisa de DOM; o Blockly roda headless no Node para testar definições de bloco). | ✅ |
 
@@ -115,27 +115,29 @@ src/
 │   ├── avisos.js             # criarAviso, MARCADOR_AUSENTE = '???'
 │   └── execucao.js           # verificarExecucao(resultado) → bloqueio por avisos
 ├── blocos/
-│   ├── registro.js           # registro tipo de bloco → { definicao, gerar }
+│   ├── registro.js           # registro tipo de bloco → { definicao, gerar, areas, variantes }
 │   └── programa.js           # bloco raiz "programa" (hat, não apagável)
 ├── projeto/
 │   └── formato.js            # constantes do arquivo v1 (formato, versao) e projetoVazio()
-├── core/
+├── core/                     # adapter do Core, todo dentro da cobertura
+│   ├── ambiente.js           # instalarCore(pyodide) + ErroAmbiente, usados pelos dois motores
 │   ├── ponte-python.js       # código Python do adapter (string), igual no navegador e no Node
 │   ├── executor-core.js      # compilarEExecutar(motor, codigo, entrada) → resultado
-│   └── motor-navegador.js    # carrega Pyodide do CDN + micropip (fora da cobertura)
+│   └── motor-navegador.js    # carrega Pyodide do CDN (testado com vi.mock('pyodide'))
 └── ui/                       # integração com Blockly e DOM (fora da cobertura)
-    └── avisos-ui.js          # marca blocos, lista avisos, destaca ao clicar
+    └── avisos-ui.js          # marca blocos; lista e destaque ficam prontos para a 009
 
 tests/
 ├── unidade/                  # gerador, nome, var, avisos, registro, determinismo, versão única
 ├── aceitacao/
 │   ├── casos/*.json          # projeto + entrada + saída esperada (schema em contracts/)
-│   ├── suporte/motor-node.js # carrega o pacote npm pyodide + micropip no Node
+│   ├── suporte/motor-node.js # carrega o pacote npm pyodide no Node + instalarCore
 │   └── aceitacao.test.js     # para cada caso: gerar → compilar → executar → comparar
 └── auxiliares/blocos-teste.js # blocos falsos de comando/expressão, só para testar indentação
 
 cobertura/                    # relatório versionado (json-summary + html)
-scripts/atualizar-readme.mjs  # escreve "N testes · X% de cobertura" no topo do README
+scripts/atualizar-readme.mjs  # atualiza a linha "**Testes:** N · **Cobertura:** X%" já existente no README
+.github/workflows/testes.yml  # CI: npm ci + npm test -- --coverage em push e PR para a main
 ```
 
 **Decisão de estrutura**: projeto único, estático, com o núcleo (`portugol/`,
@@ -153,12 +155,15 @@ medição, como permite a constitution (princípio IV).
 | Avisos + marcador + `verificarExecucao` | 004, 005, 006, 009 | 004–006 declaram as partes obrigatórias dos seus blocos; 009 chama `verificarExecucao` antes de rodar. |
 | Adapter do Core (`executor-core.js`, `ponte-python.js`) | 009, 010 | 009 liga ao botão Executar e ao Parar (worker); 010 liga o `stdin` à caixa de entrada. |
 | Formato de arquivo v1 (`formato.js`) | 011, 012 | 011 grava, 012 valida e carrega. |
-| `avisos-ui.js` (História 2, cenários 2 e 3) | 001, 009 | Precisa dos painéis (001) e do botão Executar (009). As tasks dessa parte ficam marcadas como dependentes e são concluídas quando a 001 estiver pronta. O comportamento testável (lista ordenada, bloqueio) já fica no núcleo. |
+| `avisos-ui.js` (`renderizarAvisos`, `destacarBloco`) | 009 | A 008 só marca os blocos. O bloqueio na tela (cenários 2 e 3 da História 2) depende do painel Saída (001) e do botão Executar (009). Por isso ele é uma pendência registrada no tasks.md da 008 para entrar no tasks da 009. O comportamento testável (lista ordenada, `verificarExecucao`) já fica no núcleo. |
 
 **Cobertura de SC-002 de forma progressiva**: um teste de meta-aceitação verifica que
-**todo tipo de bloco registrado** aparece em pelo menos um caso de aceitação. Na 008
-só existe o bloco `programa`; cada spec 002–006 que registra blocos precisa trazer os
-seus casos, senão a suíte falha. Ao fim do ciclo isso garante o SC-002.
+**todo par (tipo, variante) registrado** aparece em pelo menos um caso de aceitação,
+entre os blocos alcançáveis a partir do `programa`. Cada bloco declara suas variantes
+(ex.: cada operador, `se` com e sem `senão`). Assim o "todos os operadores" do SC-002
+não passa com um caso só. Na 008 só existe o bloco `programa`. Cada spec 002–006 que
+registra blocos precisa trazer os seus casos, senão a suíte falha. Ao fim do ciclo isso
+garante o SC-002.
 
 ## Acompanhamento de complexidade
 

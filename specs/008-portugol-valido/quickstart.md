@@ -40,7 +40,11 @@ Esperado:
   `algoritmo "…"` e o Core aceita.
 - `variaveis-quatro-tipos.json`: seção `var` na ordem inteiro, real, cadeia, logico;
   o Core aceita.
-- A meta-verificação de SC-002 passa, porque todo tipo registrado aparece em algum caso.
+- A meta-verificação de SC-002 passa, porque todo par (tipo, variante) registrado
+  aparece em algum caso. A regra de `portugolEsperado` para blocos com área de comandos
+  também passa.
+- No GitHub, o workflow "Testes" (`.github/workflows/testes.yml`) roda a mesma suíte
+  com cobertura em todo push e PR para a `main`.
 - Sem rede: a suíte falha no `beforeAll` com "Não foi possível carregar o ambiente
   do meuPiá…", e nenhum caso passa como falso verde.
 

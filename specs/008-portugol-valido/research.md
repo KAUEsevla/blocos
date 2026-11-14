@@ -198,19 +198,29 @@ entram na cobertura) usam o Blockly headless no Node, suportado pelo próprio pa
 
 **Decisão**:
 - Vitest `coverage.provider: 'v8'`, com `include` em `src/portugol/**`,
-  `src/blocos/**`, `src/projeto/**` e `src/core/**`. A exclusão declarada fica em
-  `src/ui/**`, `src/main.js` e `src/core/motor-navegador.js` (este depende do CDN e
-  do `window`).
+  `src/blocos/**`, `src/projeto/**` e `src/core/**`. A exclusão declarada fica só em
+  `src/ui/**` e `src/main.js` (interface e renderização, o que a constitution
+  permite).
+- O adapter do Core fica inteiro na medição. A instalação do Core e o `ErroAmbiente`
+  ficam em `src/core/ambiente.js`, usados pelo motor do navegador e pelo do Node. O
+  `motor-navegador.js` (que depende do CDN) é testado em unidade com
+  `vi.mock('pyodide')`.
 - `thresholds: { lines: 80, branches: 80 }`. Abaixo disso a suíte falha (princípio
   IV: entrega abaixo de 80% não entra na `main`).
 - Reporters `text`, `html` e `json-summary`, gravados em `cobertura/`, que é
   versionado. O `coverage/` padrão não é usado.
 - `scripts/atualizar-readme.mjs` lê `cobertura/coverage-summary.json` e o relatório
-  JSON do Vitest (número de testes) e reescreve a linha do topo do README no formato
-  `**Testes:** N · **Cobertura:** X%`. O script `npm run cobertura` roda os testes
-  e em seguida esse script.
+  JSON do Vitest (número de testes) e atualiza, no mesmo lugar, a linha já existente
+  `**Testes:** N · **Cobertura:** X%` do README. Esse é o formato e a posição do
+  modelo do repositório oficial (constitution v1.2.0). O script `npm run cobertura`
+  roda os testes e em seguida esse script.
+- O GitHub Actions (`.github/workflows/testes.yml`) roda `npm test -- --coverage` em
+  todo push e PR para a `main`. Os `thresholds` fazem o check falhar abaixo de 80%, e
+  a dupla marca esse check como obrigatório na proteção da `main`.
 
-**Motivo**: atende RNF-04 com um comando só e sem passo manual sujeito a esquecimento.
+**Motivo**: atende RNF-04 com um comando só e sem passo manual sujeito a esquecimento,
+e transforma o "NÃO PODE ser integrada à `main`" do princípio IV num bloqueio
+automático.
 
 ---
 
