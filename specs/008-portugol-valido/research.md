@@ -228,7 +228,7 @@ automático.
 
 | Lacuna | Adapter do lado do editor | Issue em `meuPia/core` |
 | --- | --- | --- |
-| Não há função pública que compile um **texto** e devolva erro estruturado; `main()` exige arquivo, imprime o progresso e o erro no stdout. | `ponte-python.js` grava `main.por`, captura o stdout e extrai a mensagem depois de `[COMPILATION ERROR]:` (linha, coluna, etapa) com uma expressão regular testada. | Abrir: "Expor `compilar(texto) -> (python, erro)` sem efeitos em arquivo". |
+| Não há função pública que compile um **texto** e devolva erro estruturado; `main()` exige arquivo, imprime o progresso e o erro no stdout. | `ponte-python.js` grava `main.por`, captura o stdout e extrai a mensagem depois de `[COMPILATION ERROR]:` (linha, coluna, etapa) com uma expressão regular testada. | [meuPia/core#14](https://github.com/meuPia/core/issues/14): "Expor `compilar(texto) -> (python, erro)` sem efeitos em arquivo". |
 | A descrição do token de atribuição nas mensagens do parser mostra `"="`, o que confunde quem escreveu `<-`. | Nenhum (o editor nunca gera texto inválido). | Registrar só como observação, se a turma achar relevante. |
 
 As issues são abertas pela dupla (task de documentação); o editor não depende de elas

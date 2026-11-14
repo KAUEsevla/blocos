@@ -200,7 +200,7 @@ exemplo `008/T033 (RF-08): gerador da seção var`.
   - injetar o workspace em `#area-blocos`, carregando `projetoVazio().blocos` com `Blockly.serialization.workspaces.load`;
   - a cada evento de mudança que não seja de UI (`!evento.isUiEvent`), gerar com `gerarPortugol({ ...projeto, blocos: Blockly.serialization.workspaces.save(ws) })` e escrever `codigo` em `#painel-portugol` com `textContent` (somente leitura).
   A atualização completa em tempo real é da spec 007 (arquivos fora da cobertura) (RF-08, RF-07)
-- [ ] T036 [US1] Rodar `npm run test:aceitacao` e corrigir até todos os casos de T030 passarem no Core real. Depois colar o Portugol de `variaveis-quatro-tipos.json` no meuPiá Lab e confirmar que roda (premissa da spec; quickstart, passo 5) (SC-001) (RF-08, RNF-07)
+- [x] T036 [US1] Rodar `npm run test:aceitacao` e corrigir até todos os casos de T030 passarem no Core real. Depois colar o Portugol de `variaveis-quatro-tipos.json` no meuPiá Lab e confirmar que roda (premissa da spec; quickstart, passo 5) (SC-001) (RF-08, RNF-07)
 
 **Checkpoint**: História 1 completa. O projeto novo mostra o Portugol do cenário 1, e todos os casos passam no Core real.
 
@@ -262,7 +262,7 @@ exemplo `008/T033 (RF-08): gerador da seção var`.
   - o workflow não altera o README nem os arquivos versionados de `cobertura/`.
   Marcar esse check como obrigatório na proteção da `main` é uma configuração do GitHub feita pela dupla (princípio IV: "NÃO PODE ser integrada à `main`") (RNF-04, RNF-07)
 - [X] T045 Rodar `npm run cobertura`, confirmar linhas e branches ≥ 80% no núcleo e versionar `cobertura/coverage-summary.json`, `cobertura/index.html` (com os arquivos do relatório HTML) e `cobertura/testes.json`, junto com o `README.md` atualizado (depende de T043 e das fases 3 e 4) (RNF-04)
-- [ ] T046 [P] Registrar a lacuna R-09: a dupla abre a issue em `github.com/meuPia/core`, "Expor `compilar(texto) -> (python, erro)` sem efeitos em arquivo", descrevendo o adapter de `src/core/executor-core.js`, e anota o link da issue na linha correspondente de `specs/008-portugol-valido/research.md` (princípio I) (RNF-01)
+- [x] T046 [P] Registrar a lacuna R-09: a dupla abre a issue em `github.com/meuPia/core`, "Expor `compilar(texto) -> (python, erro)` sem efeitos em arquivo", descrevendo o adapter de `src/core/executor-core.js`, e anota o link da issue na linha correspondente de `specs/008-portugol-valido/research.md` (princípio I) (RNF-01)
 - [X] T047 Validar o `specs/008-portugol-valido/quickstart.md` de ponta a ponta (passos 1 a 5) numa cópia limpa (`npm ci`), e corrigir o quickstart onde os comandos ou as saídas reais divergirem (RF-08, RNF-07)
 
 ---
