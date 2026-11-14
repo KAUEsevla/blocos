@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/meuPia/blocos/specs/008-portugol-valido/contracts/caso-aceitacao.schema.json",
+  "title": "Caso de aceitação do meuPiá Blocos",
+  "description": "Projeto em blocos + entrada digitada + saída esperada, executado no meupia-core real (RNF-07).",
+  "type": "object",
+  "required": ["descricao", "requisitos", "projeto", "entrada", "saidaEsperada"],
+  "additionalProperties": false,
+  "properties": {
+    "descricao": { "type": "string", "minLength": 1 },
+    "requisitos": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "pattern": "^(RF|RNF)-[A-Z]?[0-9]{2}$" }
+    },
+    "projeto": { "$ref": "#/$defs/projeto" },
+    "entrada": { "type": "array", "items": { "type": "string" } },
+    "portugolEsperado": { "type": "string" },
+    "saidaEsperada": { "type": "string" },
+    "statusEsperado": { "enum": ["ok", "erro_execucao"], "default": "ok" }
+  },
+  "$defs": {
+    "projeto": {
+      "type": "object",
+      "required": ["formato", "versao", "nome", "variaveis", "blocos"],
+      "properties": {
+        "formato": { "const": "meupia-blocos" },
+        "versao": { "const": 1 },
+        "nome": { "type": "string" },
+        "variaveis": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "nome", "tipo"],
+            "additionalProperties": false,
+            "properties": {
+              "id": { "type": "string", "minLength": 1 },
+              "nome": { "type": "string", "minLength": 1 },
+              "tipo": { "enum": ["inteiro", "real", "cadeia", "logico"] }
+            }
+          }
+        },
+        "blocos": {
+          "type": "object",
+          "description": "Saída de Blockly.serialization.workspaces.save(); a chave 'blocks' contém { languageVersion, blocks: [...] }."
+        }
+      }
+    }
+  }
+}

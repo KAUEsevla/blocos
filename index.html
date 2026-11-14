@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>meuPiá Blocos</title>
+    <style>
+      body { margin: 0; font-family: system-ui, sans-serif; display: flex; height: 100vh; }
+      #area-blocos { flex: 1; min-width: 0; }
+      #painel-portugol {
+        width: 40%; margin: 0; padding: 12px; overflow: auto;
+        background: #1e1e1e; color: #e6e6e6; font: 14px/1.5 ui-monospace, Consolas, monospace;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="area-blocos"></div>
+    <pre id="painel-portugol" aria-label="Portugol gerado"></pre>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

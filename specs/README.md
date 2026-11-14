@@ -17,7 +17,7 @@ As specs descrevem só **regras de negócio** (o quê e o porquê); o como fica 
 | [006-blocos-operadores](006-blocos-operadores/spec.md) | RF-06 | — | 008 |
 | [007-portugol-tempo-real](007-portugol-tempo-real/spec.md) | RF-07 | — | 001, 008 |
 | [008-portugol-valido](008-portugol-valido/spec.md) | RF-08 | RNF-07 | — |
-| [009-executar-no-core](009-executar-no-core/spec.md) | RF-09 | RNF-01, RNF-02, RNF-06 | 008 |
+| [009-executar-no-core](009-executar-no-core/spec.md) | RF-09 | RNF-01, RNF-02, RNF-06, RF-08 (bloqueio na tela) | 001, 008 |
 | [010-entrada-de-dados](010-entrada-de-dados/spec.md) | RF-10 | — | 003, 009 |
 | [011-salvar-projeto](011-salvar-projeto/spec.md) | RF-11 | — | 001 |
 | [012-carregar-projeto](012-carregar-projeto/spec.md) | RF-12 | — | 011, 008 |
@@ -34,6 +34,13 @@ garantidos pela constitution (princípios III e IV), não por uma spec própria.
    ponta a ponta).
 4. **004 → 005**: decisão e repetição.
 5. **011 → 012**: salvar e carregar.
+
+**Divisão do RF-08 entre 008 e 009**: a 008 entrega a verificação de execução como
+função pura e a marcação dos blocos incompletos. A parte de tela dos cenários 2 e 3 da
+História 2 da 008 (Executar não começa, Saída lista os avisos, clicar no aviso destaca o
+bloco) depende do painel Saída (001) e do botão Executar (009). Ela está registrada em
+"Pendências para a spec 009", no
+[tasks.md da 008](008-portugol-valido/tasks.md), e entra no tasks da 009.
 
 ## Decisões de regra de negócio tomadas nas specs
 

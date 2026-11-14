@@ -10,7 +10,7 @@ meuPiá, antes do Portugol escrito.
 > 🚧 **Em construção.** Este repositório é a base para o desenvolvimento do
 > editor com Spec-Driven Development. Ainda não há código.
 
-**Testes:** 0 · **Cobertura:** 0%
+**Testes:** 104 · **Cobertura:** 99,4%
 
 ## 💡 Por que o meuPiá Blocos?
 Muitos iniciantes travam antes mesmo de escrever a primeira linha de Portugol.

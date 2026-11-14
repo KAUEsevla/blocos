@@ -1,0 +1,28 @@
+{
+  "name": "meupia-blocos",
+  "version": "0.1.0",
+  "description": "Editor de programação por blocos do ecossistema meuPiá",
+  "private": true,
+  "type": "module",
+  "license": "GPL-3.0",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "test": "vitest run",
+    "test:unidade": "vitest run --project unidade",
+    "test:aceitacao": "vitest run --project aceitacao",
+    "cobertura": "vitest run --coverage --reporter=default --reporter=json --outputFile.json=cobertura/testes.json && node scripts/atualizar-readme.mjs"
+  },
+  "dependencies": {
+    "blockly": "12.5.1",
+    "pyodide": "0.25.0"
+  },
+  "devDependencies": {
+    "@vitest/coverage-v8": "4.1.12",
+    "vite": "7.3.8",
+    "vitest": "4.1.12"
+  }
+}

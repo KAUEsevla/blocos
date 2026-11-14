@@ -1,0 +1,19 @@
+{
+  "descricao": "Nome do programa vazio vira MeuPrograma",
+  "requisitos": ["RF-08", "RNF-07"],
+  "projeto": {
+    "formato": "meupia-blocos",
+    "versao": 1,
+    "nome": "",
+    "variaveis": [],
+    "blocos": {
+      "blocks": {
+        "languageVersion": 0,
+        "blocks": [{ "type": "programa", "id": "programa", "x": 24, "y": 24, "deletable": false }]
+      }
+    }
+  },
+  "entrada": [],
+  "portugolEsperado": "algoritmo \"MeuPrograma\"\n\ninicio\nfim_algoritmo\n",
+  "saidaEsperada": ""
+}

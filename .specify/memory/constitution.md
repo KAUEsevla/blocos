@@ -17,8 +17,9 @@ executa pelo meuPiá Core, tudo 100% no navegador. Fontes desta constituição:
 - Toda lacuna encontrada DEVE virar uma issue no repositório do módulo correspondente
   e ser resolvida com um adapter do lado do editor, isolado e testado.
 - A versão do Core DEVE ser fixada num único ponto de configuração do projeto. Hoje a
-  versão é `meupia-core==1.4.1`, a tag congelada da turma. Nenhum outro arquivo PODE
-  repetir o número da versão.
+  versão é `meupia-core==1.4.1`, a tag congelada da turma. Nenhum outro arquivo de
+  código ou configuração PODE repetir o número da versão. Documentos (esta
+  constituição, o briefing, specs, plans, research e contratos) PODEM citá-la.
 
 **Motivo:** o editor é um consumidor do ecossistema, não um fork dele. Manter o Core
 intocado garante que o Portugol gerado aqui roda igual no meuPiá Lab e nos demais
@@ -47,12 +48,23 @@ pura e determinística é testável sem navegador e sustenta os testes de aceita
 - Requisitos DEVEM ter IDs (`RF-xx`, `RNF-xx`), definidos em
   `docs/briefing/02-requisitos-extraidos.md` e referenciados pelas specs.
 - Cada task DEVE citar o requisito que atende.
-- Cada commit DEVE citar a task no formato `T012 (RF-05): descrição`.
+- Cada `tasks.md` recomeça a numeração em `T001`; por isso a task é identificada
+  pelo número da spec junto com o número da task.
+- Commit que implementa uma task DEVE usar o formato `NNN/Txxx (RF-xx): descrição`,
+  em que `NNN` é o número da spec (ex.: `008/T012 (RF-08): gerador da seção var`).
+- Commit que muda specs, plans, research, contratos, checklists ou outros
+  documentos, sem implementar task, DEVE usar o formato
+  `docs(NNN) (RF-xx): descrição` (ex.: `docs(002) (RF-02): uma variável por linha
+  na seção var`). Mudanças fora de uma spec usam o nome da área no lugar de `NNN`
+  (ex.: `docs(constitution): …`), citando o requisito quando houver.
+- Registro histórico: os commits `T001`, `T002` e `T003` foram de documentação
+  (constitution, briefing, specs e o plan da 008), feitos antes desta regra; seus
+  números não correspondem a tasks de nenhum `tasks.md`.
 - A spec descreve o quê e o porquê, sem detalhe técnico; o plan descreve o como
   (arquitetura, stack, dados, integrações).
 
 **Motivo:** o projeto segue Spec-Driven Development e é avaliado pela cadeia
-commit → task → requisito (RNF-05, CONTRIBUTING).
+commit → task (ou spec, nos commits `docs`) → requisito (RNF-05, CONTRIBUTING).
 
 ### IV. Testes e cobertura (NÃO NEGOCIÁVEL)
 
@@ -64,8 +76,10 @@ commit → task → requisito (RNF-05, CONTRIBUTING).
   Portugol, compilá-lo e executá-lo com o `meupia-core` real na versão fixada e
   comparar a saída com a esperada. Mocks do Core NÃO substituem esses testes.
 - O relatório de cobertura DEVE ser versionado no repositório.
-- O README DEVE mostrar no topo a linha `N testes · X% de cobertura`, atualizada a
-  cada entrega.
+- O README DEVE mostrar a linha de testes e cobertura no formato do modelo do
+  repositório oficial `meuPia/blocos`, `**Testes:** N · **Cobertura:** X%`, na posição
+  em que o modelo já a coloca (logo depois do aviso de apresentação, antes da primeira
+  seção), atualizada a cada entrega.
 - Uma entrega abaixo de 80% ou com teste de aceitação falhando NÃO PODE ser
   integrada à `main`.
 
@@ -141,4 +155,4 @@ emenda a esta constituição.
 - Toda revisão de pull request DEVE verificar a conformidade com esta constituição,
   em especial os princípios NÃO NEGOCIÁVEIS (I e IV).
 
-**Versão**: 1.0.0 | **Ratificada**: 2026-11-08 | **Última emenda**: 2026-11-08
+**Versão**: 1.2.0 | **Ratificada**: 2026-11-08 | **Última emenda**: 2026-11-14
