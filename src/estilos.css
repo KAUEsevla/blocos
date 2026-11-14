@@ -12,6 +12,13 @@
 
 *, *::before, *::after { box-sizing: border-box; }
 
+/* O Blockly calcula tamanhos (menus, campos, dicas) contando com content-box; com border-box o
+   menu de contexto ganha uma barra de rolagem à toa. */
+.injectionDiv, .injectionDiv *,
+.blocklyWidgetDiv, .blocklyWidgetDiv *,
+.blocklyDropDownDiv, .blocklyDropDownDiv *,
+.blocklyTooltipDiv { box-sizing: content-box; }
+
 html, body { height: 100%; }
 
 body {
