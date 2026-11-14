@@ -1,3 +1,146 @@
-/* Estilos da tela (spec 001; research R-02). Interface, fora da cobertura. */
+/* Estilos da tela (spec 001; research R-02, R-03; contracts/tela.md). Interface, fora da cobertura. */
+
+:root {
+  --cor-fundo: #f6f7f9;
+  --cor-superficie: #ffffff;
+  --cor-borda: #d5d9e0;
+  --cor-texto: #1f2328;
+  --cor-texto-suave: #5b6470;
+  --cor-destaque: #1a6fd6;
+  --cor-erro: #a11d1d;
+}
+
 *, *::before, *::after { box-sizing: border-box; }
-body { margin: 0; font-family: system-ui, sans-serif; }
+
+html, body { height: 100%; }
+
+body {
+  margin: 0;
+  font-family: system-ui, sans-serif;
+  color: var(--cor-texto);
+  background: var(--cor-fundo);
+  /* Barra + área dos painéis, tudo dentro da janela a partir de 1024 px (SC-001). */
+  display: grid;
+  grid-template-rows: auto 1fr;
+  height: 100vh;
+}
+
+/* Barra */
+
+#barra {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: var(--cor-superficie);
+  border-bottom: 1px solid var(--cor-borda);
+}
+
+#barra label { font-weight: 600; }
+
+#nome-programa {
+  width: 16rem;
+  padding: 4px 8px;
+  font: inherit;
+  border: 1px solid var(--cor-borda);
+  border-radius: 4px;
+}
+
+.barra-acoes { display: flex; gap: 8px; margin-left: 8px; }
+
+button {
+  font: inherit;
+  padding: 4px 12px;
+  border: 1px solid var(--cor-borda);
+  border-radius: 4px;
+  background: var(--cor-superficie);
+  color: var(--cor-texto);
+  cursor: pointer;
+}
+
+button:hover:not(:disabled) { border-color: var(--cor-destaque); }
+button:focus-visible, input:focus-visible, pre:focus-visible { outline: 2px solid var(--cor-destaque); outline-offset: 1px; }
+button:disabled { color: var(--cor-texto-suave); cursor: not-allowed; opacity: 0.7; }
+
+/* Painéis: Blocos ≈ 50%, Portugol ≈ 30%, Saída ≈ 20% (R-02). */
+
+#paineis {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 3fr) minmax(0, 2fr);
+  min-height: 0;
+}
+
+.painel {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  min-height: 0;
+  min-width: 0;
+  background: var(--cor-superficie);
+  border-right: 1px solid var(--cor-borda);
+}
+
+.painel:last-child { border-right: none; }
+
+.painel-cabecalho {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border-bottom: 1px solid var(--cor-borda);
+}
+
+.painel-cabecalho h2 { margin: 0; font-size: 1rem; flex: 1; }
+
+.mensagem-copia { font-size: 0.875rem; color: var(--cor-texto-suave); }
+
+/* Só o corpo de cada painel rola (FR-005). */
+.painel-corpo { min-height: 0; overflow: auto; }
+
+/* O Blockly ocupa o corpo inteiro e tem rolagem própria (R-03). */
+.painel-corpo--blocos { position: relative; overflow: hidden; }
+#area-blocos { position: absolute; inset: 0; }
+
+#painel-portugol .painel-corpo { background: #1e1e1e; }
+
+#codigo-portugol {
+  margin: 0;
+  padding: 12px;
+  min-height: 100%;
+  background: #1e1e1e;
+  color: #e6e6e6;
+  font: 14px/1.5 ui-monospace, Consolas, monospace;
+  white-space: pre;
+}
+
+/* Saída */
+
+#saida { padding: 8px 12px; font: 14px/1.5 ui-monospace, Consolas, monospace; }
+.saida-linhas { white-space: pre-wrap; overflow-wrap: anywhere; }
+.saida-linha--sistema { color: var(--cor-texto-suave); font-style: italic; }
+.saida-linha--erro { color: var(--cor-erro); }
+
+/* Abaixo da largura mínima: painéis empilhados, página rolando, barra fixa no topo (FR-006). */
+
+@media (max-width: 1023.98px) {
+  body { height: auto; }
+  #barra { position: sticky; top: 0; z-index: 1; flex-wrap: wrap; }
+  #paineis { grid-template-columns: 1fr; }
+  .painel { border-right: none; border-bottom: 1px solid var(--cor-borda); }
+  #painel-blocos { min-height: 70vh; }
+  #painel-portugol, #painel-saida { min-height: 45vh; }
+  #painel-portugol, #painel-saida { max-height: 45vh; }
+}
+
+/* Diálogo de confirmação (R-04). */
+
+#dialogo-confirmacao {
+  max-width: 28rem;
+  padding: 20px;
+  border: 1px solid var(--cor-borda);
+  border-radius: 8px;
+}
+
+#dialogo-confirmacao::backdrop { background: rgb(0 0 0 / 0.35); }
+#dialogo-confirmacao h2 { margin: 0 0 8px; font-size: 1.125rem; }
+#dialogo-confirmacao p { margin: 0 0 16px; }
+.dialogo-botoes { display: flex; justify-content: flex-end; gap: 8px; }
