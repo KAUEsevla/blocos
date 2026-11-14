@@ -35,7 +35,7 @@ exemplo `001/T011 (RF-01): alterações não salvas no núcleo`.
 
 **Objetivo**: limpar o `git status` do cache do Vite.
 
-- [ ] T001 Conferir que `.gitignore` tem a linha `.vite/` logo abaixo de `dist/`, na seção "Dependências e build" (a linha foi acrescentada durante o `/speckit-plan`; se faltar, acrescentar). Rodar `git status` e confirmar que `.vite/` não aparece como não rastreado (research R-11) (RF-01)
+- [X] T001 Conferir que `.gitignore` tem a linha `.vite/` logo abaixo de `dist/`, na seção "Dependências e build" (a linha foi acrescentada durante o `/speckit-plan`; se faltar, acrescentar). Rodar `git status` e confirmar que `.vite/` não aparece como não rastreado (research R-11) (RF-01)
 
 ---
 
