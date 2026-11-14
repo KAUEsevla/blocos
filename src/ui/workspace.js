@@ -49,6 +49,13 @@ export function criarWorkspace(container, blocosIniciais) {
   return ws;
 }
 
+// Troca todos os blocos do workspace (o load já limpa o que havia) e zera o desfazer,
+// para que Ctrl+Z não volte ao projeto descartado (spec 001, FR-007).
+export function recarregarBlocos(ws, blocos) {
+  Blockly.serialization.workspaces.load(blocos, ws);
+  ws.clearUndo();
+}
+
 export function serializarBlocos(ws) {
   const salvo = Blockly.serialization.workspaces.save(ws);
   // A fonte das variáveis é projeto.variaveis (data-model, "Origem das variáveis").
