@@ -21,6 +21,9 @@ export function criarWorkspace(container, blocosIniciais) {
     move: { scrollbars: true, drag: true, wheel: false },
   });
   Blockly.serialization.workspaces.load(blocosIniciais, ws);
+  // O Blockly só mede o contêiner na injeção; o painel muda de tamanho com a janela e com o
+  // empilhamento abaixo de 1024 px (spec 001, research R-03).
+  new ResizeObserver(() => Blockly.svgResize(ws)).observe(container);
   return ws;
 }
 
