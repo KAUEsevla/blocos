@@ -21,4 +21,7 @@ export const TEXTOS = Object.freeze({
   menuRenomearVariavel: 'Renomear variável…',
   menuMudarTipoVariavel: 'Mudar o tipo…',
   menuApagarVariavel: (nome) => `Apagar a variável “${nome}”`,
+  // Ícones "+"/"−" do bloco escreva (spec 003, contracts/editor-entrada-saida.md).
+  acrescentarValor: 'Acrescentar um valor',
+  tirarValor: 'Tirar o último valor',
 });
