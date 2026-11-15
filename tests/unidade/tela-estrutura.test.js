@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { TEXTOS } from '../../src/ui/textos.js';
+import { TIPOS_VARIAVEL } from '../../src/projeto/formato.js';
 
 // Estrutura estática da tela (spec 001, contracts/tela.md; research R-08). Sem jsdom:
 // o HTML é lido como texto e conferido por expressões regulares.
@@ -167,5 +168,29 @@ describe('estrutura da tela (RF-01, RNF-03)', () => {
       expect(TEXTOS[chave].trim(), chave).not.toBe('');
       expect(temPalavraEmIngles(TEXTOS[chave]), chave).toBeUndefined();
     }
+  });
+});
+
+describe('diálogo de variável (spec 002, RF-02; contracts/editor-variaveis.md)', () => {
+  const dialogo = trecho('dialog', 'dialogo-variavel');
+
+  it('existe, com título, nome de até 30 caracteres, tipo, erro e os dois botões', () => {
+    expect(dialogo).not.toBeNull();
+    expect(dialogo).toMatch(/aria-labelledby="variavel-titulo"/);
+    expect(dialogo).toMatch(/<h2 id="variavel-titulo">/);
+    expect(tagComId('variavel-nome')).toMatch(/maxlength="30"/);
+    expect(dialogo).toMatch(/<select id="variavel-tipo">/);
+    expect(tagComId('variavel-erro')).toMatch(/role="alert"/);
+    expect(dialogo).toMatch(/<button type="button" id="variavel-cancelar">Cancelar<\/button>/);
+    expect(dialogo).toMatch(/id="variavel-confirmar"/);
+  });
+
+  it('os tipos são exatamente TIPOS_VARIAVEL, nessa ordem', () => {
+    const valores = [...dialogo.matchAll(/<option value="([^"]+)"/g)].map((m) => m[1]);
+    expect(valores).toEqual([...TIPOS_VARIAVEL]);
+  });
+
+  it('nenhum texto em inglês', () => {
+    expect(temPalavraEmIngles(dialogo)).toBeUndefined();
   });
 });
