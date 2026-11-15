@@ -145,7 +145,7 @@ que espere um valor (FR-006).
 
 ### Implementação da História 3
 
-- [ ] T033 [US3] Em `src/blocos/caixa-blocos.js`, completar a regra 3 de "Caixa de blocos": um `variavel` por variável na ordem da seção `var`, reaproveitando `TIPOS_VARIAVEL` para agrupar (mesma regra de `gerarSecaoVar`, sem importar o emissor). Implementar até T032 passar (depende de T032, T029) (FR-006) (RF-02)
+- [X] T033 [US3] Em `src/blocos/caixa-blocos.js`, completar a regra 3 de "Caixa de blocos": um `variavel` por variável na ordem da seção `var`, reaproveitando `TIPOS_VARIAVEL` para agrupar (mesma regra de `gerarSecaoVar`, sem importar o emissor). Implementar até T032 passar (depende de T032, T029) (FR-006) (RF-02)
 - [ ] T034 [US3] Validar no navegador: com `idade`, `b` (inteiros) e `nome` (cadeia), criadas nessa ordem, a categoria mostra "nome recebe" (a última criada) e os blocos `idade`, `b`, `nome` nessa ordem; encaixar `idade` no valor de "b recebe" → `    b <- idade`. Fazer também os passos 7 (encaixar o bloco `b` no valor de "idade recebe" → `    idade <- b`, o aviso some) e 16 (SC-003: cronometrar do passo 1 até `idade <- b`) da seção 2 do quickstart, que ficaram da T030 por precisarem do bloco de valor na caixa. Registrar o resultado para o PR (depende de T033) (FR-006) (RF-02)
 
 **Checkpoint**: ciclo declarar → guardar → usar completo dentro do que existe antes da
