@@ -4,7 +4,11 @@ import { describe, it, expect, beforeAll, beforeEach } from 'vitest';
 import * as Blockly from 'blockly';
 import { variaveisDoMapa, blocosComVariaveis } from '../../src/projeto/variaveis.js';
 import { projetoVazio } from '../../src/projeto/formato.js';
-import { registroPadrao } from '../../src/blocos/registro.js';
+import { registroPadrao, criarRegistro } from '../../src/blocos/registro.js';
+import { BLOCO_PROGRAMA } from '../../src/blocos/programa.js';
+import { BLOCO_VARIAVEL_RECEBE, BLOCO_VARIAVEL } from '../../src/blocos/variaveis.js';
+import { registrarCampoVariavel } from '../../src/ui/campo-variavel.js';
+import { gerarPortugol } from '../../src/portugol/gerador.js';
 
 const nomes = (ws) => variaveisDoMapa(ws.getVariableMap().getAllVariables()).map((v) => v.nome);
 
@@ -76,5 +80,54 @@ describe('mapa de variáveis do Blockly (research R-04)', () => {
       expect(porTipo(tipo), tipo).toHaveLength(1);
       expect(porTipo(tipo)[0].isUiEvent, tipo).toBe(false);
     }
+  });
+});
+
+describe('blocos de variável no Blockly headless (spec 002, T025)', () => {
+  const registro = criarRegistro();
+  for (const entrada of [BLOCO_PROGRAMA, BLOCO_VARIAVEL_RECEBE, BLOCO_VARIAVEL]) registro.registrarBloco(entrada);
+  let ws;
+
+  beforeAll(() => {
+    registrarCampoVariavel();
+    Blockly.defineBlocksWithJsonArray([BLOCO_VARIAVEL_RECEBE.definicao, BLOCO_VARIAVEL.definicao]);
+  });
+
+  beforeEach(() => {
+    ws = new Blockly.Workspace();
+  });
+
+  it('ida e volta: idade recebe [b] montado pela API, salvo e gerado → idade <- b', () => {
+    const mapa = ws.getVariableMap();
+    mapa.createVariable('idade', 'inteiro', 'v-idade');
+    mapa.createVariable('b', 'inteiro', 'v-b');
+
+    const programa = ws.newBlock('programa', 'programa');
+    const recebe = ws.newBlock('variavel_recebe');
+    const valor = ws.newBlock('variavel');
+    recebe.getField('VAR').setValue('v-idade');
+    valor.getField('VAR').setValue('v-b');
+    programa.getInput('COMANDOS').connection.connect(recebe.previousConnection);
+    recebe.getInput('VALOR').connection.connect(valor.outputConnection);
+
+    const blocos = Blockly.serialization.workspaces.save(ws);
+    delete blocos.variables;
+    const salvoRecebe = blocos.blocks.blocks[0].inputs.COMANDOS.block;
+    expect(salvoRecebe.fields.VAR).toEqual({ id: 'v-idade' });
+    expect(salvoRecebe.inputs.VALOR.block.fields.VAR).toEqual({ id: 'v-b' });
+
+    const projeto = { ...projetoVazio(), variaveis: variaveisDoMapa(mapa.getAllVariables()), blocos };
+    const { codigo, avisos } = gerarPortugol(projeto, registro);
+    expect(codigo).toContain('\n    idade <- b\n');
+    expect(avisos).toEqual([]);
+  });
+
+  it('bloco novo sem variável não cria a variável "item" e mostra ???', () => {
+    const valor = ws.newBlock('variavel');
+    const recebe = ws.newBlock('variavel_recebe');
+    expect(ws.getVariableMap().getAllVariables()).toEqual([]);
+    expect(valor.getField('VAR').getText()).toBe('???');
+    expect(recebe.getField('VAR').getText()).toBe('???');
+    expect(Blockly.serialization.blocks.save(valor).fields).toEqual({ VAR: null });
   });
 });
