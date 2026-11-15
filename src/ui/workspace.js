@@ -10,8 +10,12 @@ import {
   CATEGORIA_VARIAVEIS,
   BOTAO_CRIAR_VARIAVEL,
   conteudoCategoriaVariaveis,
+  CATEGORIA_ENTRADA_SAIDA,
+  conteudoCategoriaEntradaSaida,
 } from '../blocos/caixa-blocos.js';
 import { registrarCampoVariavel } from './campo-variavel.js';
+import { registrarMutadorEscreva } from './mutador-escreva.js';
+import { registrarValidadorNumero } from './validador-numero.js';
 import { criarVariavel } from './acoes-variavel.js';
 
 let blocosDefinidos = false;
@@ -41,8 +45,11 @@ function definirBlocos() {
   if (blocosDefinidos) return;
   Blockly.setLocale(ptBr);
   Object.assign(Blockly.Msg, TRADUCOES_FALTANTES);
-  // O campo próprio precisa existir antes das definições que o citam.
+  // O campo próprio, o mutador do escreva e o validador do número precisam existir antes das
+  // definições que os citam (spec 002; spec 003, contracts/editor-entrada-saida.md).
   registrarCampoVariavel();
+  registrarMutadorEscreva();
+  registrarValidadorNumero();
   const definicoes = registroPadrao.tiposRegistrados().map((tipo) => registroPadrao.obter(tipo).definicao);
   Blockly.defineBlocksWithJsonArray(definicoes);
   blocosDefinidos = true;
@@ -59,6 +66,11 @@ export function criarWorkspace(container, projeto) {
   // Categoria dinâmica "Variáveis" e botão "Criar variável…" (spec 002, research R-05).
   ws.registerToolboxCategoryCallback(CATEGORIA_VARIAVEIS, () => conteudoCategoriaVariaveis(variaveisDoWorkspace(ws)));
   ws.registerButtonCallback(BOTAO_CRIAR_VARIAVEL, () => criarVariavel(ws));
+  // Categoria dinâmica Entrada e saída (spec 003, research R-09); o botão Criar variável… dela
+  // usa o mesmo callback acima.
+  ws.registerToolboxCategoryCallback(CATEGORIA_ENTRADA_SAIDA, () =>
+    conteudoCategoriaEntradaSaida(variaveisDoWorkspace(ws)),
+  );
   Blockly.serialization.workspaces.load(blocosComVariaveis(projeto.blocos, projeto.variaveis), ws);
   // O Blockly só mede o contêiner na injeção; o painel muda de tamanho com a janela e com o
   // empilhamento abaixo de 1024 px (spec 001, research R-03).

@@ -111,3 +111,57 @@ describe('gerarPortugol: estrutura (RF-08, FR-001..FR-004)', () => {
     expect(ms).toBeLessThan(500);
   });
 });
+
+// Spec 003, research R-06 (contracts/blocos-valores-contas.md): parênteses pela precedência.
+describe('ctx.valor com precedenciaMinima (RF-06; spec 003, R-06)', () => {
+  const reg = criarRegistroTeste();
+  reg.registrarBloco({
+    tipo: 't_mostra',
+    rotulo: 'mostra',
+    categoria: 'comando',
+    definicao: { type: 't_mostra' },
+    gerar: (b, ctx) =>
+      ctx.linha(
+        b.fields?.MIN === undefined
+          ? `mostra(${ctx.valor(b, 'V', 'o valor')})`
+          : `mostra(${ctx.valor(b, 'V', 'o valor', b.fields.MIN)})`,
+      ),
+  });
+  reg.registrarBloco({
+    tipo: 't_prec',
+    rotulo: 'prec',
+    categoria: 'valor',
+    definicao: { type: 't_prec' },
+    gerar: (b) => ({ codigo: 'x', precedencia: b.fields.P }),
+  });
+  const mostra = (campos, filho) =>
+    gerarPortugol(
+      projetoDeTeste({ comandos: [bloco('t_mostra', { campos, entradas: filho ? { V: filho } : {} })] }),
+      reg,
+    );
+  const linha = (r) => r.codigo.split('\n')[3];
+
+  it('precedência igual à mínima não leva parênteses', () => {
+    expect(linha(mostra({ MIN: 50 }, bloco('t_prec', { campos: { P: 50 } })))).toBe('    mostra(x)');
+  });
+
+  it('precedência abaixo da mínima leva parênteses', () => {
+    expect(linha(mostra({ MIN: 51 }, bloco('t_prec', { campos: { P: 50 } })))).toBe('    mostra((x))');
+  });
+
+  it('encaixe vazio nunca leva parênteses e gera o aviso', () => {
+    const r = mostra({ MIN: 99 });
+    expect(linha(r)).toBe('    mostra(???)');
+    expect(r.avisos.map((a) => a.mensagem)).toEqual(['Falta o valor do bloco mostra']);
+  });
+
+  it('bloco desconhecido nunca leva parênteses e gera o aviso', () => {
+    const r = mostra({ MIN: 99 }, bloco('nao_existe'));
+    expect(linha(r)).toBe('    mostra(???)');
+    expect(r.avisos.map((a) => a.mensagem)).toEqual(['Bloco desconhecido: nao_existe']);
+  });
+
+  it('sem o quarto argumento a mínima é 0', () => {
+    expect(linha(mostra(undefined, bloco('t_prec', { campos: { P: 0 } })))).toBe('    mostra(x)');
+  });
+});

@@ -75,3 +75,78 @@ describe('conteudoCategoriaVariaveis', () => {
     ]);
   });
 });
+
+// Spec 003, research R-09 (contracts/blocos-entrada-saida.md, "Caixa de blocos").
+describe('caixa de blocos da spec 003', () => {
+  it('categorias em ordem: Variáveis, Entrada e saída, Valores, Contas', async () => {
+    const { CATEGORIA_ENTRADA_SAIDA } = await import('../../src/blocos/caixa-blocos.js');
+    expect(CATEGORIA_ENTRADA_SAIDA).toBe('ENTRADA_SAIDA');
+    expect(CAIXA_BLOCOS.contents.map((c) => c.name)).toEqual(['Variáveis', 'Entrada e saída', 'Valores', 'Contas']);
+    const [, es, valores, contas] = CAIXA_BLOCOS.contents;
+    expect(es).toMatchObject({ kind: 'category', custom: 'ENTRADA_SAIDA' });
+    expect(valores.contents).toEqual([
+      { kind: 'block', type: 'numero' },
+      { kind: 'block', type: 'texto' },
+    ]);
+    expect(contas.contents).toEqual([{ kind: 'block', type: 'aritmetico', fields: { OP: '+' } }]);
+  });
+
+  it('Entrada e saída começa com um escreva com o texto “Olá, mundo!” encaixado (bloco normal)', async () => {
+    const { conteudoCategoriaEntradaSaida } = await import('../../src/blocos/caixa-blocos.js');
+    const [primeiro] = conteudoCategoriaEntradaSaida([]);
+    expect(primeiro).toEqual({
+      kind: 'block',
+      type: 'escreva',
+      inputs: { VALOR1: { block: { type: 'texto', fields: { TEXTO: 'Olá, mundo!' } } } },
+    });
+    expect(JSON.stringify(primeiro)).not.toContain('shadow');
+  });
+
+  it('entrada que não é lista não lança e é pura', async () => {
+    const { conteudoCategoriaEntradaSaida } = await import('../../src/blocos/caixa-blocos.js');
+    expect(() => conteudoCategoriaEntradaSaida(undefined)).not.toThrow();
+    expect(() => conteudoCategoriaEntradaSaida('x')).not.toThrow();
+    const lista = [{ id: 'v1', nome: 'a', tipo: 'inteiro' }];
+    expect(conteudoCategoriaEntradaSaida(lista)).toEqual(conteudoCategoriaEntradaSaida(lista));
+  });
+});
+
+describe('itens de bloco das categorias estáticas', () => {
+  it('não são congelados: o Blockly acrescenta propriedades a eles ao montar a caixa', () => {
+    for (const categoria of CAIXA_BLOCOS.contents.filter((c) => Array.isArray(c.contents))) {
+      expect(Object.isFrozen(categoria)).toBe(false);
+      for (const item of categoria.contents) expect(Object.isExtensible(item)).toBe(true);
+    }
+  });
+});
+
+// Spec 003, caso de borda "leia num projeto sem variáveis" (research R-09).
+describe('conteudoCategoriaEntradaSaida com e sem variáveis', () => {
+  const ESCREVA = {
+    kind: 'block',
+    type: 'escreva',
+    inputs: { VALOR1: { block: { type: 'texto', fields: { TEXTO: 'Olá, mundo!' } } } },
+  };
+
+  it('sem variáveis: escreva, a orientação e o botão Criar variável…, sem leia', async () => {
+    const { conteudoCategoriaEntradaSaida, TEXTO_LEIA_SEM_VARIAVEL } = await import('../../src/blocos/caixa-blocos.js');
+    expect(TEXTO_LEIA_SEM_VARIAVEL).toBe('Para usar o leia, crie uma variável primeiro.');
+    expect(conteudoCategoriaEntradaSaida([])).toEqual([
+      ESCREVA,
+      { kind: 'label', text: 'Para usar o leia, crie uma variável primeiro.' },
+      { kind: 'button', text: 'Criar variável…', callbackKey: BOTAO_CRIAR_VARIAVEL },
+    ]);
+  });
+
+  it('com variáveis: escreva e um único leia com a última da lista do mapa', async () => {
+    const { conteudoCategoriaEntradaSaida } = await import('../../src/blocos/caixa-blocos.js');
+    const lista = [
+      { id: 'v-a', nome: 'a', tipo: 'inteiro' },
+      { id: 'v-nome', nome: 'nome', tipo: 'cadeia' },
+    ];
+    expect(conteudoCategoriaEntradaSaida(lista)).toEqual([
+      ESCREVA,
+      { kind: 'block', type: 'leia', fields: { VAR: { id: 'v-nome' } } },
+    ]);
+  });
+});

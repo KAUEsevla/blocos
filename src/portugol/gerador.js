@@ -51,7 +51,9 @@ export function gerarPortugol(projeto, registro = registroPadrao) {
       gerarCadeia(bloco.inputs?.[encaixe]?.block);
       emissor.sair();
     },
-    valor(bloco, encaixe, parte) {
+    // Parênteses pela precedência (spec 003, research R-06): o filho volta entre parênteses
+    // quando liga mais fraco que o pedido. ??? nunca leva parênteses.
+    valor(bloco, encaixe, parte, precedenciaMinima = 0) {
       const filho = bloco.inputs?.[encaixe]?.block;
       if (!filho) return parteAusente(bloco, encaixe, parte);
       const entrada = registro.obter(filho.type);
@@ -59,7 +61,8 @@ export function gerarPortugol(projeto, registro = registroPadrao) {
         blocoDesconhecido(filho);
         return MARCADOR_AUSENTE;
       }
-      return entrada.gerar(filho, ctx).codigo;
+      const { codigo, precedencia } = entrada.gerar(filho, ctx);
+      return precedencia < precedenciaMinima ? `(${codigo})` : codigo;
     },
     variavel(bloco, campo, parte) {
       const referencia = bloco.fields?.[campo];

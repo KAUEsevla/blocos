@@ -116,3 +116,7 @@ O estudante interrompe um programa que entrou em laço infinito.
   seguintes, na mesma sessão, não.
 - A versão congelada é `meupia-core` 1.4.1 até o professor confirmar (pergunta Q-01).
 - A entrada de dados do leia é definida na feature 010.
+- Esta feature fecha a parte de executar do SC-002 da spec 003 ("Olá, mundo!" montado e
+  executado em menos de 2 minutos) e a Saída na tela do FR-003 da 003 (uma linha por
+  escreva). A montagem e a saída no Core já foram conferidas pela 003
+  ([research R-12](../003-blocos-leia-escreva/research.md)).

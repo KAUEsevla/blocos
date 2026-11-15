@@ -7,10 +7,17 @@ import { TIPOS_VARIAVEL } from '../../src/projeto/formato.js';
 import { gerarPortugol } from '../../src/portugol/gerador.js';
 import { verificarExecucao } from '../../src/portugol/execucao.js';
 import { criarRegistroTeste, bloco, projetoDeTeste } from '../auxiliares/blocos-teste.js';
+import { BLOCO_NUMERO } from '../../src/blocos/valores.js';
+import { BLOCO_ARITMETICO } from '../../src/blocos/contas.js';
+import { BLOCO_ESCREVA } from '../../src/blocos/entrada-saida.js';
 
 const registro = criarRegistroTeste();
 registro.registrarBloco(BLOCO_VARIAVEL_RECEBE);
 registro.registrarBloco(BLOCO_VARIAVEL);
+// Blocos reais de número, conta e escreva (spec 003, T017), no lugar dos blocos de teste.
+registro.registrarBloco(BLOCO_NUMERO);
+registro.registrarBloco(BLOCO_ARITMETICO);
+registro.registrarBloco(BLOCO_ESCREVA);
 
 const IDADE = { id: 'v-idade', nome: 'idade', tipo: 'inteiro' };
 const ANOS = { id: 'v-anos', nome: 'anos', tipo: 'inteiro' };
@@ -21,7 +28,9 @@ const recebe = (variavel, valor) =>
     campos: { VAR: variavel ? { id: variavel.id } : null },
     entradas: valor ? { VALOR: valor } : {},
   });
-const numero = (n) => bloco('teste_numero', { campos: { NUM: n } });
+const numero = (n) => bloco('numero', { campos: { NUM: String(n) } });
+const soma = (a, b) => bloco('aritmetico', { campos: { OP: '+' }, entradas: { A: a, B: b } });
+const escreva = (valor) => bloco('escreva', { entradas: { VALOR1: valor } });
 
 function corpo(variaveis, comandos) {
   const { codigo, avisos } = gerarPortugol(projetoDeTeste({ variaveis, comandos }), registro);
@@ -63,9 +72,8 @@ describe('exemplos normativos (contracts/blocos-variaveis.md)', () => {
     expect(r.avisos).toEqual([]);
   });
 
-  it('escreva(idade + 1) com os blocos de teste de escreva, soma e número', () => {
-    const soma = bloco('teste_soma', { entradas: { A: ler(IDADE), B: numero(1) } });
-    const r = corpo([IDADE], [bloco('teste_escreva', { entradas: { VALOR: soma } })]);
+  it('escreva(idade + 1) com os blocos reais de escreva, conta e número (spec 003)', () => {
+    const r = corpo([IDADE], [escreva(soma(ler(IDADE), numero(1)))]);
     expect(r.linhas).toEqual(['    escreva(idade + 1)']);
     expect(r.avisos).toEqual([]);
   });
@@ -107,8 +115,7 @@ describe('História 3 - Usar o valor de uma variável (FR-006)', () => {
   const A = { id: 'v-a', nome: 'a', tipo: 'inteiro' };
 
   it('cenário 1: escreva(idade + 1), sem avisos', () => {
-    const soma = bloco('teste_soma', { entradas: { A: ler(IDADE), B: numero(1) } });
-    const r = corpo([IDADE], [bloco('teste_escreva', { entradas: { VALOR: soma } })]);
+    const r = corpo([IDADE], [escreva(soma(ler(IDADE), numero(1)))]);
     expect(r.linhas).toEqual(['    escreva(idade + 1)']);
     expect(r.avisos).toEqual([]);
   });
@@ -127,9 +134,27 @@ describe('História 3 - Usar o valor de uma variável (FR-006)', () => {
   });
 
   it('variável sem id dentro de uma soma: ??? + 1 com o aviso do bloco variável', () => {
-    const soma = bloco('teste_soma', { entradas: { A: ler(null), B: numero(1) } });
-    const r = corpo([IDADE], [bloco('teste_escreva', { entradas: { VALOR: soma } })]);
+    const r = corpo([IDADE], [escreva(soma(ler(null), numero(1)))]);
     expect(r.linhas).toEqual(['    escreva(??? + 1)']);
     expect(r.avisos).toEqual(['Falta a variável do bloco variável']);
+  });
+});
+
+// Spec 003, research R-05 (P-3): o campo de variável é um módulo comum.
+describe('campoVariavel (spec 003, P-3)', () => {
+  it('devolve um objeto novo a cada chamada, com os quatro tipos', async () => {
+    const { campoVariavel } = await import('../../src/blocos/campo-variavel.js');
+    const a = campoVariavel();
+    const b = campoVariavel();
+    expect(a).not.toBe(b);
+    expect(a).toEqual(b);
+    expect(a).toEqual({
+      type: 'campo_variavel',
+      name: 'VAR',
+      variable: null,
+      variableTypes: [...TIPOS_VARIAVEL],
+      defaultType: 'inteiro',
+    });
+    expect(BLOCO_VARIAVEL.definicao.args0[0]).toEqual(a);
   });
 });

@@ -124,3 +124,7 @@ O estudante usa blocos de número, de texto e de lógico (verdadeiro/falso).
 
 - Funções nativas (raiz, piso, tamanho...) estão fora do escopo mínimo.
 - A precedência considerada é a do Guia da Linguagem do Core na versão fixada.
+- Os blocos de número, de texto e de conta aritmética (`+ - * / %`) foram entregues pela
+  spec 003 ([research R-03 da 003](../003-blocos-leia-escreva/research.md)), seguindo
+  FR-001 (sem o negativo), FR-004 (número e texto), FR-005, FR-006, FR-007 e FR-008 desta
+  spec. A 006 os amplia sem mudar `type`, campos ou variantes.

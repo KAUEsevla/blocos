@@ -2,17 +2,9 @@
 // Não importam o Blockly: a definição é JSON, aplicada pela interface com
 // defineBlocksWithJsonArray. O campo "campo_variavel" é registrado pela interface
 // (src/ui/campo-variavel.js) antes das definições.
-import { TIPOS_VARIAVEL } from '../projeto/formato.js';
 import { PRECEDENCIA } from '../portugol/precedencia.js';
 import { COR_VARIAVEIS } from './caixa-blocos.js';
-
-const campoVariavel = () => ({
-  type: 'campo_variavel',
-  name: 'VAR',
-  variable: null,
-  variableTypes: [...TIPOS_VARIAVEL],
-  defaultType: 'inteiro',
-});
+import { campoVariavel } from './campo-variavel.js';
 
 // "variável recebe valor" → nome <- valor (FR-005).
 export const BLOCO_VARIAVEL_RECEBE = {

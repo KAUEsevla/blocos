@@ -1,0 +1,101 @@
+{
+  "descricao": "Pendência P-1 da spec 002 (História 3): idade <- 15 e escreva(idade + 1) mostram 16 no Core real",
+  "requisitos": [
+    "RF-02",
+    "RF-03",
+    "RF-06",
+    "RNF-07"
+  ],
+  "projeto": {
+    "formato": "meupia-blocos",
+    "versao": 1,
+    "nome": "Idade",
+    "variaveis": [
+      {
+        "id": "v-idade",
+        "nome": "idade",
+        "tipo": "inteiro"
+      }
+    ],
+    "blocos": {
+      "blocks": {
+        "languageVersion": 0,
+        "blocks": [
+          {
+            "type": "programa",
+            "id": "programa",
+            "x": 24,
+            "y": 24,
+            "deletable": false,
+            "inputs": {
+              "COMANDOS": {
+                "block": {
+                  "type": "variavel_recebe",
+                  "id": "r2",
+                  "fields": {
+                    "VAR": {
+                      "id": "v-idade"
+                    }
+                  },
+                  "inputs": {
+                    "VALOR": {
+                      "block": {
+                        "type": "numero",
+                        "id": "n1",
+                        "fields": {
+                          "NUM": "15"
+                        }
+                      }
+                    }
+                  },
+                  "next": {
+                    "block": {
+                      "type": "escreva",
+                      "id": "e6",
+                      "inputs": {
+                        "VALOR1": {
+                          "block": {
+                            "type": "aritmetico",
+                            "id": "c5",
+                            "fields": {
+                              "OP": "+"
+                            },
+                            "inputs": {
+                              "A": {
+                                "block": {
+                                  "type": "variavel",
+                                  "id": "v3",
+                                  "fields": {
+                                    "VAR": {
+                                      "id": "v-idade"
+                                    }
+                                  }
+                                }
+                              },
+                              "B": {
+                                "block": {
+                                  "type": "numero",
+                                  "id": "n4",
+                                  "fields": {
+                                    "NUM": "1"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "entrada": [],
+  "portugolEsperado": "algoritmo \"Idade\"\n\nvar\n    idade: inteiro\n\ninicio\n    idade <- 15\n    escreva(idade + 1)\nfim_algoritmo\n",
+  "saidaEsperada": "16\n"
+}

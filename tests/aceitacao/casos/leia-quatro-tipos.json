@@ -1,0 +1,210 @@
+{
+  "descricao": "leia com o campo de variável da spec 002 (P-3) nos quatro tipos; no lógico, VERDADEIRO vira verdadeiro (spec 003, História 2)",
+  "requisitos": [
+    "RF-03",
+    "RNF-07"
+  ],
+  "projeto": {
+    "formato": "meupia-blocos",
+    "versao": 1,
+    "nome": "Leitura",
+    "variaveis": [
+      {
+        "id": "v-idade",
+        "nome": "idade",
+        "tipo": "inteiro"
+      },
+      {
+        "id": "v-altura",
+        "nome": "altura",
+        "tipo": "real"
+      },
+      {
+        "id": "v-nome",
+        "nome": "nome",
+        "tipo": "cadeia"
+      },
+      {
+        "id": "v-ok",
+        "nome": "ok",
+        "tipo": "logico"
+      }
+    ],
+    "blocos": {
+      "blocks": {
+        "languageVersion": 0,
+        "blocks": [
+          {
+            "type": "programa",
+            "id": "programa",
+            "x": 24,
+            "y": 24,
+            "deletable": false,
+            "inputs": {
+              "COMANDOS": {
+                "block": {
+                  "type": "leia",
+                  "id": "l1",
+                  "fields": {
+                    "VAR": {
+                      "id": "v-nome"
+                    }
+                  },
+                  "next": {
+                    "block": {
+                      "type": "leia",
+                      "id": "l2",
+                      "fields": {
+                        "VAR": {
+                          "id": "v-idade"
+                        }
+                      },
+                      "next": {
+                        "block": {
+                          "type": "leia",
+                          "id": "l3",
+                          "fields": {
+                            "VAR": {
+                              "id": "v-altura"
+                            }
+                          },
+                          "next": {
+                            "block": {
+                              "type": "leia",
+                              "id": "l4",
+                              "fields": {
+                                "VAR": {
+                                  "id": "v-ok"
+                                }
+                              },
+                              "next": {
+                                "block": {
+                                  "type": "escreva",
+                                  "id": "e7",
+                                  "extraState": {
+                                    "valores": 2
+                                  },
+                                  "inputs": {
+                                    "VALOR1": {
+                                      "block": {
+                                        "type": "texto",
+                                        "id": "t5",
+                                        "fields": {
+                                          "TEXTO": "Oi, "
+                                        }
+                                      }
+                                    },
+                                    "VALOR2": {
+                                      "block": {
+                                        "type": "variavel",
+                                        "id": "v6",
+                                        "fields": {
+                                          "VAR": {
+                                            "id": "v-nome"
+                                          }
+                                        }
+                                      }
+                                    }
+                                  },
+                                  "next": {
+                                    "block": {
+                                      "type": "escreva",
+                                      "id": "e11",
+                                      "inputs": {
+                                        "VALOR1": {
+                                          "block": {
+                                            "type": "aritmetico",
+                                            "id": "c10",
+                                            "fields": {
+                                              "OP": "+"
+                                            },
+                                            "inputs": {
+                                              "A": {
+                                                "block": {
+                                                  "type": "variavel",
+                                                  "id": "v8",
+                                                  "fields": {
+                                                    "VAR": {
+                                                      "id": "v-idade"
+                                                    }
+                                                  }
+                                                }
+                                              },
+                                              "B": {
+                                                "block": {
+                                                  "type": "numero",
+                                                  "id": "n9",
+                                                  "fields": {
+                                                    "NUM": "1"
+                                                  }
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      },
+                                      "next": {
+                                        "block": {
+                                          "type": "escreva",
+                                          "id": "e13",
+                                          "inputs": {
+                                            "VALOR1": {
+                                              "block": {
+                                                "type": "variavel",
+                                                "id": "v12",
+                                                "fields": {
+                                                  "VAR": {
+                                                    "id": "v-altura"
+                                                  }
+                                                }
+                                              }
+                                            }
+                                          },
+                                          "next": {
+                                            "block": {
+                                              "type": "escreva",
+                                              "id": "e15",
+                                              "inputs": {
+                                                "VALOR1": {
+                                                  "block": {
+                                                    "type": "variavel",
+                                                    "id": "v14",
+                                                    "fields": {
+                                                      "VAR": {
+                                                        "id": "v-ok"
+                                                      }
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "entrada": [
+    "Ana",
+    "15",
+    "1.5",
+    "VERDADEIRO"
+  ],
+  "portugolEsperado": "algoritmo \"Leitura\"\n\nvar\n    idade: inteiro\n    altura: real\n    nome: cadeia\n    ok: logico\n\ninicio\n    leia(nome)\n    leia(idade)\n    leia(altura)\n    leia(ok)\n    escreva(\"Oi, \", nome)\n    escreva(idade + 1)\n    escreva(altura)\n    escreva(ok)\nfim_algoritmo\n",
+  "saidaEsperada": "Oi, Ana\n16\n1.5\nverdadeiro\n"
+}

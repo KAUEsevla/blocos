@@ -64,7 +64,7 @@ desse tipo para o qual `presente(bloco)` seja `true`. Blocos soltos não contam.
 
 | Função | Uso |
 | --- | --- |
-| `ctx.valor(bloco, encaixe, parte) → string` | Gera a expressão do encaixe de valor. Se estiver vazio, registra o aviso `Falta ${parte} do bloco ${rotulo}` e devolve `???`. Para blocos `valor`, devolve `{ codigo, precedencia }` internamente; a 006 usa isso para os parênteses. |
+| `ctx.valor(bloco, encaixe, parte, precedenciaMinima = 0) → string` | Gera a expressão do encaixe de valor. Se estiver vazio, registra o aviso `Falta ${parte} do bloco ${rotulo}` e devolve `???`. Se o filho devolver `precedencia < precedenciaMinima`, o código volta entre parênteses; `???` nunca leva parênteses. Regra e escala em [blocos-valores-contas.md](../../003-blocos-leia-escreva/contracts/blocos-valores-contas.md) (spec 003). |
 | `ctx.comandos(bloco, encaixe)` | Emite a cadeia de comandos do encaixe com um nível a mais de indentação. Área vazia não gera nada (é permitida). |
 | `ctx.linha(texto)` | Emite uma linha no nível atual (só para blocos `comando`). |
 | `ctx.variavel(bloco, campo, parte) → string` | Resolve o `{ id }` do campo para o nome em `projeto.variaveis`. Se faltar ou não existir, registra o aviso e devolve `???`. |

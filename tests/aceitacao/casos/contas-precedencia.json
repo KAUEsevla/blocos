@@ -1,0 +1,257 @@
+{
+  "descricao": "As cinco contas, com parênteses só onde a estrutura dos blocos exige, e texto + número concatenado (spec 006, FR-001 e FR-005; spec 003, research R-06)",
+  "requisitos": [
+    "RF-06",
+    "RNF-07"
+  ],
+  "projeto": {
+    "formato": "meupia-blocos",
+    "versao": 1,
+    "nome": "Contas",
+    "variaveis": [],
+    "blocos": {
+      "blocks": {
+        "languageVersion": 0,
+        "blocks": [
+          {
+            "type": "programa",
+            "id": "programa",
+            "x": 24,
+            "y": 24,
+            "deletable": false,
+            "inputs": {
+              "COMANDOS": {
+                "block": {
+                  "type": "escreva",
+                  "id": "e6",
+                  "inputs": {
+                    "VALOR1": {
+                      "block": {
+                        "type": "aritmetico",
+                        "id": "c5",
+                        "fields": {
+                          "OP": "*"
+                        },
+                        "inputs": {
+                          "A": {
+                            "block": {
+                              "type": "numero",
+                              "id": "n1",
+                              "fields": {
+                                "NUM": "2"
+                              }
+                            }
+                          },
+                          "B": {
+                            "block": {
+                              "type": "aritmetico",
+                              "id": "c4",
+                              "fields": {
+                                "OP": "+"
+                              },
+                              "inputs": {
+                                "A": {
+                                  "block": {
+                                    "type": "numero",
+                                    "id": "n2",
+                                    "fields": {
+                                      "NUM": "3"
+                                    }
+                                  }
+                                },
+                                "B": {
+                                  "block": {
+                                    "type": "numero",
+                                    "id": "n3",
+                                    "fields": {
+                                      "NUM": "4"
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "next": {
+                    "block": {
+                      "type": "escreva",
+                      "id": "e12",
+                      "inputs": {
+                        "VALOR1": {
+                          "block": {
+                            "type": "aritmetico",
+                            "id": "c11",
+                            "fields": {
+                              "OP": "-"
+                            },
+                            "inputs": {
+                              "A": {
+                                "block": {
+                                  "type": "numero",
+                                  "id": "n7",
+                                  "fields": {
+                                    "NUM": "10"
+                                  }
+                                }
+                              },
+                              "B": {
+                                "block": {
+                                  "type": "aritmetico",
+                                  "id": "c10",
+                                  "fields": {
+                                    "OP": "-"
+                                  },
+                                  "inputs": {
+                                    "A": {
+                                      "block": {
+                                        "type": "numero",
+                                        "id": "n8",
+                                        "fields": {
+                                          "NUM": "3"
+                                        }
+                                      }
+                                    },
+                                    "B": {
+                                      "block": {
+                                        "type": "numero",
+                                        "id": "n9",
+                                        "fields": {
+                                          "NUM": "2"
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "next": {
+                        "block": {
+                          "type": "escreva",
+                          "id": "e16",
+                          "inputs": {
+                            "VALOR1": {
+                              "block": {
+                                "type": "aritmetico",
+                                "id": "c15",
+                                "fields": {
+                                  "OP": "/"
+                                },
+                                "inputs": {
+                                  "A": {
+                                    "block": {
+                                      "type": "numero",
+                                      "id": "n13",
+                                      "fields": {
+                                        "NUM": "7"
+                                      }
+                                    }
+                                  },
+                                  "B": {
+                                    "block": {
+                                      "type": "numero",
+                                      "id": "n14",
+                                      "fields": {
+                                        "NUM": "2"
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "next": {
+                            "block": {
+                              "type": "escreva",
+                              "id": "e20",
+                              "inputs": {
+                                "VALOR1": {
+                                  "block": {
+                                    "type": "aritmetico",
+                                    "id": "c19",
+                                    "fields": {
+                                      "OP": "%"
+                                    },
+                                    "inputs": {
+                                      "A": {
+                                        "block": {
+                                          "type": "numero",
+                                          "id": "n17",
+                                          "fields": {
+                                            "NUM": "7"
+                                          }
+                                        }
+                                      },
+                                      "B": {
+                                        "block": {
+                                          "type": "numero",
+                                          "id": "n18",
+                                          "fields": {
+                                            "NUM": "2"
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              },
+                              "next": {
+                                "block": {
+                                  "type": "escreva",
+                                  "id": "e24",
+                                  "inputs": {
+                                    "VALOR1": {
+                                      "block": {
+                                        "type": "aritmetico",
+                                        "id": "c23",
+                                        "fields": {
+                                          "OP": "+"
+                                        },
+                                        "inputs": {
+                                          "A": {
+                                            "block": {
+                                              "type": "texto",
+                                              "id": "t21",
+                                              "fields": {
+                                                "TEXTO": "a"
+                                              }
+                                            }
+                                          },
+                                          "B": {
+                                            "block": {
+                                              "type": "numero",
+                                              "id": "n22",
+                                              "fields": {
+                                                "NUM": "1"
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "entrada": [],
+  "portugolEsperado": "algoritmo \"Contas\"\n\ninicio\n    escreva(2 * (3 + 4))\n    escreva(10 - (3 - 2))\n    escreva(7 / 2)\n    escreva(7 % 2)\n    escreva(\"a\" + 1)\nfim_algoritmo\n",
+  "saidaEsperada": "14\n9\n3.5\n1\na1\n"
+}

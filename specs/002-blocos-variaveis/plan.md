@@ -179,10 +179,14 @@ Registradas em R-08. Não são tasks desta spec:
   número; decidir o `check` de saída do bloco `variavel` conforme o tipo (o SC-002 da
   006 proíbe lógico em lugar de número); passo B do quickstart da 007 (mudar um
   número no campo).
-- **003**: caso de aceitação `escreva(idade + 1)` → `16` com `idade <- 15` (História 3,
-  depende também da 006); caso que escreve as quatro variáveis sem atribuir, para
-  conferir no Core o valor inicial `0`, `0.0`, texto vazio e `falso` (Entidade
-  "Variável"); `leia` usa o mesmo campo de variável (`campo_variavel`).
+- **003** (✅ resolvidas pela spec 003): caso de aceitação `escreva(idade + 1)` → `16`
+  com `idade <- 15` ([escreva-conta-idade.json](../../tests/aceitacao/casos/escreva-conta-idade.json));
+  valores iniciais `0`, `0.0`, texto vazio e `falso` no Core
+  ([escreva-valores-iniciais.json](../../tests/aceitacao/casos/escreva-valores-iniciais.json));
+  `leia` com o mesmo campo de variável (`BLOCO_LEIA` em `src/blocos/entrada-saida.js`, caso
+  [leia-quatro-tipos.json](../../tests/aceitacao/casos/leia-quatro-tipos.json)). O caso
+  `idade <- 15` listado acima para a 006 também já existe (`escreva-conta-idade.json`), com
+  o bloco de número antecipado pela 003.
 
 ## Complexity Tracking
 

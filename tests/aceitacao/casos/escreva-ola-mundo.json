@@ -1,0 +1,50 @@
+{
+  "descricao": "O primeiro programa: escreva(\"Olá, mundo!\") mostra o texto na Saída (spec 003, História 1)",
+  "requisitos": [
+    "RF-03",
+    "RF-06",
+    "RNF-07"
+  ],
+  "projeto": {
+    "formato": "meupia-blocos",
+    "versao": 1,
+    "nome": "OlaMundo",
+    "variaveis": [],
+    "blocos": {
+      "blocks": {
+        "languageVersion": 0,
+        "blocks": [
+          {
+            "type": "programa",
+            "id": "programa",
+            "x": 24,
+            "y": 24,
+            "deletable": false,
+            "inputs": {
+              "COMANDOS": {
+                "block": {
+                  "type": "escreva",
+                  "id": "e2",
+                  "inputs": {
+                    "VALOR1": {
+                      "block": {
+                        "type": "texto",
+                        "id": "t1",
+                        "fields": {
+                          "TEXTO": "Olá, mundo!"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "entrada": [],
+  "portugolEsperado": "algoritmo \"OlaMundo\"\n\ninicio\n    escreva(\"Olá, mundo!\")\nfim_algoritmo\n",
+  "saidaEsperada": "Olá, mundo!\n"
+}

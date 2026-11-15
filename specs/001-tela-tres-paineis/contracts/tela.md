@@ -31,7 +31,7 @@ Três `<section class="painel">`, **nesta ordem** no HTML, cada uma com
 
 | Painel | `section` id | `<h2>` id / texto | Corpo |
 | --- | --- | --- | --- |
-| Blocos | `painel-blocos` | `titulo-blocos` / `Blocos` | cabeçalho com `<button id="botao-desfazer">Desfazer</button>` e `<button id="botao-refazer">Refazer</button>`, ambos `disabled` no HTML (spec 007, [editor.md](../../007-portugol-tempo-real/contracts/editor.md)); corpo `<div class="painel-corpo">` com `<div id="area-blocos">` (Blockly), que tem a caixa de blocos com a categoria "Variáveis" (spec 002, [editor-variaveis.md](../../002-blocos-variaveis/contracts/editor-variaveis.md)) |
+| Blocos | `painel-blocos` | `titulo-blocos` / `Blocos` | cabeçalho com `<button id="botao-desfazer">Desfazer</button>` e `<button id="botao-refazer">Refazer</button>`, ambos `disabled` no HTML (spec 007, [editor.md](../../007-portugol-tempo-real/contracts/editor.md)); corpo `<div class="painel-corpo">` com `<div id="area-blocos">` (Blockly), que tem a caixa de blocos com as categorias "Variáveis" (spec 002, [editor-variaveis.md](../../002-blocos-variaveis/contracts/editor-variaveis.md)), "Entrada e saída", "Valores" e "Contas" (spec 003, [editor-entrada-saida.md](../../003-blocos-leia-escreva/contracts/editor-entrada-saida.md)) |
 | Portugol | `painel-portugol` | `titulo-portugol` / `Portugol` | cabeçalho com `<button id="botao-copiar">Copiar código</button>` e `<span id="mensagem-copia" aria-live="polite">`; corpo `<pre id="codigo-portugol" tabindex="0" aria-label="Portugol gerado, somente leitura">` |
 | Saída | `painel-saida` | `titulo-saida` / `Saída` | `<div id="saida" class="painel-corpo">` (contrato [painel-saida.md](painel-saida.md)) |
 
