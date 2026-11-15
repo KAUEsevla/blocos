@@ -1,6 +1,6 @@
 // Conta aritmética + - * / % (RF-06, antecipada da spec 006 pela spec 003, research R-03, R-06;
-// contracts/blocos-valores-contas.md). Sem "check" de tipos: são da 006 (texto + número no
-// "+" é concatenação, regra do Core). Não importa o Blockly.
+// contracts/blocos-valores-contas.md). Tipos dos encaixes pela spec 006 (research R-08): Numero ou
+// Texto, porque o "+" concatena texto com número (regra do Core). Não importa o Blockly.
 import { PRECEDENCIA } from '../portugol/precedencia.js';
 import { MARCADOR_AUSENTE } from '../portugol/avisos.js';
 
@@ -26,7 +26,7 @@ export const BLOCO_ARITMETICO = {
     type: 'aritmetico',
     message0: '%1 %2 %3',
     args0: [
-      { type: 'input_value', name: 'A' },
+      { type: 'input_value', name: 'A', check: ['Numero', 'Texto'] },
       {
         type: 'field_dropdown',
         name: 'OP',
@@ -38,10 +38,10 @@ export const BLOCO_ARITMETICO = {
           ['resto', '%'],
         ],
       },
-      { type: 'input_value', name: 'B' },
+      { type: 'input_value', name: 'B', check: ['Numero', 'Texto'] },
     ],
     inputsInline: true,
-    output: null,
+    output: ['Numero', 'Texto'],
     colour: COR_CONTAS,
     tooltip: 'Faz a conta com os dois valores. “resto” é o que sobra da divisão',
   },
