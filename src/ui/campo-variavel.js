@@ -5,10 +5,21 @@
 // Campo sem variável: o FieldVariable padrão cria uma variável "item" no initModel(). Aqui
 // o campo fica vazio e mostra "???" (o gerador já avisa "Falta a variável …"). Por isso
 // saveState() e dropdownCreate(), que no padrão supõem uma variável, também são cobertos.
+//
+// Menu próprio (T039, research R-06): as variáveis e, no fim, "Renomear variável…",
+// "Mudar o tipo…" e "Apagar a variável", tratados por acoes-variavel.js, sem
+// window.prompt, window.confirm nem as mensagens RENAME_VARIABLE/DELETE_VARIABLE do Blockly.
 import * as Blockly from 'blockly';
 import { MARCADOR_AUSENTE } from '../portugol/avisos.js';
+import { TEXTOS } from './textos.js';
+import { renomearVariavel, mudarTipoVariavel, apagarVariavel } from './acoes-variavel.js';
 
 export const TIPO_CAMPO_VARIAVEL = 'campo_variavel';
+
+const RENOMEAR = 'MEUPIA_RENOMEAR_VARIAVEL';
+const MUDAR_TIPO = 'MEUPIA_MUDAR_TIPO_VARIAVEL';
+const APAGAR = 'MEUPIA_APAGAR_VARIAVEL';
+const ACOES = { [RENOMEAR]: renomearVariavel, [MUDAR_TIPO]: mudarTipoVariavel, [APAGAR]: apagarVariavel };
 
 export class CampoVariavel extends Blockly.FieldVariable {
   constructor(...args) {
@@ -49,23 +60,44 @@ export class CampoVariavel extends Blockly.FieldVariable {
     super.fromXml(elemento);
   }
 
+  // Os três itens próprios chamam as ações no workspace principal (o bloco pode estar na
+  // caixa de blocos, cujo workspace é outro).
+  onItemSelected_(menu, item) {
+    const acao = ACOES[item.getValue()];
+    if (!acao) {
+      super.onItemSelected_(menu, item);
+      return;
+    }
+    const bloco = this.getSourceBlock();
+    const variavel = this.getVariable();
+    if (!bloco || bloco.isDeadOrDying() || !variavel) return;
+    const ws = bloco.workspace.isFlyout ? bloco.workspace.targetWorkspace : bloco.workspace;
+    acao(ws, variavel.getId());
+  }
+
   static fromJson(opcoes) {
     const nome = Blockly.utils.parsing.replaceMessageReferences(opcoes.variable);
     return new this(nome || null, undefined, undefined, undefined, opcoes);
   }
 }
 
-// Sem variável escolhida, o menu lista as variáveis dos tipos aceitos (o padrão lança erro).
-const menuPadrao = Blockly.FieldVariable.dropdownCreate;
+// Menu: as variáveis dos tipos aceitos, por nome (como o padrão); com uma variável escolhida,
+// os três itens próprios no fim. Sem variável, só a lista (o padrão lança erro nesse caso).
 CampoVariavel.dropdownCreate = function dropdownCreate() {
-  if (this.getVariable()) return menuPadrao.call(this);
   const ws = this.getSourceBlock()?.workspace;
   const tipos = Array.isArray(this.variableTypes) ? this.variableTypes : [];
   const opcoes = (ws ? ws.getVariableMap().getAllVariables() : [])
     .filter((v) => tipos.length === 0 || tipos.includes(v.getType()))
     .sort(Blockly.Variables.compareByName)
     .map((v) => [v.getName(), v.getId()]);
-  return opcoes.length > 0 ? opcoes : [[MARCADOR_AUSENTE, '']];
+  const variavel = this.getVariable();
+  if (!variavel) return opcoes.length > 0 ? opcoes : [[MARCADOR_AUSENTE, '']];
+  return [
+    ...opcoes,
+    [TEXTOS.menuRenomearVariavel, RENOMEAR],
+    [TEXTOS.menuMudarTipoVariavel, MUDAR_TIPO],
+    [TEXTOS.menuApagarVariavel(variavel.getName()), APAGAR],
+  ];
 };
 
 let registrado = false;

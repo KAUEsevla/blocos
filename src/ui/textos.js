@@ -17,4 +17,8 @@ export const TEXTOS = Object.freeze({
   renomearVariavelBotao: 'Renomear',
   tipoVariavelTitulo: (nome) => `Mudar o tipo de ${nome}`,
   tipoVariavelBotao: 'Mudar o tipo',
+  // Menu do campo de variável (spec 002, T039).
+  menuRenomearVariavel: 'Renomear variável…',
+  menuMudarTipoVariavel: 'Mudar o tipo…',
+  menuApagarVariavel: (nome) => `Apagar a variável “${nome}”`,
 });
