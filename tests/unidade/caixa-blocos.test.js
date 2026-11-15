@@ -88,6 +88,8 @@ describe('caixa de blocos da spec 003', () => {
     expect(valores.contents).toEqual([
       { kind: 'block', type: 'numero' },
       { kind: 'block', type: 'texto' },
+      // Spec 006 (R-12): o valor fixo lógico.
+      { kind: 'block', type: 'logico', fields: { VALOR: 'verdadeiro' } },
     ]);
     // Spec 006 (R-12): Contas ganha o negativo depois da conta.
     expect(contas.contents).toEqual([

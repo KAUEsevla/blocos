@@ -40,6 +40,7 @@ export const CAIXA_BLOCOS = Object.freeze({
       contents: [
         { kind: 'block', type: 'numero' },
         { kind: 'block', type: 'texto' },
+        { kind: 'block', type: 'logico', fields: { VALOR: 'verdadeiro' } },
       ],
     },
     {
