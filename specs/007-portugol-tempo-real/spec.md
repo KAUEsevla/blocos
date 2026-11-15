@@ -4,7 +4,7 @@
 
 **Criada em**: 2026-11-08
 
-**Status**: Rascunho
+**Status**: Aprovada
 
 **Rastreia**: RF-07
 
@@ -31,7 +31,7 @@ nenhuma outra ação; apagar o bloco e verificar que a linha some.
    Portugol passa a mostrar 8.
 3. **Dado** o nome do programa "MeuPrograma", **Quando** o estudante muda para
    "Media", **Então** a primeira linha passa a ser `algoritmo "Media"`.
-4. **Dado** um programa com blocos, **Quando** o estudante desfaz a última ação,
+4. **Dado** um programa com blocos, **Quando** o estudante desfaz a última ação nos blocos,
    **Então** o Portugol volta ao que era antes dela.
 
 ---
@@ -39,7 +39,9 @@ nenhuma outra ação; apagar o bloco e verificar que a linha some.
 ### História 2 - Blocos soltos não entram no programa (Prioridade: P2)
 
 Blocos que estão na área de trabalho mas não estão encaixados no programa não
-aparecem no Portugol e ficam visualmente marcados como "fora do programa".
+aparecem no Portugol e ficam visualmente marcados como "fora do programa". Blocos
+encaixados uns nos outros fora do programa formam uma pilha solta (um bloco sozinho
+também é uma pilha); a marca fica só no primeiro bloco de cada pilha.
 
 **Por que esta prioridade**: ensina que só o que está encaixado faz parte do
 programa e evita Portugol com comandos perdidos.
@@ -50,10 +52,13 @@ aparece no Portugol e está marcado.
 **Cenários de aceitação**:
 
 1. **Dado** um bloco escreva solto na área de trabalho, **Quando** o Portugol é
-   gerado, **Então** ele não aparece no código e o bloco mostra o aviso "Este bloco
+   gerado, **Então** ele não aparece no código e o bloco mostra o aviso "Esta pilha
    está fora do programa".
 2. **Dado** esse bloco solto, **Quando** o estudante o encaixa no programa, **Então**
    o aviso some e a linha aparece no Portugol.
+3. **Dado** uma pilha de três blocos encaixados entre si, solta fora do programa,
+   **Quando** o Portugol é gerado, **Então** nenhum dos três aparece no código e só o
+   primeiro bloco da pilha mostra o aviso "Esta pilha está fora do programa".
 
 ### Casos de borda
 
@@ -73,7 +78,9 @@ aparece no Portugol e está marcado.
   atualizar o painel Portugol sem ação do estudante.
 - **FR-002**: A atualização DEVE acontecer em até 1 segundo após a alteração.
 - **FR-003**: Apenas os blocos encaixados no programa DEVEM entrar no Portugol.
-- **FR-004**: Blocos soltos DEVEM ser marcados visualmente como fora do programa.
+- **FR-004**: Blocos soltos DEVEM ser marcados visualmente como fora do programa: o
+  primeiro bloco de cada pilha solta mostra o aviso "Esta pilha está fora do
+  programa"; os demais blocos da pilha não recebem aviso próprio.
 - **FR-005**: A posição de rolagem do painel Portugol DEVE ser mantida ao atualizar,
   para o estudante não perder de vista o trecho que está lendo.
 - **FR-006**: O editor DEVE permitir desfazer e refazer alterações nos blocos.
