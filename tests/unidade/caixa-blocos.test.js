@@ -110,3 +110,12 @@ describe('caixa de blocos da spec 003', () => {
     expect(conteudoCategoriaEntradaSaida(lista)).toEqual(conteudoCategoriaEntradaSaida(lista));
   });
 });
+
+describe('itens de bloco das categorias estáticas', () => {
+  it('não são congelados: o Blockly acrescenta propriedades a eles ao montar a caixa', () => {
+    for (const categoria of CAIXA_BLOCOS.contents.filter((c) => Array.isArray(c.contents))) {
+      expect(Object.isFrozen(categoria)).toBe(false);
+      for (const item of categoria.contents) expect(Object.isExtensible(item)).toBe(true);
+    }
+  });
+});

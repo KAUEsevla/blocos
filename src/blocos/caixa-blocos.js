@@ -29,21 +29,23 @@ export const CAIXA_BLOCOS = Object.freeze({
       custom: CATEGORIA_ENTRADA_SAIDA,
       colour: COR_ENTRADA_SAIDA,
     }),
-    Object.freeze({
+    // Categorias estáticas não são congeladas: o Blockly acrescenta propriedades aos itens de
+    // bloco ao montar a caixa (por exemplo "enabled").
+    {
       kind: 'category',
       name: 'Valores',
       colour: COR_VALORES,
-      contents: Object.freeze([
-        Object.freeze({ kind: 'block', type: 'numero' }),
-        Object.freeze({ kind: 'block', type: 'texto' }),
-      ]),
-    }),
-    Object.freeze({
+      contents: [
+        { kind: 'block', type: 'numero' },
+        { kind: 'block', type: 'texto' },
+      ],
+    },
+    {
       kind: 'category',
       name: 'Contas',
       colour: COR_CONTAS,
-      contents: Object.freeze([Object.freeze({ kind: 'block', type: 'aritmetico', fields: { OP: '+' } })]),
-    }),
+      contents: [{ kind: 'block', type: 'aritmetico', fields: { OP: '+' } }],
+    },
   ]),
 });
 
