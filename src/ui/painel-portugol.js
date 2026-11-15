@@ -1,12 +1,22 @@
 // Painel Portugol: somente leitura, com "Copiar código" (RF-01, RNF-03; spec 001, FR-004;
-// research R-06). Interface, fora da cobertura.
+// research R-06). Mantém a rolagem ao atualizar (spec 007, FR-005; research R-06).
+// Interface, fora da cobertura.
 import { TEXTOS } from './textos.js';
 
 const DURACAO_MENSAGEM_MS = 3000;
 let temporizador = null;
 
 export function mostrarCodigo(pre, codigo) {
+  if (pre.textContent === codigo) return;
+  // Quem rola é o corpo do painel, não o <pre>.
+  const rolagem = pre.parentElement;
+  const topo = rolagem?.scrollTop ?? 0;
+  const esquerda = rolagem?.scrollLeft ?? 0;
   pre.textContent = codigo;
+  if (rolagem) {
+    rolagem.scrollTop = topo;
+    rolagem.scrollLeft = esquerda;
+  }
 }
 
 function copiarPorSelecao(pre) {
