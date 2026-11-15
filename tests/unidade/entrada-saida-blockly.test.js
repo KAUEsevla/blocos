@@ -1,0 +1,130 @@
+// Comportamento do Blockly 12.5.1 em que os blocos da spec 003 se apoiam (research R-04, R-05,
+// R-07; contracts/editor-entrada-saida.md). Blockly headless, como variaveis-blockly.test.js.
+import { describe, it, expect, beforeAll, beforeEach } from 'vitest';
+import * as Blockly from 'blockly';
+import { registroPadrao } from '../../src/blocos/registro.js';
+import { registrarCampoVariavel } from '../../src/ui/campo-variavel.js';
+import { registrarMutadorEscreva } from '../../src/ui/mutador-escreva.js';
+import { registrarValidadorNumero } from '../../src/ui/validador-numero.js';
+import { gerarPortugol } from '../../src/portugol/gerador.js';
+import { projetoVazio } from '../../src/projeto/formato.js';
+
+const salvar = (ws) => {
+  const s = Blockly.serialization.workspaces.save(ws);
+  delete s.variables;
+  return s;
+};
+
+const txt = (t) => ({ block: { type: 'texto', fields: { TEXTO: t } } });
+
+function escrevaCom(valores, extraState) {
+  const inputs = {};
+  valores.forEach((t, i) => (inputs[`VALOR${i + 1}`] = txt(t)));
+  const b = { type: 'escreva', id: 'e1', x: 0, y: 0, inputs };
+  if (extraState) b.extraState = extraState;
+  return { blocks: { languageVersion: 0, blocks: [b] } };
+}
+
+const encaixes = (bloco) => bloco.inputList.filter((i) => /^VALOR\d+$/.test(i.name)).map((i) => i.name);
+
+describe('escreva no Blockly (research R-04)', () => {
+  let ws;
+
+  beforeAll(() => {
+    registrarCampoVariavel();
+    registrarMutadorEscreva();
+    registrarValidadorNumero();
+    Blockly.defineBlocksWithJsonArray(registroPadrao.tiposRegistrados().map((t) => registroPadrao.obter(t).definicao));
+  });
+
+  beforeEach(() => {
+    ws = new Blockly.Workspace();
+  });
+
+  it('extraState { valores: 3 } cria VALOR1..VALOR3 e volta igual ao salvar', () => {
+    Blockly.serialization.workspaces.load(escrevaCom(['a', 'b', 'c'], { valores: 3 }), ws);
+    const b = ws.getBlockById('e1');
+    expect(encaixes(b)).toEqual(['VALOR1', 'VALOR2', 'VALOR3']);
+    const salvo = salvar(ws).blocks.blocks[0];
+    expect(salvo.extraState).toEqual({ valores: 3 });
+    expect(Object.keys(salvo.inputs)).toEqual(['VALOR1', 'VALOR2', 'VALOR3']);
+  });
+
+  it('sem extraState o bloco tem um encaixe', () => {
+    Blockly.serialization.workspaces.load(escrevaCom(['a']), ws);
+    expect(encaixes(ws.getBlockById('e1'))).toEqual(['VALOR1']);
+  });
+
+  it('extraState acima de 10 carrega com 10 encaixes', () => {
+    Blockly.serialization.workspaces.load(escrevaCom([], { valores: 50 }), ws);
+    expect(encaixes(ws.getBlockById('e1'))).toHaveLength(10);
+  });
+
+  it('o Portugol depois da ida e volta é igual ao do JSON original', () => {
+    const projeto = projetoVazio();
+    projeto.blocos.blocks.blocks[0].inputs = {
+      COMANDOS: {
+        block: {
+          type: 'escreva',
+          extraState: { valores: 2 },
+          inputs: { VALOR1: txt('Idade: '), VALOR2: { block: { type: 'numero', fields: { NUM: '15' } } } },
+        },
+      },
+    };
+    const antes = gerarPortugol(projeto).codigo;
+    Blockly.serialization.workspaces.load(projeto.blocos, ws);
+    expect(gerarPortugol({ ...projeto, blocos: salvar(ws) }).codigo).toBe(antes);
+    expect(antes).toContain('    escreva("Idade: ", 15)');
+  });
+
+  it('acrescentar e tirar valor mudam os encaixes e o estado salvo', () => {
+    Blockly.serialization.workspaces.load(escrevaCom(['a']), ws);
+    const b = ws.getBlockById('e1');
+    b.acrescentarValor();
+    expect(encaixes(b)).toEqual(['VALOR1', 'VALOR2']);
+    expect(b.saveExtraState()).toEqual({ valores: 2 });
+    b.tirarValor();
+    expect(encaixes(b)).toEqual(['VALOR1']);
+  });
+
+  it('tirar o encaixe com bloco deixa o bloco solto, e um desfazer volta tudo', async () => {
+    Blockly.serialization.workspaces.load(escrevaCom(['a', 'b'], { valores: 2 }), ws);
+    ws.clearUndo();
+    const b = ws.getBlockById('e1');
+    const filho = b.getInputTargetBlock('VALOR2');
+    b.tirarValor();
+    expect(encaixes(b)).toEqual(['VALOR1']);
+    expect(filho.isDisposed()).toBe(false);
+    expect(filho.getParent()).toBeNull();
+    expect(ws.getTopBlocks(false)).toHaveLength(2);
+    // O Blockly entrega os eventos à pilha do desfazer num setTimeout(0).
+    await new Promise((r) => setTimeout(r, 0));
+    ws.undo(false);
+    expect(encaixes(b)).toEqual(['VALOR1', 'VALOR2']);
+    expect(b.getInputTargetBlock('VALOR2')).toBe(filho);
+    expect(ws.getTopBlocks(false)).toHaveLength(1);
+  });
+
+  it('nos limites, acrescentar com 10 e tirar com 1 não mudam nada', () => {
+    Blockly.serialization.workspaces.load(escrevaCom([], { valores: 10 }), ws);
+    const b = ws.getBlockById('e1');
+    b.acrescentarValor();
+    expect(encaixes(b)).toHaveLength(10);
+    Blockly.serialization.workspaces.load(escrevaCom(['a']), ws);
+    const c = ws.getBlockById('e1');
+    c.tirarValor();
+    expect(encaixes(c)).toEqual(['VALOR1']);
+  });
+
+  it('o validador do número recusa 12a e guarda 3,5 como 3.5 (research R-07)', () => {
+    const n = ws.newBlock('numero');
+    const campo = n.getField('NUM');
+    expect(campo.getValue()).toBe('0');
+    campo.setValue('12a');
+    expect(campo.getValue()).toBe('0');
+    campo.setValue('3,5');
+    expect(campo.getValue()).toBe('3.5');
+    campo.setValue('007');
+    expect(campo.getValue()).toBe('7');
+  });
+});
