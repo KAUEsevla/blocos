@@ -8,6 +8,7 @@ import { TIPOS_VARIAVEL } from '../projeto/formato.js';
 import { COR_VALORES } from './valores.js';
 import { COR_CONTAS } from './contas.js';
 import { COR_COMPARACOES } from './comparacoes.js';
+import { COR_LOGICA } from './logica.js';
 
 export const CATEGORIA_VARIAVEIS = 'VARIAVEIS';
 export const BOTAO_CRIAR_VARIAVEL = 'CRIAR_VARIAVEL';
@@ -57,6 +58,16 @@ export const CAIXA_BLOCOS = Object.freeze({
       name: 'Comparações',
       colour: COR_COMPARACOES,
       contents: [{ kind: 'block', type: 'relacional', fields: { OP: '=' } }],
+    },
+    {
+      kind: 'category',
+      name: 'Lógica',
+      colour: COR_LOGICA,
+      contents: [
+        { kind: 'block', type: 'e_ou', fields: { OP: 'e' } },
+        { kind: 'block', type: 'e_ou', fields: { OP: 'ou' } },
+        { kind: 'block', type: 'nao' },
+      ],
     },
   ]),
 });

@@ -173,4 +173,26 @@ describe('caixa de blocos da spec 006', () => {
       contents: [{ kind: 'block', type: 'relacional', fields: { OP: '=' } }],
     });
   });
+
+  it('Lógica vem por último, com e, ou e não, e a ordem completa das categorias', async () => {
+    const { COR_LOGICA } = await import('../../src/blocos/logica.js');
+    expect(CAIXA_BLOCOS.contents.map((c) => c.name)).toEqual([
+      'Variáveis',
+      'Entrada e saída',
+      'Valores',
+      'Contas',
+      'Comparações',
+      'Lógica',
+    ]);
+    expect(categoria('Lógica')).toEqual({
+      kind: 'category',
+      name: 'Lógica',
+      colour: COR_LOGICA,
+      contents: [
+        { kind: 'block', type: 'e_ou', fields: { OP: 'e' } },
+        { kind: 'block', type: 'e_ou', fields: { OP: 'ou' } },
+        { kind: 'block', type: 'nao' },
+      ],
+    });
+  });
 });
