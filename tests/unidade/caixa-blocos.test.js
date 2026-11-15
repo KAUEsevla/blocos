@@ -75,3 +75,38 @@ describe('conteudoCategoriaVariaveis', () => {
     ]);
   });
 });
+
+// Spec 003, research R-09 (contracts/blocos-entrada-saida.md, "Caixa de blocos").
+describe('caixa de blocos da spec 003', () => {
+  it('categorias em ordem: Variáveis, Entrada e saída, Valores, Contas', async () => {
+    const { CATEGORIA_ENTRADA_SAIDA } = await import('../../src/blocos/caixa-blocos.js');
+    expect(CATEGORIA_ENTRADA_SAIDA).toBe('ENTRADA_SAIDA');
+    expect(CAIXA_BLOCOS.contents.map((c) => c.name)).toEqual(['Variáveis', 'Entrada e saída', 'Valores', 'Contas']);
+    const [, es, valores, contas] = CAIXA_BLOCOS.contents;
+    expect(es).toMatchObject({ kind: 'category', custom: 'ENTRADA_SAIDA' });
+    expect(valores.contents).toEqual([
+      { kind: 'block', type: 'numero' },
+      { kind: 'block', type: 'texto' },
+    ]);
+    expect(contas.contents).toEqual([{ kind: 'block', type: 'aritmetico', fields: { OP: '+' } }]);
+  });
+
+  it('Entrada e saída começa com um escreva com o texto “Olá, mundo!” encaixado (bloco normal)', async () => {
+    const { conteudoCategoriaEntradaSaida } = await import('../../src/blocos/caixa-blocos.js');
+    const [primeiro] = conteudoCategoriaEntradaSaida([]);
+    expect(primeiro).toEqual({
+      kind: 'block',
+      type: 'escreva',
+      inputs: { VALOR1: { block: { type: 'texto', fields: { TEXTO: 'Olá, mundo!' } } } },
+    });
+    expect(JSON.stringify(primeiro)).not.toContain('shadow');
+  });
+
+  it('entrada que não é lista não lança e é pura', async () => {
+    const { conteudoCategoriaEntradaSaida } = await import('../../src/blocos/caixa-blocos.js');
+    expect(() => conteudoCategoriaEntradaSaida(undefined)).not.toThrow();
+    expect(() => conteudoCategoriaEntradaSaida('x')).not.toThrow();
+    const lista = [{ id: 'v1', nome: 'a', tipo: 'inteiro' }];
+    expect(conteudoCategoriaEntradaSaida(lista)).toEqual(conteudoCategoriaEntradaSaida(lista));
+  });
+});
