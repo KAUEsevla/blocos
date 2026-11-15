@@ -127,7 +127,8 @@ O estudante usa blocos de número, de texto e de lógico (verdadeiro/falso).
 - Os blocos de número, de texto e de conta aritmética (`+ - * / %`) foram entregues pela
   spec 003 ([research R-03 da 003](../003-blocos-leia-escreva/research.md)), seguindo
   FR-001 (sem o negativo), FR-004 (número e texto), FR-005, FR-006, FR-007 e FR-008 desta
-  spec. A 006 os amplia sem mudar `type`, campos ou variantes.
+  spec. A 006 os amplia sem mudar a forma nem as opções deles, e projetos já montados
+  continuam abrindo iguais.
 - O bloco "se" é da spec 004. Até ela existir, o teste independente da História 2 usa
   comparações dentro de "escreva" e de "variável recebe valor"; o "se idade >= 18" é
   conferido na 004.

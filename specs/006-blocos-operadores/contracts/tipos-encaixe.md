@@ -95,3 +95,11 @@ célula pelo teste.
 | `para` (005) | de, até, passo | `['Numero']` |
 
 Assim uma variável lógica, uma comparação ou um `e`/`ou` cabem na condição, e um número não.
+
+## Regra para a spec 012
+
+Carregar um arquivo com um encaixe incompatível (por exemplo, feito à mão) faz o
+`Blockly.serialization.workspaces.load` lançar `BadConnectionCheck`, porque o verificador
+`meupia` recusa o encaixe. A 012 trata esse erro e mostra uma mensagem amigável em pt-BR,
+sem stack trace (princípio V). `encaixesIncompativeis` pode ser usada antes da carga para
+apontar quais blocos estão no lugar errado (research R-15).
