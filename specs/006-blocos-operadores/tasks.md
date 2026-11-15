@@ -72,7 +72,7 @@ verificador de encaixe e a pendência P-1. Nenhum texto de Portugol atual muda.
 
 ### Precedência
 
-- [ ] T002 [P] Criar `tests/unidade/blocos-operadores.test.js` com um `describe('escala de precedência')`: `PRECEDENCIA` congelado e exatamente igual a `{ OU: 10, E: 20, NAO: 30, RELACIONAL: 40, ADITIVO: 50, MULTIPLICATIVO: 60, UNARIO: 70, PRIMARIO: 100 }`; os valores da 003 (`ADITIVO`, `MULTIPLICATIVO`, `PRIMARIO`) não mudam. Deve falhar até T003 (R-03) (RF-06)
+- [X] T002 [P] Criar `tests/unidade/blocos-operadores.test.js` com um `describe('escala de precedência')`: `PRECEDENCIA` congelado e exatamente igual a `{ OU: 10, E: 20, NAO: 30, RELACIONAL: 40, ADITIVO: 50, MULTIPLICATIVO: 60, UNARIO: 70, PRIMARIO: 100 }`; os valores da 003 (`ADITIVO`, `MULTIPLICATIVO`, `PRIMARIO`) não mudam. Deve falhar até T003 (R-03) (RF-06)
 - [ ] T003 Em `src/portugol/precedencia.js`, acrescentar `OU: 10`, `E: 20`, `NAO: 30`, `RELACIONAL: 40` e `UNARIO: 70`, mantendo os três níveis atuais, e reescrever o comentário do topo com a escala inteira (`ou < e < nao < relacional < + - < * / % < - unário < primário`, 008/R-02) e a regra "relacional não associativo; `nao` e `negativo` pedem `PRIMARIO` do operando" (research R-03 da 006). `npm run test:unidade` inteiro verde (depende de T002) (RF-06)
 
 ### Regras de tipo (núcleo)
