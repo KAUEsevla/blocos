@@ -10,6 +10,9 @@ export const BOTAO_CRIAR_VARIAVEL = 'CRIAR_VARIAVEL';
 // Mesma cor dos blocos de variável (src/blocos/variaveis.js).
 export const COR_VARIAVEIS = 330;
 
+// Mesma cor dos blocos escreva e leia (src/blocos/entrada-saida.js; spec 003).
+export const COR_ENTRADA_SAIDA = 160;
+
 export const CAIXA_BLOCOS = Object.freeze({
   kind: 'categoryToolbox',
   contents: Object.freeze([
