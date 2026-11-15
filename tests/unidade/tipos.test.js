@@ -7,6 +7,7 @@ import {
   checkEfetivo,
   encaixesIncompativeis,
 } from '../../src/blocos/tipos.js';
+import { registroPadrao } from '../../src/blocos/registro.js';
 
 // Entradas de registro mínimas, montadas aqui: os blocos novos ainda não existem.
 const entrada = (tipo, definicao, extra = {}) => ({ tipo, definicao: { type: tipo, ...definicao }, ...extra });
@@ -150,5 +151,90 @@ describe('encaixesIncompativeis', () => {
       inputs: { A: { shadow: no('log', 's1') }, B: { block: no('desconhecido', 'x1') } },
     });
     expect(encaixesIncompativeis(e, registro, {})).toEqual([]);
+  });
+});
+
+// Matriz do SC-002 com os blocos reais (contracts/tipos-encaixe.md, "Matriz do SC-002").
+describe('matriz do SC-002', () => {
+  const saida = (tipo, tipoVariavel) => checkEfetivo(registroPadrao.obter(tipo), 'saida', tipoVariavel);
+  const encaixe = (tipo, nome, tipoVariavel) => checkEfetivo(registroPadrao.obter(tipo), nome, tipoVariavel);
+
+  const FILHOS = {
+    numero: saida('numero'),
+    texto: saida('texto'),
+    logico: saida('logico'),
+    aritmetico: saida('aritmetico'),
+    negativo: saida('negativo'),
+    relacional: saida('relacional'),
+    e_ou: saida('e_ou'),
+    nao: saida('nao'),
+    'variavel inteiro': saida('variavel', 'inteiro'),
+    'variavel real': saida('variavel', 'real'),
+    'variavel cadeia': saida('variavel', 'cadeia'),
+    'variavel logico': saida('variavel', 'logico'),
+    'variavel sem variável': saida('variavel', undefined),
+  };
+
+  const ENCAIXES = {
+    'aritmetico A': encaixe('aritmetico', 'A'),
+    'aritmetico B': encaixe('aritmetico', 'B'),
+    'negativo X': encaixe('negativo', 'X'),
+    'relacional A': encaixe('relacional', 'A'),
+    'relacional B': encaixe('relacional', 'B'),
+    'e_ou A': encaixe('e_ou', 'A'),
+    'e_ou B': encaixe('e_ou', 'B'),
+    'nao X': encaixe('nao', 'X'),
+    'recebe inteiro': encaixe('variavel_recebe', 'VALOR', 'inteiro'),
+    'recebe real': encaixe('variavel_recebe', 'VALOR', 'real'),
+    'recebe cadeia': encaixe('variavel_recebe', 'VALOR', 'cadeia'),
+    'recebe logico': encaixe('variavel_recebe', 'VALOR', 'logico'),
+    'recebe sem variável': encaixe('variavel_recebe', 'VALOR', undefined),
+    'escreva VALOR1': encaixe('escreva', 'VALOR1'),
+  };
+
+  // Uma linha por filho; colunas na ordem de ENCAIXES. 1 = encaixa, 0 = não encaixa.
+  //              ari ari neg rel rel eou eou nao  int real cad log sem  esc
+  const TABELA = {
+    numero:                  [1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 0, 0, 1, 1],
+    texto:                   [1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 1, 1],
+    logico:                  [0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1],
+    aritmetico:              [1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 1, 1],
+    negativo:                [1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 0, 0, 1, 1],
+    relacional:              [0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1],
+    e_ou:                    [0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1],
+    nao:                     [0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1],
+    'variavel inteiro':      [1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 0, 0, 1, 1],
+    'variavel real':         [1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 0, 0, 1, 1],
+    'variavel cadeia':       [1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 1, 1],
+    'variavel logico':       [0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1],
+    'variavel sem variável': [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+  };
+
+  const nomesEncaixes = Object.keys(ENCAIXES);
+  const celulas = Object.entries(TABELA).flatMap(([filho, linha]) =>
+    linha.map((esperado, i) => [filho, nomesEncaixes[i], esperado === 1]),
+  );
+
+  it('a tabela cobre todos os filhos e encaixes', () => {
+    expect(Object.keys(TABELA)).toEqual(Object.keys(FILHOS));
+    for (const linha of Object.values(TABELA)) expect(linha).toHaveLength(nomesEncaixes.length);
+  });
+
+  it.each(celulas)('%s em %s → %s', (filho, nomeEncaixe, esperado) => {
+    expect(compativeis(ENCAIXES[nomeEncaixe], FILHOS[filho])).toBe(esperado);
+  });
+
+  it('nenhum valor só lógico encaixa onde só cabe número, e vice-versa', () => {
+    const so = (check, tipo) => Array.isArray(check) && check.length > 0 && check.every((t) => t === tipo);
+    const violacoes = [];
+    for (const [filho, checkFilho] of Object.entries(FILHOS)) {
+      for (const [nome, checkEncaixe] of Object.entries(ENCAIXES)) {
+        const cruzado =
+          (so(checkFilho, 'Logico') && so(checkEncaixe, 'Numero')) ||
+          (so(checkFilho, 'Numero') && so(checkEncaixe, 'Logico'));
+        if (cruzado && compativeis(checkEncaixe, checkFilho)) violacoes.push(`${filho} → ${nome}`);
+      }
+    }
+    expect(violacoes).toEqual([]);
   });
 });
