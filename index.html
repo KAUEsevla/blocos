@@ -64,6 +64,28 @@
       </div>
     </dialog>
 
+    <dialog id="dialogo-variavel" aria-labelledby="variavel-titulo">
+      <form method="dialog">
+        <h2 id="variavel-titulo"></h2>
+        <label id="variavel-rotulo-nome" class="dialogo-campo">Nome
+          <input id="variavel-nome" maxlength="30" autocomplete="off" spellcheck="false">
+        </label>
+        <label id="variavel-rotulo-tipo" class="dialogo-campo">Tipo
+          <select id="variavel-tipo">
+            <option value="inteiro">inteiro (número sem vírgula)</option>
+            <option value="real">real (número com vírgula)</option>
+            <option value="cadeia">cadeia (texto)</option>
+            <option value="logico">logico (verdadeiro ou falso)</option>
+          </select>
+        </label>
+        <p id="variavel-erro" role="alert"></p>
+        <div class="dialogo-botoes">
+          <button type="button" id="variavel-cancelar">Cancelar</button>
+          <button type="submit" id="variavel-confirmar"></button>
+        </div>
+      </form>
+    </dialog>
+
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>
