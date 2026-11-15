@@ -89,7 +89,7 @@ describe('registro de blocos (RF-08)', () => {
   });
 
   it('o registro padrão tem o programa e os blocos de variável da 002, nessa ordem', () => {
-    expect(registroPadrao.tiposRegistrados()).toEqual(['programa', 'variavel_recebe', 'variavel', 'escreva', 'texto', 'numero']);
+    expect(registroPadrao.tiposRegistrados()).toEqual(['programa', 'variavel_recebe', 'variavel', 'escreva', 'texto', 'numero', 'aritmetico']);
     expect(registroPadrao.obter('variavel_recebe').categoria).toBe('comando');
     expect(registroPadrao.obter('variavel').categoria).toBe('valor');
   });
