@@ -4,7 +4,7 @@
 
 **Criada em**: 2026-11-08
 
-**Status**: Rascunho
+**Status**: Implementada
 
 **Rastreia**: RF-01 · RNF-03 (pt-BR)
 

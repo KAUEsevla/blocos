@@ -8,7 +8,7 @@ import { TEXTOS } from '../../src/ui/textos.js';
 const RAIZ = join(import.meta.dirname, '..', '..');
 const html = readFileSync(join(RAIZ, 'index.html'), 'utf8');
 
-const PALAVRAS_INGLES = ['Run', 'Save', 'Load', 'New', 'Copy', 'Cancel', 'OK'];
+const PALAVRAS_INGLES = ['Run', 'Save', 'Load', 'New', 'Copy', 'Cancel', 'OK', 'Undo', 'Redo'];
 const CHAVES_TEXTOS = [
   'orientacaoSaida',
   'copiaOk',
@@ -113,6 +113,34 @@ describe('estrutura da tela (RF-01, RNF-03)', () => {
     expect(portugol).toContain('id="codigo-portugol"');
 
     expect(trecho('section', 'painel-saida')).toMatch(/<div id="saida"/);
+  });
+
+  it('painel Blocos com Desfazer e Refazer no cabeçalho (spec 007, FR-006)', () => {
+    const blocos = trecho('section', 'painel-blocos');
+    const inicioCabecalho = blocos.search(/<div class="painel-cabecalho">/);
+    const fimCabecalho = blocos.indexOf('</div>', inicioCabecalho);
+    expect(inicioCabecalho, 'cabeçalho do painel Blocos').toBeGreaterThanOrEqual(0);
+    const cabecalho = blocos.slice(inicioCabecalho, fimCabecalho);
+
+    const botoes = [
+      ['titulo-blocos', null, null],
+      ['botao-desfazer', 'Desfazer', 'Desfazer (Ctrl+Z)'],
+      ['botao-refazer', 'Refazer', 'Refazer (Ctrl+Y)'],
+    ];
+    let anterior = -1;
+    for (const [id, texto, dica] of botoes) {
+      const pos = posicao(cabecalho, `id="${id}"`);
+      expect(pos, `${id} no cabeçalho, nessa ordem`).toBeGreaterThan(anterior);
+      anterior = pos;
+      if (!texto) continue;
+      const tag = tagComId(id);
+      expect(tag).toMatch(/^<button\b/);
+      expect(tag).toMatch(/type="button"/);
+      expect(tag).toMatch(/\bdisabled\b/);
+      expect(tag).toMatch(new RegExp(`title="${dica.replace(/[()+]/g, '\\$&')}"`));
+      expect(trecho('button', id)).toMatch(new RegExp(`>${texto}</button>$`));
+    }
+    expect(cabecalho).toMatch(/<h2 id="titulo-blocos">Blocos<\/h2>/);
   });
 
   it('diálogo de confirmação com botões em pt-BR', () => {

@@ -63,8 +63,25 @@ export function serializarBlocos(ws) {
   return salvo;
 }
 
-export function aoMudar(ws, callback) {
-  ws.addChangeListener((evento) => {
-    if (!evento.isUiEvent) callback(evento);
-  });
+// Repassa TODOS os eventos, inclusive os de interface: quem decide quando gerar é o
+// atualizador do núcleo (spec 007, research R-02; contracts/editor.md). "arrastando" vale
+// só para o evento em que chega.
+export function ouvirEventos(ws, notificar) {
+  ws.addChangeListener((evento) => notificar(evento, { arrastando: ws.isDragging() }));
+}
+
+// Desfazer e refazer usam a pilha do próprio Blockly (spec 007, FR-006; research R-05).
+export function desfazer(ws) {
+  ws.undo(false);
+}
+
+export function refazer(ws) {
+  ws.undo(true);
+}
+
+export function estadoDesfazer(ws) {
+  return {
+    podeDesfazer: ws.getUndoStack().length > 0,
+    podeRefazer: ws.getRedoStack().length > 0,
+  };
 }

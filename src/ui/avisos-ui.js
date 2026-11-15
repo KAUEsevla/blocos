@@ -1,10 +1,15 @@
-// Avisos de bloco incompleto na interface (RF-08, FR-005; fora da cobertura).
-// aplicarAvisos marca os blocos; renderizarAvisos e destacarBloco ficam prontos para a spec 009.
+// Avisos nos blocos (fora da cobertura): bloco incompleto (RF-08, FR-005) e pilha fora do
+// programa (RF-07; spec 007, FR-004). Cada tipo usa a sua chave no setWarningText, para que
+// limpar um não apague o outro (contracts/editor.md). renderizarAvisos e destacarBloco
+// ficam prontos para a spec 009.
 
+// workspace → (chave → ids marcados)
 const marcadosPorWorkspace = new WeakMap();
 
-export function aplicarAvisos(workspace, avisos) {
-  const anteriores = marcadosPorWorkspace.get(workspace) ?? new Set();
+export function aplicarAvisos(workspace, avisos, chave = 'incompleto') {
+  const porChave = marcadosPorWorkspace.get(workspace) ?? new Map();
+  marcadosPorWorkspace.set(workspace, porChave);
+  const anteriores = porChave.get(chave) ?? new Set();
   const mensagensPorBloco = new Map();
   for (const aviso of avisos) {
     const lista = mensagensPorBloco.get(aviso.blocoId) ?? [];
@@ -13,12 +18,12 @@ export function aplicarAvisos(workspace, avisos) {
   }
 
   for (const id of anteriores) {
-    if (!mensagensPorBloco.has(id)) workspace.getBlockById(id)?.setWarningText(null);
+    if (!mensagensPorBloco.has(id)) workspace.getBlockById(id)?.setWarningText(null, chave);
   }
   for (const [id, mensagens] of mensagensPorBloco) {
-    workspace.getBlockById(id)?.setWarningText(mensagens.join('\n'));
+    workspace.getBlockById(id)?.setWarningText(mensagens.join('\n'), chave);
   }
-  marcadosPorWorkspace.set(workspace, new Set(mensagensPorBloco.keys()));
+  porChave.set(chave, new Set(mensagensPorBloco.keys()));
 }
 
 export function renderizarAvisos(container, avisos, aoClicar) {

@@ -1,10 +1,22 @@
 // Bootstrap da página do meuPiá Blocos (fora da cobertura: interface).
-// Tela de três painéis da spec 001; a atualização em tempo real completa é da 007.
+// Tela de três painéis da spec 001, com o Portugol em tempo real da spec 007: o
+// atualizador do núcleo decide quando gerar (contracts/editor.md, seção src/main.js).
 import './estilos.css';
 import { projetoVazio } from './projeto/formato.js';
 import { assinaturaProjeto, haAlteracoes } from './projeto/alteracoes.js';
 import { gerarPortugol } from './portugol/gerador.js';
-import { criarWorkspace, recarregarBlocos, serializarBlocos, aoMudar } from './ui/workspace.js';
+import { criarAtualizacaoTempoReal } from './portugol/tempo-real.js';
+import { blocosForaDoPrograma } from './portugol/fora-do-programa.js';
+import {
+  criarWorkspace,
+  recarregarBlocos,
+  serializarBlocos,
+  ouvirEventos,
+  desfazer,
+  refazer,
+  estadoDesfazer,
+} from './ui/workspace.js';
+import { ligarBotoesDesfazer, atualizarBotoesDesfazer } from './ui/barra-blocos.js';
 import { aplicarAvisos } from './ui/avisos-ui.js';
 import { criarPainelSaida } from './ui/painel-saida.js';
 import { mostrarCodigo, copiarCodigo } from './ui/painel-portugol.js';
@@ -30,11 +42,20 @@ function projetoAtual() {
 let referencia = assinaturaProjeto(projetoAtual());
 
 function atualizarPortugol() {
-  const resultado = gerarPortugol(projetoAtual());
+  const projetoGerado = projetoAtual();
+  const resultado = gerarPortugol(projetoGerado);
   ultimoCodigo = resultado.codigo;
   mostrarCodigo(preCodigo, resultado.codigo);
-  aplicarAvisos(ws, resultado.avisos);
+  aplicarAvisos(ws, resultado.avisos, 'incompleto');
+  // A marca de pilha solta não entra em resultado.avisos: não bloqueia Executar (R-04).
+  aplicarAvisos(ws, blocosForaDoPrograma(projetoGerado.blocos), 'fora-do-programa');
+  atualizarBotoesDesfazer(estadoDesfazer(ws));
 }
+
+const tempoReal = criarAtualizacaoTempoReal({
+  atualizar: atualizarPortugol,
+  agendar: (fn) => requestAnimationFrame(fn),
+});
 
 async function novoProjeto() {
   if (haAlteracoes(projetoAtual(), referencia)) {
@@ -49,7 +70,7 @@ async function novoProjeto() {
   projeto = projetoVazio();
   definirNome(projeto.nome);
   recarregarBlocos(ws, projeto.blocos);
-  atualizarPortugol();
+  tempoReal.atualizarAgora();
   saida.mostrarOrientacao();
   referencia = assinaturaProjeto(projetoAtual());
 }
@@ -58,7 +79,7 @@ ligarBarra({
   aoMudarNome(nome) {
     // Valor bruto: o gerador saneia (sanearNomePrograma).
     projeto.nome = nome;
-    atualizarPortugol();
+    tempoReal.solicitar();
   },
   aoNovo: novoProjeto,
 });
@@ -67,6 +88,11 @@ document.getElementById('botao-copiar').addEventListener('click', () => {
   copiarCodigo(ultimoCodigo, { pre: preCodigo, mensagem: mensagemCopia });
 });
 
-aoMudar(ws, atualizarPortugol);
-atualizarPortugol();
+ligarBotoesDesfazer({
+  aoDesfazer: () => desfazer(ws),
+  aoRefazer: () => refazer(ws),
+});
+
+ouvirEventos(ws, tempoReal.notificar);
+tempoReal.atualizarAgora();
 saida.mostrarOrientacao();
