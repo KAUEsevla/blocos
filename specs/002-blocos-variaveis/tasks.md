@@ -141,7 +141,7 @@ que espere um valor (FR-006).
 ### Testes da História 3
 
 - [X] T031 [P] [US3] Em `tests/unidade/blocos-variaveis.test.js`, acrescentar `describe('História 3 …')`: (1) `teste_escreva [teste_soma [idade] [teste_numero 1]]` → `    escreva(idade + 1)` sem avisos (cenário 1); (2) `variavel` na condição de `teste_se` → `    se idade entao`; (3) `variavel` no valor de `variavel_recebe` de outra variável (`a <- b`) e da própria (`a <- a`); (4) `variavel` com campo sem id dentro de `teste_soma` → `??? + 1` e o aviso "Falta a variável do bloco variável" (FR-006) (RF-02)
-- [ ] T032 [P] [US3] Em `tests/unidade/caixa-blocos.test.js`, acrescentar: depois do `variavel_recebe`, um `{ kind: 'block', type: 'variavel', fields: { VAR: { id } } }` por variável na **ordem da seção `var`** (agrupada `inteiro`, `real`, `cadeia`, `logico`; ordem de criação dentro do tipo), com quatro variáveis criadas fora dessa ordem. Deve falhar até T033 (FR-006) (RF-02)
+- [X] T032 [P] [US3] Em `tests/unidade/caixa-blocos.test.js`, acrescentar: depois do `variavel_recebe`, um `{ kind: 'block', type: 'variavel', fields: { VAR: { id } } }` por variável na **ordem da seção `var`** (agrupada `inteiro`, `real`, `cadeia`, `logico`; ordem de criação dentro do tipo), com quatro variáveis criadas fora dessa ordem. Deve falhar até T033 (FR-006) (RF-02)
 
 ### Implementação da História 3
 

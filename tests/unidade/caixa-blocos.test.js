@@ -52,4 +52,26 @@ describe('conteudoCategoriaVariaveis', () => {
     expect(conteudo.slice(0, 2)).toEqual([BOTAO, recebe('v-altura')]);
     expect(conteudo.filter((item) => item.type === 'variavel_recebe')).toHaveLength(1);
   });
+
+  // História 3 (T033): um bloco de valor por variável, na ordem da seção var.
+  const valor = (id) => ({ kind: 'block', type: 'variavel', fields: { VAR: { id } } });
+
+  it('depois do "recebe", um bloco variavel por variável na ordem da seção var', () => {
+    const variaveis = Object.freeze([
+      { id: 'v-ok', nome: 'ok', tipo: 'logico' },
+      { id: 'v-nome', nome: 'nome', tipo: 'cadeia' },
+      { id: 'v-idade', nome: 'idade', tipo: 'inteiro' },
+      { id: 'v-altura', nome: 'altura', tipo: 'real' },
+      { id: 'v-anos', nome: 'anos', tipo: 'inteiro' },
+    ]);
+    expect(conteudoCategoriaVariaveis(variaveis)).toEqual([
+      BOTAO,
+      recebe('v-anos'),
+      valor('v-idade'),
+      valor('v-anos'),
+      valor('v-altura'),
+      valor('v-nome'),
+      valor('v-ok'),
+    ]);
+  });
 });
