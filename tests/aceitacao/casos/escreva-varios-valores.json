@@ -1,14 +1,21 @@
 {
-  "descricao": "escreva com vários valores junta tudo na mesma linha, sem espaço entre eles (spec 003, História 1)",
+  "descricao": "escreva com vários valores (texto, variável e números) junta tudo na mesma linha, sem espaço entre eles (spec 003, História 1, cenário 2)",
   "requisitos": [
     "RF-03",
+    "RF-06",
     "RNF-07"
   ],
   "projeto": {
     "formato": "meupia-blocos",
     "versao": 1,
     "nome": "VariosValores",
-    "variaveis": [],
+    "variaveis": [
+      {
+        "id": "v-idade",
+        "nome": "idade",
+        "tipo": "inteiro"
+      }
+    ],
     "blocos": {
       "blocks": {
         "languageVersion": 0,
@@ -22,27 +29,89 @@
             "inputs": {
               "COMANDOS": {
                 "block": {
-                  "type": "escreva",
-                  "id": "e3",
-                  "extraState": {
-                    "valores": 2
+                  "type": "variavel_recebe",
+                  "id": "r2",
+                  "fields": {
+                    "VAR": {
+                      "id": "v-idade"
+                    }
                   },
                   "inputs": {
-                    "VALOR1": {
+                    "VALOR": {
                       "block": {
-                        "type": "texto",
-                        "id": "t1",
+                        "type": "numero",
+                        "id": "n1",
                         "fields": {
-                          "TEXTO": "Idade: "
+                          "NUM": "15"
                         }
                       }
-                    },
-                    "VALOR2": {
-                      "block": {
-                        "type": "texto",
-                        "id": "t2",
-                        "fields": {
-                          "TEXTO": "15"
+                    }
+                  },
+                  "next": {
+                    "block": {
+                      "type": "escreva",
+                      "id": "e5",
+                      "extraState": {
+                        "valores": 2
+                      },
+                      "inputs": {
+                        "VALOR1": {
+                          "block": {
+                            "type": "texto",
+                            "id": "t3",
+                            "fields": {
+                              "TEXTO": "Idade: "
+                            }
+                          }
+                        },
+                        "VALOR2": {
+                          "block": {
+                            "type": "variavel",
+                            "id": "v4",
+                            "fields": {
+                              "VAR": {
+                                "id": "v-idade"
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "next": {
+                        "block": {
+                          "type": "escreva",
+                          "id": "e9",
+                          "extraState": {
+                            "valores": 3
+                          },
+                          "inputs": {
+                            "VALOR1": {
+                              "block": {
+                                "type": "texto",
+                                "id": "t6",
+                                "fields": {
+                                  "TEXTO": "a"
+                                }
+                              }
+                            },
+                            "VALOR2": {
+                              "block": {
+                                "type": "numero",
+                                "id": "n7",
+                                "fields": {
+                                  "NUM": "1"
+                                }
+                              }
+                            },
+                            "VALOR3": {
+                              "block": {
+                                "type": "numero",
+                                "id": "n8",
+                                "fields": {
+                                  "NUM": "2.5"
+                                }
+                              }
+                            }
+                          }
                         }
                       }
                     }
@@ -56,6 +125,6 @@
     }
   },
   "entrada": [],
-  "portugolEsperado": "algoritmo \"VariosValores\"\n\ninicio\n    escreva(\"Idade: \", \"15\")\nfim_algoritmo\n",
-  "saidaEsperada": "Idade: 15\n"
+  "portugolEsperado": "algoritmo \"VariosValores\"\n\nvar\n    idade: inteiro\n\ninicio\n    idade <- 15\n    escreva(\"Idade: \", idade)\n    escreva(\"a\", 1, 2.5)\nfim_algoritmo\n",
+  "saidaEsperada": "Idade: 15\na12.5\n"
 }

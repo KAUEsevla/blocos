@@ -1,0 +1,50 @@
+{
+  "descricao": "Número com zeros à esquerda (arquivo editado à mão, NUM \"007\") gera 7: o Core 1.4.1 aceita 007 no parser mas gera Python inválido (spec 003, research R-07)",
+  "requisitos": [
+    "RF-03",
+    "RF-06",
+    "RNF-07"
+  ],
+  "projeto": {
+    "formato": "meupia-blocos",
+    "versao": 1,
+    "nome": "Zeros",
+    "variaveis": [],
+    "blocos": {
+      "blocks": {
+        "languageVersion": 0,
+        "blocks": [
+          {
+            "type": "programa",
+            "id": "programa",
+            "x": 24,
+            "y": 24,
+            "deletable": false,
+            "inputs": {
+              "COMANDOS": {
+                "block": {
+                  "type": "escreva",
+                  "id": "e2",
+                  "inputs": {
+                    "VALOR1": {
+                      "block": {
+                        "type": "numero",
+                        "id": "n1",
+                        "fields": {
+                          "NUM": "007"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "entrada": [],
+  "portugolEsperado": "algoritmo \"Zeros\"\n\ninicio\n    escreva(7)\nfim_algoritmo\n",
+  "saidaEsperada": "7\n"
+}
