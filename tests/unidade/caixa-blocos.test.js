@@ -88,7 +88,11 @@ describe('caixa de blocos da spec 003', () => {
       { kind: 'block', type: 'numero' },
       { kind: 'block', type: 'texto' },
     ]);
-    expect(contas.contents).toEqual([{ kind: 'block', type: 'aritmetico', fields: { OP: '+' } }]);
+    // Spec 006 (R-12): Contas ganha o negativo depois da conta.
+    expect(contas.contents).toEqual([
+      { kind: 'block', type: 'aritmetico', fields: { OP: '+' } },
+      { kind: 'block', type: 'negativo' },
+    ]);
   });
 
   it('Entrada e saída começa com um escreva com o texto “Olá, mundo!” encaixado (bloco normal)', async () => {
