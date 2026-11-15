@@ -109,7 +109,7 @@ nunca recebe a marca e o console fica sem erros.
 
 ## Fase 5: Acabamento
 
-- [ ] T018 Rodar `npm test` (unidade + aceitação da 008 no Core real) e `npm run cobertura`; confirmar linhas e branches ≥ 80% no núcleo, com `src/portugol/tempo-real.js` e `src/portugol/fora-do-programa.js` no relatório; versionar `cobertura/` (incluindo `coverage-summary.json`, o relatório HTML e `testes.json`) e o `README.md` com a linha `**Testes:** N · **Cobertura:** X%` atualizada pelo script (depende das fases 3 e 4) (RNF-04)
+- [X] T018 Rodar `npm test` (unidade + aceitação da 008 no Core real) e `npm run cobertura`; confirmar linhas e branches ≥ 80% no núcleo, com `src/portugol/tempo-real.js` e `src/portugol/fora-do-programa.js` no relatório; versionar `cobertura/` (incluindo `coverage-summary.json`, o relatório HTML e `testes.json`) e o `README.md` com a linha `**Testes:** N · **Cobertura:** X%` atualizada pelo script (depende das fases 3 e 4) (RNF-04)
 - [ ] T019 Percorrer as seções 1 e 2 do [quickstart.md](quickstart.md) inteiras e conferir que nenhum texto novo da tela está em outro idioma (botões, `title`, menu de contexto do Blockly). Registrar no PR o que foi verificado e a lista de pendências para a 002 (seção abaixo) (depende de T018) (FR-001..FR-006) (RF-07, RNF-03)
 
 ---
