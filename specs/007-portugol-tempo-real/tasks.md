@@ -93,7 +93,7 @@ nunca recebe a marca e o console fica sem erros.
 
 ### Testes da História 2
 
-- [ ] T012 [P] [US2] Escrever `tests/unidade/fora-do-programa.test.js` para `blocosForaDoPrograma(blocos)` e `MENSAGEM_FORA_DO_PROGRAMA` com **todos** os casos da tabela "Testes" de [contracts/fora-do-programa.md](contracts/fora-do-programa.md), usando `projetoVazio()`, `bloco`, `encadear` e `projetoDeTeste({ soltos })` de `tests/auxiliares/blocos-teste.js`. Conferir que a mensagem é exatamente `"Esta pilha está fora do programa"` e que cada item tem só as chaves `blocoId` e `mensagem`. Para "entrada congelada", congelar a entrada em profundidade com uma função auxiliar local. Deve falhar até T013 (FR-003, FR-004) (RF-07)
+- [X] T012 [P] [US2] Escrever `tests/unidade/fora-do-programa.test.js` para `blocosForaDoPrograma(blocos)` e `MENSAGEM_FORA_DO_PROGRAMA` com **todos** os casos da tabela "Testes" de [contracts/fora-do-programa.md](contracts/fora-do-programa.md), usando `projetoVazio()`, `bloco`, `encadear` e `projetoDeTeste({ soltos })` de `tests/auxiliares/blocos-teste.js`. Conferir que a mensagem é exatamente `"Esta pilha está fora do programa"` e que cada item tem só as chaves `blocoId` e `mensagem`. Para "entrada congelada", congelar a entrada em profundidade com uma função auxiliar local. Deve falhar até T013 (FR-003, FR-004) (RF-07)
 
 ### Implementação da História 2
 
