@@ -5,6 +5,7 @@ import { gerarPortugol } from '../../src/portugol/gerador.js';
 import { BLOCO_NUMERO, BLOCO_TEXTO, COR_VALORES } from '../../src/blocos/valores.js';
 import { BLOCO_ARITMETICO, BLOCO_NEGATIVO, COR_CONTAS } from '../../src/blocos/contas.js';
 import { BLOCO_VARIAVEL } from '../../src/blocos/variaveis.js';
+import { BLOCO_RELACIONAL, OPERADORES_RELACIONAIS, COR_COMPARACOES } from '../../src/blocos/comparacoes.js';
 import { criarRegistroTeste, bloco, projetoDeTeste } from '../auxiliares/blocos-teste.js';
 
 describe('escala de precedência (R-03)', () => {
@@ -62,6 +63,7 @@ function gerar(registro, valor) {
 const v = (nome) => bloco('variavel', { campos: { VAR: { id: `v-${nome}` } } });
 const num = (n) => bloco('numero', { campos: { NUM: String(n) } });
 const conta = (op, a, b) => bloco('aritmetico', { campos: { OP: op }, entradas: { ...(a && { A: a }), ...(b && { B: b }) } });
+const rel = (op, a, b) => bloco('relacional', { campos: { OP: op }, entradas: { ...(a && { A: a }), ...(b && { B: b }) } });
 const neg = (x) => bloco('negativo', { entradas: x ? { X: x } : {} });
 
 describe('negativo (R-04)', () => {
@@ -105,3 +107,77 @@ describe('negativo (R-04)', () => {
   });
 });
 
+
+describe('relacional (R-05)', () => {
+  const registro = registroCom(BLOCO_RELACIONAL);
+
+  it.each([
+    ['idade >= 18', () => rel('>=', v('idade'), num(18))],
+    ['a <> b', () => rel('<>', v('a'), v('b'))],
+    ['x = 1', () => rel('=', v('x'), num(1))],
+    ['x <> 1', () => rel('<>', v('x'), num(1))],
+    ['x < 1', () => rel('<', v('x'), num(1))],
+    ['x > 1', () => rel('>', v('x'), num(1))],
+    ['x <= 1', () => rel('<=', v('x'), num(1))],
+    ['x >= 1', () => rel('>=', v('x'), num(1))],
+    ['(1 < 2) = ok', () => rel('=', rel('<', num(1), num(2)), v('ok'))],
+    ['1 + 1 = 2', () => rel('=', conta('+', num(1), num(1)), num(2))],
+  ])('gera %s', (esperado, montar) => {
+    expect(gerar(registro, montar())).toEqual({ expr: esperado, avisos: [] });
+  });
+
+  it('encaixes vazios viram ??? com aviso', () => {
+    expect(gerar(registro, rel('<', null, num(1)))).toEqual({
+      expr: '??? < 1',
+      avisos: ['Falta o primeiro valor do bloco comparação'],
+    });
+    expect(gerar(registro, rel('<', num(1), null)).avisos).toEqual(['Falta o segundo valor do bloco comparação']);
+  });
+
+  it('operador inválido vira ??? com aviso', () => {
+    expect(gerar(registro, rel('==', num(1), num(1)))).toEqual({
+      expr: '???',
+      avisos: ['Escolha a comparação do bloco comparação'],
+    });
+  });
+
+  it('devolve a precedência RELACIONAL', () => {
+    const ctx = { campo: () => '<', valor: () => 'x' };
+    expect(BLOCO_RELACIONAL.gerar(rel('<'), ctx).precedencia).toBe(PRECEDENCIA.RELACIONAL);
+  });
+
+  it('operadores, definição, rótulo e variantes', () => {
+    expect(Object.isFrozen(OPERADORES_RELACIONAIS)).toBe(true);
+    expect(Object.keys(OPERADORES_RELACIONAIS)).toEqual(['=', '<>', '<', '>', '<=', '>=']);
+    expect(COR_COMPARACOES).toBe(260);
+    expect(BLOCO_RELACIONAL.rotulo).toBe('comparação');
+    expect(BLOCO_RELACIONAL.categoria).toBe('valor');
+    expect(BLOCO_RELACIONAL.definicao).toEqual({
+      type: 'relacional',
+      message0: '%1 %2 %3',
+      args0: [
+        { type: 'input_value', name: 'A' },
+        {
+          type: 'field_dropdown',
+          name: 'OP',
+          options: [
+            ['=', '='],
+            ['≠', '<>'],
+            ['<', '<'],
+            ['>', '>'],
+            ['≤', '<='],
+            ['≥', '>='],
+          ],
+        },
+        { type: 'input_value', name: 'B' },
+      ],
+      inputsInline: true,
+      output: ['Logico'],
+      colour: COR_COMPARACOES,
+      tooltip: 'Compara os dois valores. O resultado é verdadeiro ou falso',
+    });
+    expect(BLOCO_RELACIONAL.variantes.map((x) => x.nome)).toEqual(['=', '<>', '<', '>', '<=', '>=']);
+    expect(BLOCO_RELACIONAL.variantes[1].presente(rel('<>'))).toBe(true);
+    expect(BLOCO_RELACIONAL.variantes[1].presente(rel('='))).toBe(false);
+  });
+});
