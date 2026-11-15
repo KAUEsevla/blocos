@@ -85,3 +85,6 @@ próprio painel Saída. Ao confirmar, a execução continua.
 
 - Pré-carregar uma lista de entradas antes de executar (útil para testes) está fora
   desta entrega; os testes de aceitação fornecem as entradas automaticamente.
+- O Core 1.4.1 converte o valor do leia com `float()` para variável real: `1,5` digitado
+  com vírgula é recusado ("O valor digitado não é um número"). Levantado na spec 003
+  ([research R-02](../003-blocos-leia-escreva/research.md)).

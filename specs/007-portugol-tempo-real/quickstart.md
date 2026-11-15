@@ -73,7 +73,7 @@ Com os primeiros blocos de comando e de valor, repetir na 002 e de novo na 003 (
 | # | Passo | Esperado | Cobre |
 | --- | --- | --- | --- |
 | A | Encaixar um bloco de comando no `programa` | A linha aparece em até 1 s, sem clicar em nada | História 1, cenário 1 |
-| B | Mudar um número de 5 para 8 no campo | O Portugol mostra 8 enquanto se digita | História 1, cenário 2 |
+| B | Mudar um número de 5 para 8 no campo | O Portugol mostra 8 enquanto se digita | História 1, cenário 2 (o bloco de número existe desde a spec 003; conferido no passo L do [quickstart da 003](../003-blocos-leia-escreva/quickstart.md)) |
 | C | Desfazer o último encaixe | O Portugol volta ao que era antes | História 1, cenário 4 |
 | D | Pegar um bloco encaixado e arrastar sem soltar | A linha continua no Portugol até soltar | caso de borda "arraste" |
 | E | Soltar um bloco fora do `programa` | Não aparece no Portugol; ícone de aviso com "Esta pilha está fora do programa" | História 2, cenário 1 |
