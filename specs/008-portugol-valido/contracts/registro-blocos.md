@@ -17,8 +17,16 @@ registrarBloco({
     { nome: 'sem senão', presente: (bloco) => !bloco.extraState?.senao },
     { nome: 'com senão', presente: (bloco) => bloco.extraState?.senao === true },
   ],
+  tipoPelaVariavel: 'saida' | 'VALOR', // opcional (spec 006): ver "Tipos dos encaixes"
 })
 ```
+
+### Tipos dos encaixes (`check` e `tipoPelaVariavel`, spec 006)
+
+| Chave | Regra |
+| --- | --- |
+| `check` em `definicao.output` e nos `input_value` | Tipo de saída e tipos aceitos (`Numero`, `Texto`, `Logico`); ausente = qualquer. Seguem [tipos-encaixe.md](../../006-blocos-operadores/contracts/tipos-encaixe.md) da 006 e **não entram no gerador**. |
+| `tipoPelaVariavel` (opcional) | `'saida'` ou o nome de um `input_value`: o tipo daquele ponto vem da variável do campo `VAR` (`inteiro`/`real` → `Numero`, `cadeia` → `Texto`, `logico` → `Logico`). O registro recusa outro valor ou bloco sem campo `VAR`. |
 
 ### Categorias
 
