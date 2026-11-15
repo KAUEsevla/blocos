@@ -2,7 +2,8 @@
 // contracts/blocos-variaveis.md, "Caixa de blocos"). Definição pura, sem Blockly: a interface
 // a passa ao Blockly.inject e registra o callback da categoria dinâmica.
 // As specs 003–006 acrescentam as categorias delas em CAIXA_BLOCOS.contents (a 003 trouxe
-// Entrada e saída, Valores e Contas; contracts/blocos-entrada-saida.md da 003).
+// Entrada e saída, Valores e Contas; contracts/blocos-entrada-saida.md da 003). A 006 acrescenta
+// o lógico, o negativo, Comparações e Lógica (research R-12 da 006).
 import { TIPOS_VARIAVEL } from '../projeto/formato.js';
 import { COR_VALORES } from './valores.js';
 import { COR_CONTAS } from './contas.js';
@@ -44,7 +45,10 @@ export const CAIXA_BLOCOS = Object.freeze({
       kind: 'category',
       name: 'Contas',
       colour: COR_CONTAS,
-      contents: [{ kind: 'block', type: 'aritmetico', fields: { OP: '+' } }],
+      contents: [
+        { kind: 'block', type: 'aritmetico', fields: { OP: '+' } },
+        { kind: 'block', type: 'negativo' },
+      ],
     },
   ]),
 });
