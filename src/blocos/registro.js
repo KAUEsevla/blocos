@@ -2,6 +2,8 @@
 // plugam seus blocos sem mexer no gerador.
 import { BLOCO_PROGRAMA } from './programa.js';
 import { BLOCO_VARIAVEL_RECEBE, BLOCO_VARIAVEL } from './variaveis.js';
+import { BLOCO_ESCREVA } from './entrada-saida.js';
+import { BLOCO_TEXTO } from './valores.js';
 
 const CATEGORIAS = ['comando', 'valor', 'raiz'];
 const OBRIGATORIOS = ['tipo', 'rotulo', 'categoria', 'definicao', 'gerar'];
@@ -68,9 +70,11 @@ export function criarRegistro() {
   };
 }
 
-// Registro com todos os blocos do editor: o programa (008) e os blocos de variável (002);
-// 003–006 acrescentam os seus.
+// Registro com todos os blocos do editor: o programa (008), os blocos de variável (002) e os
+// de entrada e saída com os valores e a conta antecipados da 006 (003); 004–006 acrescentam os seus.
 export const registroPadrao = criarRegistro();
 registroPadrao.registrarBloco(BLOCO_PROGRAMA);
 registroPadrao.registrarBloco(BLOCO_VARIAVEL_RECEBE);
 registroPadrao.registrarBloco(BLOCO_VARIAVEL);
+registroPadrao.registrarBloco(BLOCO_ESCREVA);
+registroPadrao.registrarBloco(BLOCO_TEXTO);

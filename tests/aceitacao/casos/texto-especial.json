@@ -1,0 +1,83 @@
+{
+  "descricao": "Textos com aspas, barra invertida (inclusive barra seguida de n) e texto vazio saem exatamente como digitados (spec 006, FR-007; spec 003, research R-08)",
+  "requisitos": [
+    "RF-06",
+    "RNF-07"
+  ],
+  "projeto": {
+    "formato": "meupia-blocos",
+    "versao": 1,
+    "nome": "Textos",
+    "variaveis": [],
+    "blocos": {
+      "blocks": {
+        "languageVersion": 0,
+        "blocks": [
+          {
+            "type": "programa",
+            "id": "programa",
+            "x": 24,
+            "y": 24,
+            "deletable": false,
+            "inputs": {
+              "COMANDOS": {
+                "block": {
+                  "type": "escreva",
+                  "id": "e2",
+                  "inputs": {
+                    "VALOR1": {
+                      "block": {
+                        "type": "texto",
+                        "id": "t1",
+                        "fields": {
+                          "TEXTO": "a\"b\\c"
+                        }
+                      }
+                    }
+                  },
+                  "next": {
+                    "block": {
+                      "type": "escreva",
+                      "id": "e4",
+                      "inputs": {
+                        "VALOR1": {
+                          "block": {
+                            "type": "texto",
+                            "id": "t3",
+                            "fields": {
+                              "TEXTO": "x\\ny"
+                            }
+                          }
+                        }
+                      },
+                      "next": {
+                        "block": {
+                          "type": "escreva",
+                          "id": "e6",
+                          "inputs": {
+                            "VALOR1": {
+                              "block": {
+                                "type": "texto",
+                                "id": "t5",
+                                "fields": {
+                                  "TEXTO": ""
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "entrada": [],
+  "portugolEsperado": "algoritmo \"Textos\"\n\ninicio\n    escreva(\"a\\\"b\\\\c\")\n    escreva(\"x\\\\ny\")\n    escreva(\"\")\nfim_algoritmo\n",
+  "saidaEsperada": "a\"b\\c\nx\\ny\n\n"
+}

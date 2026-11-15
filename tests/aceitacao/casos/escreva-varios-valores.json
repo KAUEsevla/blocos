@@ -1,0 +1,61 @@
+{
+  "descricao": "escreva com vários valores junta tudo na mesma linha, sem espaço entre eles (spec 003, História 1)",
+  "requisitos": [
+    "RF-03",
+    "RNF-07"
+  ],
+  "projeto": {
+    "formato": "meupia-blocos",
+    "versao": 1,
+    "nome": "VariosValores",
+    "variaveis": [],
+    "blocos": {
+      "blocks": {
+        "languageVersion": 0,
+        "blocks": [
+          {
+            "type": "programa",
+            "id": "programa",
+            "x": 24,
+            "y": 24,
+            "deletable": false,
+            "inputs": {
+              "COMANDOS": {
+                "block": {
+                  "type": "escreva",
+                  "id": "e3",
+                  "extraState": {
+                    "valores": 2
+                  },
+                  "inputs": {
+                    "VALOR1": {
+                      "block": {
+                        "type": "texto",
+                        "id": "t1",
+                        "fields": {
+                          "TEXTO": "Idade: "
+                        }
+                      }
+                    },
+                    "VALOR2": {
+                      "block": {
+                        "type": "texto",
+                        "id": "t2",
+                        "fields": {
+                          "TEXTO": "15"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "entrada": [],
+  "portugolEsperado": "algoritmo \"VariosValores\"\n\ninicio\n    escreva(\"Idade: \", \"15\")\nfim_algoritmo\n",
+  "saidaEsperada": "Idade: 15\n"
+}
