@@ -194,3 +194,83 @@ describe('leia no Blockly (research R-05)', async () => {
     expect(ws.getBlockById('programa').getInputTargetBlock('COMANDOS').id).toBe('e1');
   });
 });
+
+// Passo E do quickstart da 003 (História 1, cenário 2; FR-002): criar idade, clicar "+" no
+// escreva que vem da caixa e encaixar a variável no segundo valor. O mesmo Portugol roda no Core
+// real no caso escreva-varios-valores.json (saída "Idade: 15").
+describe('passo E do quickstart: variável no segundo valor do escreva', async () => {
+  const { readFileSync } = await import('node:fs');
+  const { join } = await import('node:path');
+  const { conteudoCategoriaEntradaSaida } = await import('../../src/blocos/caixa-blocos.js');
+  const { variaveisDoMapa } = await import('../../src/projeto/variaveis.js');
+  let ws;
+
+  beforeAll(() => {
+    registrarCampoVariavel();
+    registrarMutadorEscreva();
+    registrarValidadorNumero();
+    Blockly.defineBlocksWithJsonArray(registroPadrao.tiposRegistrados().map((t) => registroPadrao.obter(t).definicao));
+  });
+
+  beforeEach(() => {
+    ws = new Blockly.Workspace();
+    Blockly.serialization.workspaces.load(projetoVazio().blocos, ws);
+  });
+
+  // Monta o passo E como o estudante faz: escreva da caixa no programa, "+", variável no VALOR2.
+  function montarPassoE() {
+    ws.getVariableMap().createVariable('idade', 'inteiro', 'v-idade');
+    const [itemEscreva] = conteudoCategoriaEntradaSaida(variaveisDoMapa(ws.getVariableMap().getAllVariables()));
+    const { kind: _kind, ...estado } = itemEscreva;
+    const escreva = Blockly.serialization.blocks.append(estado, ws);
+    ws.getBlockById('programa').getInput('COMANDOS').connection.connect(escreva.previousConnection);
+    escreva.getInputTargetBlock('VALOR1').setFieldValue('Idade: ', 'TEXTO');
+    escreva.acrescentarValor();
+    const idade = ws.newBlock('variavel');
+    idade.getField('VAR').setValue('v-idade');
+    escreva.getInput('VALOR2').connection.connect(idade.outputConnection);
+    return escreva;
+  }
+
+  const portugol = () =>
+    gerarPortugol({
+      ...projetoVazio(),
+      variaveis: variaveisDoMapa(ws.getVariableMap().getAllVariables()),
+      blocos: salvar(ws),
+    });
+
+  it('gera escreva("Idade: ", idade) sem avisos', () => {
+    montarPassoE();
+    const { codigo, avisos } = portugol();
+    expect(avisos).toEqual([]);
+    expect(codigo).toBe(
+      'algoritmo "MeuPrograma"\n\nvar\n    idade: inteiro\n\ninicio\n    escreva("Idade: ", idade)\nfim_algoritmo\n',
+    );
+  });
+
+  it('antes de encaixar a variável, o segundo valor é ??? com o aviso do valor 2', () => {
+    ws.getVariableMap().createVariable('idade', 'inteiro', 'v-idade');
+    const [itemEscreva] = conteudoCategoriaEntradaSaida([]);
+    const { kind: _kind, ...estado } = itemEscreva;
+    const escreva = Blockly.serialization.blocks.append(estado, ws);
+    ws.getBlockById('programa').getInput('COMANDOS').connection.connect(escreva.previousConnection);
+    escreva.acrescentarValor();
+    const { codigo, avisos } = portugol();
+    expect(codigo).toContain('    escreva("Olá, mundo!", ???)\n');
+    expect(avisos.map((a) => a.mensagem)).toEqual(['Falta o valor 2 do bloco escreva']);
+  });
+
+  it('o escreva salvo tem a mesma forma do caso que roda no Core real', () => {
+    montarPassoE();
+    const salvo = salvar(ws).blocks.blocks[0].inputs.COMANDOS.block;
+    expect(salvo.extraState).toEqual({ valores: 2 });
+    expect(salvo.inputs.VALOR1.block).toMatchObject({ type: 'texto', fields: { TEXTO: 'Idade: ' } });
+    expect(salvo.inputs.VALOR2.block).toMatchObject({ type: 'variavel', fields: { VAR: { id: 'v-idade' } } });
+
+    const caso = JSON.parse(
+      readFileSync(join(import.meta.dirname, '../aceitacao/casos/escreva-varios-valores.json'), 'utf8'),
+    );
+    expect(caso.portugolEsperado).toContain('    escreva("Idade: ", idade)\n');
+    expect(caso.saidaEsperada.split('\n')[0]).toBe('Idade: 15');
+  });
+});
