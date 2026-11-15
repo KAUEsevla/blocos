@@ -1,4 +1,5 @@
-// Registro de blocos (contracts/registro-blocos.md): o ponto em que as specs 002–006
+// Registro de blocos (contracts/registro-blocos.md; chave tipoPelaVariavel da spec 006,
+// contracts/tipos-encaixe.md): o ponto em que as specs 002–006
 // plugam seus blocos sem mexer no gerador.
 import { BLOCO_PROGRAMA } from './programa.js';
 import { BLOCO_VARIAVEL_RECEBE, BLOCO_VARIAVEL } from './variaveis.js';
@@ -43,7 +44,22 @@ function validar(entrada) {
     }
     nomes.add(variante.nome);
   }
+  validarTipoPelaVariavel(entrada);
   return { ...entrada, areas: [...areas], variantes: [...variantes] };
+}
+
+// Chave opcional da spec 006 (research R-09; contracts/tipos-encaixe.md): o check daquele
+// ponto ('saida' ou o nome de um input_value) vem do tipo da variável do campo VAR.
+function validarTipoPelaVariavel(entrada) {
+  const valor = entrada.tipoPelaVariavel;
+  if (valor === undefined) return;
+  const args = Array.isArray(entrada.definicao?.args0) ? entrada.definicao.args0 : [];
+  const temVar = args.some((a) => a?.name === 'VAR');
+  const encaixes = args.filter((a) => a?.type === 'input_value').map((a) => a.name);
+  const pontoValido = valor === 'saida' || (typeof valor === 'string' && encaixes.includes(valor));
+  if (!temVar || !pontoValido) {
+    throw new Error(`tipoPelaVariavel inválido no bloco "${entrada.tipo}": use 'saida' ou um encaixe, com campo VAR.`);
+  }
 }
 
 export function criarRegistro() {
