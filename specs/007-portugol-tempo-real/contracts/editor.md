@@ -28,7 +28,9 @@ Estilo igual ao "Copiar código" do painel Portugol (mesmo cabeçalho flexível)
 | `refazer(ws)` | — | `ws.undo(true)` |
 | `estadoDesfazer(ws)` | — | `{ podeDesfazer: ws.getUndoStack().length > 0, podeRefazer: ws.getRedoStack().length > 0 }` |
 
-`criarWorkspace`, `recarregarBlocos` e `serializarBlocos` não mudam.
+`criarWorkspace`, `recarregarBlocos` e `serializarBlocos` não mudam nesta spec. A 002 passou
+`criarWorkspace` e `recarregarBlocos` a receber o projeto inteiro (blocos e variáveis); ver
+[editor-variaveis.md](../../002-blocos-variaveis/contracts/editor-variaveis.md).
 
 ## `src/ui/avisos-ui.js`
 
@@ -63,12 +65,12 @@ ligarBotoesDesfazer({ aoDesfazer: () => desfazer(ws), aoRefazer: () => refazer(w
 tempoReal.atualizarAgora();              // abertura da página
 ```
 
-No Novo: `recarregarBlocos(...)` → `tempoReal.atualizarAgora()` → marca a referência.
+No Novo: `recarregarBlocos(ws, projeto)` → `tempoReal.atualizarAgora()` → marca a referência.
 
 ## Ganchos para outras specs
 
 | Spec | Usa | Quando |
 | --- | --- | --- |
-| 002 | `tempoReal.solicitar()` | depois de criar, renomear ou apagar variável em `projeto.variaveis` |
-| 012 | `recarregarBlocos` + `tempoReal.atualizarAgora()` | depois de carregar, antes de marcar a referência |
+| 002 | eventos do workspace (sem `tempoReal.solicitar()`) | criar, renomear, mudar o tipo e apagar variável disparam eventos não-UI do mapa de variáveis do Blockly, que já chegam ao `notificar` e entram no desfazer (002, research R-04 e R-10) |
+| 012 | `recarregarBlocos(ws, projeto)` + `tempoReal.atualizarAgora()` | depois de carregar, antes de marcar a referência; o projeto leva as variáveis junto |
 | 009 | `resultado.avisos` (só `incompleto`) | a marca de soltos não bloqueia Executar |
