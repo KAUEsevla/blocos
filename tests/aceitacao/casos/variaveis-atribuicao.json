@@ -1,0 +1,57 @@
+{
+  "descricao": "Atribuições entre variáveis com os blocos recebe e variável são aceitas pelo Core",
+  "requisitos": ["RF-02", "RNF-07"],
+  "projeto": {
+    "formato": "meupia-blocos",
+    "versao": 1,
+    "nome": "Trocas",
+    "variaveis": [
+      { "id": "v-a", "nome": "a", "tipo": "inteiro" },
+      { "id": "v-b", "nome": "b", "tipo": "inteiro" },
+      { "id": "v-nome", "nome": "nome", "tipo": "cadeia" }
+    ],
+    "blocos": {
+      "blocks": {
+        "languageVersion": 0,
+        "blocks": [
+          {
+            "type": "programa",
+            "id": "programa",
+            "x": 24,
+            "y": 24,
+            "deletable": false,
+            "inputs": {
+              "COMANDOS": {
+                "block": {
+                  "type": "variavel_recebe",
+                  "id": "r1",
+                  "fields": { "VAR": { "id": "v-a" } },
+                  "inputs": { "VALOR": { "block": { "type": "variavel", "id": "l1", "fields": { "VAR": { "id": "v-b" } } } } },
+                  "next": {
+                    "block": {
+                      "type": "variavel_recebe",
+                      "id": "r2",
+                      "fields": { "VAR": { "id": "v-b" } },
+                      "inputs": { "VALOR": { "block": { "type": "variavel", "id": "l2", "fields": { "VAR": { "id": "v-a" } } } } },
+                      "next": {
+                        "block": {
+                          "type": "variavel_recebe",
+                          "id": "r3",
+                          "fields": { "VAR": { "id": "v-nome" } },
+                          "inputs": { "VALOR": { "block": { "type": "variavel", "id": "l3", "fields": { "VAR": { "id": "v-nome" } } } } }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "entrada": [],
+  "portugolEsperado": "algoritmo \"Trocas\"\n\nvar\n    a: inteiro\n    b: inteiro\n    nome: cadeia\n\ninicio\n    a <- b\n    b <- a\n    nome <- nome\nfim_algoritmo\n",
+  "saidaEsperada": ""
+}

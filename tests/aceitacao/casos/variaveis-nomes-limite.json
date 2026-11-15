@@ -1,0 +1,28 @@
+{
+  "descricao": "Nomes válidos parecidos com reservados ou no limite (30 caracteres, igual ao programa) são declarados e aceitos pelo Core",
+  "requisitos": ["RF-02", "RNF-07"],
+  "projeto": {
+    "formato": "meupia-blocos",
+    "versao": 1,
+    "nome": "MeuPrograma",
+    "variaveis": [
+      { "id": "v-entrada", "nome": "entrada", "tipo": "inteiro" },
+      { "id": "v-e1", "nome": "E1", "tipo": "inteiro" },
+      { "id": "v-dado2", "nome": "dado_2", "tipo": "real" },
+      { "id": "v-x", "nome": "x", "tipo": "real" },
+      { "id": "v-senha", "nome": "senha", "tipo": "cadeia" },
+      { "id": "v-meuprograma", "nome": "MeuPrograma", "tipo": "cadeia" },
+      { "id": "v-resultado", "nome": "Resultado", "tipo": "logico" },
+      { "id": "v-longo", "nome": "abcdefghijklmnopqrstuvwxyz1234", "tipo": "logico" }
+    ],
+    "blocos": {
+      "blocks": {
+        "languageVersion": 0,
+        "blocks": [{ "type": "programa", "id": "programa", "x": 24, "y": 24, "deletable": false }]
+      }
+    }
+  },
+  "entrada": [],
+  "portugolEsperado": "algoritmo \"MeuPrograma\"\n\nvar\n    entrada: inteiro\n    E1: inteiro\n    dado_2: real\n    x: real\n    senha: cadeia\n    MeuPrograma: cadeia\n    Resultado: logico\n    abcdefghijklmnopqrstuvwxyz1234: logico\n\ninicio\nfim_algoritmo\n",
+  "saidaEsperada": ""
+}

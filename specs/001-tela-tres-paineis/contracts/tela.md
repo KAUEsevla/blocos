@@ -31,7 +31,7 @@ Três `<section class="painel">`, **nesta ordem** no HTML, cada uma com
 
 | Painel | `section` id | `<h2>` id / texto | Corpo |
 | --- | --- | --- | --- |
-| Blocos | `painel-blocos` | `titulo-blocos` / `Blocos` | cabeçalho com `<button id="botao-desfazer">Desfazer</button>` e `<button id="botao-refazer">Refazer</button>`, ambos `disabled` no HTML (spec 007, [editor.md](../../007-portugol-tempo-real/contracts/editor.md)); corpo `<div class="painel-corpo">` com `<div id="area-blocos">` (Blockly) |
+| Blocos | `painel-blocos` | `titulo-blocos` / `Blocos` | cabeçalho com `<button id="botao-desfazer">Desfazer</button>` e `<button id="botao-refazer">Refazer</button>`, ambos `disabled` no HTML (spec 007, [editor.md](../../007-portugol-tempo-real/contracts/editor.md)); corpo `<div class="painel-corpo">` com `<div id="area-blocos">` (Blockly), que tem a caixa de blocos com a categoria "Variáveis" (spec 002, [editor-variaveis.md](../../002-blocos-variaveis/contracts/editor-variaveis.md)) |
 | Portugol | `painel-portugol` | `titulo-portugol` / `Portugol` | cabeçalho com `<button id="botao-copiar">Copiar código</button>` e `<span id="mensagem-copia" aria-live="polite">`; corpo `<pre id="codigo-portugol" tabindex="0" aria-label="Portugol gerado, somente leitura">` |
 | Saída | `painel-saida` | `titulo-saida` / `Saída` | `<div id="saida" class="painel-corpo">` (contrato [painel-saida.md](painel-saida.md)) |
 
@@ -55,7 +55,14 @@ seleção e cópia com Ctrl+C.
 `src/ui/confirmacao.js`: preenche os textos, abre com `showModal()`, resolve `true` só no
 botão de confirmar; Cancelar, `Esc` (evento `cancel`) e fechar de outro modo resolvem
 `false`. Para o Novo: título "Começar um projeto novo?", mensagem "As alterações que não
-foram salvas serão perdidas.", botões "Descartar e começar" e "Cancelar" (R-04).
+foram salvas serão perdidas.", botões "Descartar e começar" e "Cancelar" (R-04). A spec 002
+usa o mesmo diálogo para apagar uma variável em uso (botões "Apagar" e "Cancelar").
+
+## Diálogo de variável (`<dialog id="dialogo-variavel">`)
+
+Criado pela spec 002 para criar, renomear e mudar o tipo de uma variável: nome,
+tipo, mensagem de erro e botões. Estrutura e comportamento em
+[editor-variaveis.md](../../002-blocos-variaveis/contracts/editor-variaveis.md).
 
 ## Layout (R-02)
 

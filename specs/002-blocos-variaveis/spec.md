@@ -4,7 +4,7 @@
 
 **Criada em**: 2026-11-08
 
-**Status**: Rascunho
+**Status**: Implementada
 
 **Rastreia**: RF-02
 
@@ -106,11 +106,15 @@ mudam; apagar uma variável em uso e verificar a confirmação.
   `int`, `len`...): recusado com "este nome é reservado"; aceitá-lo faria o programa
   parar de funcionar (por exemplo, uma variável `print` impediria o escreva de mostrar
   texto).
+- Nomes internos do Python, como `max`, `sum`, `id`, são recusados com "este nome
+  é reservado", mesmo que o código gerado pelo Core não os use hoje.
 - Nome reservado escrito com outras maiúsculas (`Print`, `SE`, `Main`): também
   recusado.
 - Nome igual ao nome do programa: permitido (não há conflito no Portugol).
 - Mudar o tipo de uma variável já usada: permitido; o Core aponta incompatibilidades
   ao executar.
+- Ordem na seção `var`: a variável que muda de tipo vai para o fim do grupo do tipo
+  novo; a que volta pelo desfazer volta para o fim do seu grupo.
 - Projeto sem variáveis: a seção `var` não aparece no Portugol.
 
 ## Requisitos *(obrigatório)*
@@ -123,8 +127,9 @@ mudam; apagar uma variável em uso e verificar a confirmação.
   dígitos e sublinhado (`_`) e ter entre 1 e 30 caracteres.
 - **FR-003**: O nome NÃO PODE ser palavra reservada do Portugol, palavra reservada
   do Python (linguagem para a qual o meuPiá Core traduz o programa), nome usado pelo
-  código que o Core gera (como `print`, `input` e `main`), nem repetir outra
-  variável. Todas as comparações são feitas sem diferenciar maiúsculas/minúsculas.
+  código que o Core gera (como `print`, `input` e `main`), nome interno do Python
+  (todas as funções, tipos e exceções que o Python já traz, como `max`, `sum` e
+  `id`), nem repetir outra variável. Todas as comparações são feitas sem diferenciar maiúsculas/minúsculas.
   Um nome reservado é recusado com a mensagem amigável "este nome é reservado".
 - **FR-004**: Toda variável criada DEVE ser declarada na seção `var` do Portugol,
   uma por linha (`nome: tipo`), agrupada por tipo, na ordem inteiro, real, cadeia,
@@ -160,7 +165,11 @@ mudam; apagar uma variável em uso e verificar a confirmação.
 - A verificação de tipo do valor atribuído é feita pelo Core na execução (feature
   009); o editor não bloqueia atribuições por tipo nesta entrega.
 - A lista de palavras reservadas segue o Guia da Linguagem do Core na versão fixada.
-- A lista completa de nomes recusados (palavras-chave e nativos do Core, palavras
-  reservadas do Python e nomes usados pelo código gerado) vem do research da spec 008
-  ([R-10](../008-portugol-valido/research.md)), levantado no `meupia-core` 1.4.1. Se a
-  versão fixada do Core mudar, a lista precisa ser revista.
+- A lista completa de nomes recusados vem de dois levantamentos: palavras-chave e
+  nativos do Core e nomes usados pelo código gerado, no research da spec 008
+  ([R-10](../008-portugol-valido/research.md)), conferidos no `meupia-core` 1.4.1
+  ([R-02](research.md)); palavras reservadas e nomes internos do Python 3.11 (o Python
+  do Pyodide fixado), no research desta spec ([R-03](research.md)). Recusar todos os
+  nomes internos do Python, e não só os que o código gerado usa hoje, evita rever a
+  lista a cada bloco novo. Se a versão fixada do Core ou do Pyodide mudar, a lista
+  precisa ser revista.

@@ -1,6 +1,7 @@
 // Registro de blocos (contracts/registro-blocos.md): o ponto em que as specs 002–006
 // plugam seus blocos sem mexer no gerador.
 import { BLOCO_PROGRAMA } from './programa.js';
+import { BLOCO_VARIAVEL_RECEBE, BLOCO_VARIAVEL } from './variaveis.js';
 
 const CATEGORIAS = ['comando', 'valor', 'raiz'];
 const OBRIGATORIOS = ['tipo', 'rotulo', 'categoria', 'definicao', 'gerar'];
@@ -67,6 +68,9 @@ export function criarRegistro() {
   };
 }
 
-// Registro com todos os blocos do editor. Na 008 só existe o programa; 002–006 acrescentam os seus.
+// Registro com todos os blocos do editor: o programa (008) e os blocos de variável (002);
+// 003–006 acrescentam os seus.
 export const registroPadrao = criarRegistro();
 registroPadrao.registrarBloco(BLOCO_PROGRAMA);
+registroPadrao.registrarBloco(BLOCO_VARIAVEL_RECEBE);
+registroPadrao.registrarBloco(BLOCO_VARIAVEL);

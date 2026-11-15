@@ -138,16 +138,26 @@ button:disabled { color: var(--cor-texto-suave); cursor: not-allowed; opacity: 0
   #painel-portugol, #painel-saida { max-height: 45vh; }
 }
 
-/* Diálogo de confirmação (R-04). */
+/* Diálogos de confirmação (001, R-04) e de variável (002, contracts/editor-variaveis.md). */
 
-#dialogo-confirmacao {
+#dialogo-confirmacao,
+#dialogo-variavel {
   max-width: 28rem;
   padding: 20px;
   border: 1px solid var(--cor-borda);
   border-radius: 8px;
 }
 
-#dialogo-confirmacao::backdrop { background: rgb(0 0 0 / 0.35); }
-#dialogo-confirmacao h2 { margin: 0 0 8px; font-size: 1.125rem; }
+#dialogo-confirmacao::backdrop,
+#dialogo-variavel::backdrop { background: rgb(0 0 0 / 0.35); }
+#dialogo-confirmacao h2,
+#dialogo-variavel h2 { margin: 0 0 8px; font-size: 1.125rem; }
 #dialogo-confirmacao p { margin: 0 0 16px; }
+#dialogo-variavel form { margin: 0; }
+.dialogo-campo { display: flex; flex-direction: column; gap: 4px; margin: 0 0 12px; }
+.dialogo-campo[hidden] { display: none; }
+.dialogo-campo input,
+.dialogo-campo select { font: inherit; padding: 4px 6px; border: 1px solid var(--cor-borda); border-radius: 4px; }
+/* Altura reservada: o diálogo não pula quando a mensagem aparece. */
+#variavel-erro { min-height: 1.4em; margin: 0 0 12px; color: var(--cor-erro); }
 .dialogo-botoes { display: flex; justify-content: flex-end; gap: 8px; }

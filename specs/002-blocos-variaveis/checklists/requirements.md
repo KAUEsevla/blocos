@@ -40,3 +40,7 @@
   colidem com ela quebram a execução. A lista completa fica no research da spec 008
   (R-10), referenciado nas Premissas. Itens revalidados; todos continuam atendidos.
 - Itens desmarcados exigem atualização da spec antes de `/speckit-clarify` ou `/speckit-plan`.
+- 2026-11-15 (analyze): FR-003, Premissas e casos de borda passaram a dizer que todos
+  os nomes internos do Python (como `max`, `sum`, `id`) são recusados, e um caso de
+  borda define a ordem na seção `var` depois de mudar o tipo ou desfazer. Status
+  "Aprovada". Itens revalidados; todos continuam atendidos.

@@ -1,0 +1,48 @@
+{
+  "descricao": "Atribuição solta fora do programa não entra no Portugol e o programa roda no Core",
+  "requisitos": ["RF-02", "RF-07", "RNF-07"],
+  "projeto": {
+    "formato": "meupia-blocos",
+    "versao": 1,
+    "nome": "Solto",
+    "variaveis": [
+      { "id": "v-a", "nome": "a", "tipo": "inteiro" },
+      { "id": "v-b", "nome": "b", "tipo": "inteiro" }
+    ],
+    "blocos": {
+      "blocks": {
+        "languageVersion": 0,
+        "blocks": [
+          {
+            "type": "programa",
+            "id": "programa",
+            "x": 24,
+            "y": 24,
+            "deletable": false,
+            "inputs": {
+              "COMANDOS": {
+                "block": {
+                  "type": "variavel_recebe",
+                  "id": "dentro",
+                  "fields": { "VAR": { "id": "v-a" } },
+                  "inputs": { "VALOR": { "block": { "type": "variavel", "id": "valor-dentro", "fields": { "VAR": { "id": "v-b" } } } } }
+                }
+              }
+            }
+          },
+          {
+            "type": "variavel_recebe",
+            "id": "solto",
+            "x": 320,
+            "y": 240,
+            "fields": { "VAR": { "id": "v-b" } },
+            "inputs": { "VALOR": { "block": { "type": "variavel", "id": "valor-solto", "fields": { "VAR": { "id": "v-a" } } } } }
+          }
+        ]
+      }
+    }
+  },
+  "entrada": [],
+  "portugolEsperado": "algoritmo \"Solto\"\n\nvar\n    a: inteiro\n    b: inteiro\n\ninicio\n    a <- b\nfim_algoritmo\n",
+  "saidaEsperada": ""
+}
