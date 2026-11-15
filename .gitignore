@@ -42,3 +42,4 @@ $RECYCLE.BIN/
 # Dependências e build
 node_modules/
 dist/
+.vite/

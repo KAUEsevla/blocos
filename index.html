@@ -4,18 +4,64 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>meuPiá Blocos</title>
-    <style>
-      body { margin: 0; font-family: system-ui, sans-serif; display: flex; height: 100vh; }
-      #area-blocos { flex: 1; min-width: 0; }
-      #painel-portugol {
-        width: 40%; margin: 0; padding: 12px; overflow: auto;
-        background: #1e1e1e; color: #e6e6e6; font: 14px/1.5 ui-monospace, Consolas, monospace;
-      }
-    </style>
   </head>
   <body>
-    <div id="area-blocos"></div>
-    <pre id="painel-portugol" aria-label="Portugol gerado"></pre>
+    <header id="barra">
+      <label for="nome-programa">Nome do programa</label>
+      <input
+        type="text"
+        id="nome-programa"
+        value="MeuPrograma"
+        maxlength="40"
+        spellcheck="false"
+        autocomplete="off"
+      />
+      <div class="barra-acoes">
+        <button type="button" id="botao-executar" disabled title="Disponível em breve">Executar</button>
+        <button type="button" id="botao-salvar" disabled title="Disponível em breve">Salvar</button>
+        <button type="button" id="botao-carregar" disabled title="Disponível em breve">Carregar</button>
+        <button type="button" id="botao-novo">Novo</button>
+      </div>
+    </header>
+
+    <main id="paineis">
+      <section id="painel-blocos" class="painel" aria-labelledby="titulo-blocos">
+        <div class="painel-cabecalho">
+          <h2 id="titulo-blocos">Blocos</h2>
+        </div>
+        <div class="painel-corpo painel-corpo--blocos">
+          <div id="area-blocos"></div>
+        </div>
+      </section>
+
+      <section id="painel-portugol" class="painel" aria-labelledby="titulo-portugol">
+        <div class="painel-cabecalho">
+          <h2 id="titulo-portugol">Portugol</h2>
+          <span id="mensagem-copia" class="mensagem-copia" aria-live="polite"></span>
+          <button type="button" id="botao-copiar">Copiar código</button>
+        </div>
+        <div class="painel-corpo">
+          <pre id="codigo-portugol" tabindex="0" aria-label="Portugol gerado, somente leitura"></pre>
+        </div>
+      </section>
+
+      <section id="painel-saida" class="painel" aria-labelledby="titulo-saida">
+        <div class="painel-cabecalho">
+          <h2 id="titulo-saida">Saída</h2>
+        </div>
+        <div id="saida" class="painel-corpo"></div>
+      </section>
+    </main>
+
+    <dialog id="dialogo-confirmacao" aria-labelledby="dialogo-titulo" aria-describedby="dialogo-mensagem">
+      <h2 id="dialogo-titulo"></h2>
+      <p id="dialogo-mensagem"></p>
+      <div class="dialogo-botoes">
+        <button type="button" id="dialogo-cancelar">Cancelar</button>
+        <button type="button" id="dialogo-confirmar">Confirmar</button>
+      </div>
+    </dialog>
+
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>
