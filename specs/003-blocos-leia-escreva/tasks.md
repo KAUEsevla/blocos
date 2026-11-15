@@ -137,7 +137,7 @@ D (`leia`) e H a K do quickstart.
 
 ### Testes da História 2
 
-- [ ] T024 [P] [US2] Em `tests/unidade/blocos-entrada-saida.test.js`, parte **leia**: (1) com `criarRegistro()` + `BLOCO_PROGRAMA` + `BLOCO_LEIA`, `leia` com `fields.VAR: { id: 'v-nome' }` e a variável `nome` gera `    leia(nome)`; (2) `VAR: null`, campo ausente ou id inexistente gera `leia(???)` e o aviso "Falta a variável do bloco leia" (História 2, cenário 2); (3) a definição usa `campoVariavel()` (`args0[0]` igual a `campoVariavel()`), **não** tem nenhum `input_value` (FR-005) e tem a *tooltip* exata "Pede um valor a quem usa o programa e guarda na variável. Numa variável lógica, só “verdadeiro” vira verdadeiro; o resto vira falso."; (4) renomear: trocar só `variaveis[0].nome` para `apelido` muda o texto para `leia(apelido)`. Deve falhar até T025 (FR-004, FR-005, FR-006; P-3) (RF-03)
+- [X] T024 [P] [US2] Em `tests/unidade/blocos-entrada-saida.test.js`, parte **leia**: (1) com `criarRegistro()` + `BLOCO_PROGRAMA` + `BLOCO_LEIA`, `leia` com `fields.VAR: { id: 'v-nome' }` e a variável `nome` gera `    leia(nome)`; (2) `VAR: null`, campo ausente ou id inexistente gera `leia(???)` e o aviso "Falta a variável do bloco leia" (História 2, cenário 2); (3) a definição usa `campoVariavel()` (`args0[0]` igual a `campoVariavel()`), **não** tem nenhum `input_value` (FR-005) e tem a *tooltip* exata "Pede um valor a quem usa o programa e guarda na variável. Numa variável lógica, só “verdadeiro” vira verdadeiro; o resto vira falso."; (4) renomear: trocar só `variaveis[0].nome` para `apelido` muda o texto para `leia(apelido)`. Deve falhar até T025 (FR-004, FR-005, FR-006; P-3) (RF-03)
 
 ### Implementação da História 2
 

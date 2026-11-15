@@ -149,3 +149,49 @@ describe('bloco escreva (FR-001, FR-003)', () => {
     expect(d.tooltip).toBe('Mostra os valores na tela, um ao lado do outro, e passa para a próxima linha');
   });
 });
+
+// História 2 (FR-004, FR-005, FR-006; P-3).
+describe('bloco leia', async () => {
+  const { BLOCO_LEIA } = await import('../../src/blocos/entrada-saida.js');
+  const { campoVariavel } = await import('../../src/blocos/campo-variavel.js');
+  const reg = criarRegistro();
+  reg.registrarBloco(BLOCO_PROGRAMA);
+  reg.registrarBloco(BLOCO_LEIA);
+  const NOME = { id: 'v-nome', nome: 'nome', tipo: 'cadeia' };
+  const leia = (campo) => bloco('leia', campo === undefined ? {} : { campos: { VAR: campo } });
+  const gerar = (comando, variaveis = [NOME]) => {
+    const { codigo, avisos } = gerarPortugol(projetoDeTeste({ variaveis, comandos: [comando] }), reg);
+    const linhas = codigo.split('\n');
+    return { linha: linhas[linhas.indexOf('inicio') + 1], avisos: avisos.map((a) => a.mensagem) };
+  };
+
+  it('com a variável nome gera leia(nome) (História 2, cenário 1)', () => {
+    expect(gerar(leia({ id: 'v-nome' }))).toEqual({ linha: '    leia(nome)', avisos: [] });
+  });
+
+  it.each([
+    ['VAR null', null],
+    ['sem campo', undefined],
+    ['id inexistente', { id: 'v-outra' }],
+  ])('%s gera leia(???) e o aviso (História 2, cenário 2)', (_nome, campo) => {
+    expect(gerar(leia(campo))).toEqual({ linha: '    leia(???)', avisos: ['Falta a variável do bloco leia'] });
+  });
+
+  it('renomear a variável muda o texto', () => {
+    expect(gerar(leia({ id: 'v-nome' }), [{ ...NOME, nome: 'apelido' }]).linha).toBe('    leia(apelido)');
+  });
+
+  it('definição: o mesmo campo de variável da 002, sem encaixe de valor, com a dica', () => {
+    const d = BLOCO_LEIA.definicao;
+    expect(BLOCO_LEIA).toMatchObject({ tipo: 'leia', rotulo: 'leia', categoria: 'comando' });
+    expect(d.message0).toBe('leia %1');
+    expect(d.args0).toEqual([campoVariavel()]);
+    expect(JSON.stringify(d)).not.toContain('input_value');
+    expect(d.previousStatement).toBeNull();
+    expect(d.nextStatement).toBeNull();
+    expect(d.tooltip).toBe(
+      'Pede um valor a quem usa o programa e guarda na variável. Numa variável lógica, só “verdadeiro” vira verdadeiro; o resto vira falso.',
+    );
+    expect(BLOCO_LEIA.variantes ?? []).toEqual([]);
+  });
+});
