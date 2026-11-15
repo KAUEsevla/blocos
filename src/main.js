@@ -6,6 +6,7 @@ import { projetoVazio } from './projeto/formato.js';
 import { assinaturaProjeto, haAlteracoes } from './projeto/alteracoes.js';
 import { gerarPortugol } from './portugol/gerador.js';
 import { criarAtualizacaoTempoReal } from './portugol/tempo-real.js';
+import { blocosForaDoPrograma } from './portugol/fora-do-programa.js';
 import {
   criarWorkspace,
   recarregarBlocos,
@@ -41,10 +42,13 @@ function projetoAtual() {
 let referencia = assinaturaProjeto(projetoAtual());
 
 function atualizarPortugol() {
-  const resultado = gerarPortugol(projetoAtual());
+  const projetoGerado = projetoAtual();
+  const resultado = gerarPortugol(projetoGerado);
   ultimoCodigo = resultado.codigo;
   mostrarCodigo(preCodigo, resultado.codigo);
-  aplicarAvisos(ws, resultado.avisos);
+  aplicarAvisos(ws, resultado.avisos, 'incompleto');
+  // A marca de pilha solta não entra em resultado.avisos: não bloqueia Executar (R-04).
+  aplicarAvisos(ws, blocosForaDoPrograma(projetoGerado.blocos), 'fora-do-programa');
   atualizarBotoesDesfazer(estadoDesfazer(ws));
 }
 
