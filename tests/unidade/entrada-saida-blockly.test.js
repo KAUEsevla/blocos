@@ -128,3 +128,69 @@ describe('escreva no Blockly (research R-04)', () => {
     expect(campo.getValue()).toBe('7');
   });
 });
+
+// História 2 (P-3): o leia usa o campo de variável da 002 também no Blockly.
+describe('leia no Blockly (research R-05)', async () => {
+  const { blocosComVariaveis, contarBlocosApagados } = await import('../../src/projeto/variaveis.js');
+  const NOME = { id: 'v-nome', nome: 'nome', tipo: 'cadeia' };
+  const blocos = {
+    blocks: {
+      languageVersion: 0,
+      blocks: [
+        {
+          type: 'programa',
+          id: 'programa',
+          x: 0,
+          y: 0,
+          inputs: {
+            COMANDOS: {
+              block: {
+                type: 'leia',
+                id: 'l1',
+                fields: { VAR: { id: 'v-nome' } },
+                next: { block: { type: 'escreva', id: 'e1', inputs: { VALOR1: txt('fim') } } },
+              },
+            },
+          },
+        },
+        { type: 'variavel', id: 'solto', x: 300, y: 300, fields: { VAR: { id: 'v-nome' } } },
+      ],
+    },
+  };
+  let ws;
+
+  beforeAll(() => {
+    registrarCampoVariavel();
+    registrarMutadorEscreva();
+    registrarValidadorNumero();
+    Blockly.defineBlocksWithJsonArray(registroPadrao.tiposRegistrados().map((t) => registroPadrao.obter(t).definicao));
+  });
+
+  beforeEach(() => {
+    ws = new Blockly.Workspace();
+    Blockly.serialization.workspaces.load(blocosComVariaveis(blocos, [NOME]), ws);
+  });
+
+  const projeto = (variaveis) => ({ ...projetoVazio(), variaveis, blocos: salvar(ws) });
+
+  it('mostra a variável e acompanha o renomear', () => {
+    expect(ws.getBlockById('l1').getField('VAR').getText()).toBe('nome');
+    const v = ws.getVariableMap().getVariableById('v-nome');
+    ws.getVariableMap().renameVariable(v, 'apelido');
+    expect(ws.getBlockById('l1').getField('VAR').getText()).toBe('apelido');
+    expect(gerarPortugol(projeto([{ ...NOME, nome: 'apelido' }])).codigo).toContain('    leia(apelido)\n');
+  });
+
+  it('o leia conta como uso ao apagar a variável, igual ao que o Blockly remove', () => {
+    const contagem = contarBlocosApagados(salvar(ws), 'v-nome');
+    expect(contagem).toEqual({ usos: 2, total: 2 });
+    const antes = ws.getAllBlocks(false).length;
+    ws.getVariableMap().deleteVariable(ws.getVariableMap().getVariableById('v-nome'));
+    expect(antes - ws.getAllBlocks(false).length).toBe(contagem.total);
+  });
+
+  it('o comando seguinte ao leia apagado sobe para o lugar dele', () => {
+    ws.getVariableMap().deleteVariable(ws.getVariableMap().getVariableById('v-nome'));
+    expect(ws.getBlockById('programa').getInputTargetBlock('COMANDOS').id).toBe('e1');
+  });
+});
