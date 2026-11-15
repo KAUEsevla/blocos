@@ -20,7 +20,7 @@ Devem passar, além dos testes da 008 e da 001:
 | --- | --- |
 | `tests/unidade/tempo-real.test.js` | FR-001, FR-002, caso de borda do arraste ([tempo-real.md](contracts/tempo-real.md)) |
 | `tests/unidade/fora-do-programa.test.js` | FR-003, FR-004 ([fora-do-programa.md](contracts/fora-do-programa.md)) |
-| `tests/unidade/tempo-real-cenarios.test.js` | SC-001, SC-002 (100 blocos < 200 ms), SC-003, História 1 (incluindo o arraste) e História 2 no núcleo |
+| `tests/unidade/tempo-real-cenarios.test.js` | SC-001, História 1 (incluindo o arraste), História 2, SC-003 e SC-002 (100 blocos < 200 ms, no bloco da História 2) no núcleo |
 | `tests/unidade/tela-estrutura.test.js` | botões Desfazer/Refazer ([editor.md](contracts/editor.md)) |
 
 ```bash
