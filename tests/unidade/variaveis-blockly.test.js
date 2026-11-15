@@ -8,6 +8,8 @@ import { registroPadrao, criarRegistro } from '../../src/blocos/registro.js';
 import { BLOCO_PROGRAMA } from '../../src/blocos/programa.js';
 import { BLOCO_VARIAVEL_RECEBE, BLOCO_VARIAVEL } from '../../src/blocos/variaveis.js';
 import { registrarCampoVariavel } from '../../src/ui/campo-variavel.js';
+import { registrarMutadorEscreva } from '../../src/ui/mutador-escreva.js';
+import { registrarValidadorNumero } from '../../src/ui/validador-numero.js';
 import { gerarPortugol } from '../../src/portugol/gerador.js';
 
 const nomes = (ws) => variaveisDoMapa(ws.getVariableMap().getAllVariables()).map((v) => v.nome);
@@ -19,6 +21,9 @@ describe('mapa de variáveis do Blockly (research R-04)', () => {
   let ws;
 
   beforeAll(() => {
+    registrarCampoVariavel();
+    registrarMutadorEscreva();
+    registrarValidadorNumero();
     const definicoes = registroPadrao.tiposRegistrados().map((tipo) => registroPadrao.obter(tipo).definicao);
     Blockly.defineBlocksWithJsonArray(definicoes);
   });

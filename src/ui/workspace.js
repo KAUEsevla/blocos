@@ -12,6 +12,8 @@ import {
   conteudoCategoriaVariaveis,
 } from '../blocos/caixa-blocos.js';
 import { registrarCampoVariavel } from './campo-variavel.js';
+import { registrarMutadorEscreva } from './mutador-escreva.js';
+import { registrarValidadorNumero } from './validador-numero.js';
 import { criarVariavel } from './acoes-variavel.js';
 
 let blocosDefinidos = false;
@@ -41,8 +43,11 @@ function definirBlocos() {
   if (blocosDefinidos) return;
   Blockly.setLocale(ptBr);
   Object.assign(Blockly.Msg, TRADUCOES_FALTANTES);
-  // O campo próprio precisa existir antes das definições que o citam.
+  // O campo próprio, o mutador do escreva e o validador do número precisam existir antes das
+  // definições que os citam (spec 002; spec 003, contracts/editor-entrada-saida.md).
   registrarCampoVariavel();
+  registrarMutadorEscreva();
+  registrarValidadorNumero();
   const definicoes = registroPadrao.tiposRegistrados().map((tipo) => registroPadrao.obter(tipo).definicao);
   Blockly.defineBlocksWithJsonArray(definicoes);
   blocosDefinidos = true;
