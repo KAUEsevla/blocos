@@ -208,6 +208,33 @@ Core devolve "Erro interno do compilador". O passo 4 é o adapter do lado do edi
 (princípio I). A issue em `meuPia/core` ("Inteiro com zeros à esquerda gera Python
 inválido") é aberta pela dupla numa task de documentação, como na 008/R-09.
 
+**Texto da issue** (T032; a dupla abre em `meuPia/core` e põe o link aqui):
+
+> **Título**: Inteiro com zeros à esquerda gera Python inválido
+>
+> **Versão**: `meupia-core` 1.4.1 (PyPI), rodando no Pyodide 0.25.0.
+>
+> **Passos**: compilar o programa
+>
+> ```text
+> algoritmo "T"
+> inicio
+>     escreva(007)
+> fim_algoritmo
+> ```
+>
+> **Esperado**: um erro léxico em português apontando o número, ou o número 7.
+>
+> **Obtido**: o lexer e o parser aceitam `007`, e a compilação termina com
+> "Erro interno do compilador: código Python gerado inválido (leading zeros in decimal
+> integer literals are not permitted; use an 0o prefix for octal integers, …)". `00.5`
+> funciona.
+>
+> **Contorno no meuPiá Blocos**: o bloco de número tira os zeros à esquerda antes de gerar
+> o Portugol (`normalizarNumero`, `src/blocos/valores.js`).
+
+**Link da issue**: _pendente (a dupla abre; ver T034)._
+
 **Alternativas consideradas**: `field_number` do Blockly (rejeitada: recusa vírgula e
 mostra números com formatação do navegador); gerar o texto como digitado (rejeitada:
 `007` quebra a compilação).
