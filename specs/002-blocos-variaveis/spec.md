@@ -4,7 +4,7 @@
 
 **Criada em**: 2026-11-08
 
-**Status**: Aprovada
+**Status**: Implementada
 
 **Rastreia**: RF-02
 
