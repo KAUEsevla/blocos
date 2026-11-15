@@ -2,7 +2,7 @@
 import { describe, it, expect } from 'vitest';
 import { PRECEDENCIA } from '../../src/portugol/precedencia.js';
 import { gerarPortugol } from '../../src/portugol/gerador.js';
-import { BLOCO_NUMERO, BLOCO_TEXTO, COR_VALORES } from '../../src/blocos/valores.js';
+import { BLOCO_NUMERO, BLOCO_TEXTO, BLOCO_LOGICO, COR_VALORES } from '../../src/blocos/valores.js';
 import { BLOCO_ARITMETICO, BLOCO_NEGATIVO, COR_CONTAS } from '../../src/blocos/contas.js';
 import { BLOCO_VARIAVEL } from '../../src/blocos/variaveis.js';
 import { BLOCO_RELACIONAL, OPERADORES_RELACIONAIS, COR_COMPARACOES } from '../../src/blocos/comparacoes.js';
@@ -64,6 +64,7 @@ const v = (nome) => bloco('variavel', { campos: { VAR: { id: `v-${nome}` } } });
 const num = (n) => bloco('numero', { campos: { NUM: String(n) } });
 const conta = (op, a, b) => bloco('aritmetico', { campos: { OP: op }, entradas: { ...(a && { A: a }), ...(b && { B: b }) } });
 const rel = (op, a, b) => bloco('relacional', { campos: { OP: op }, entradas: { ...(a && { A: a }), ...(b && { B: b }) } });
+const log = (valor) => bloco('logico', valor === undefined ? {} : { campos: { VALOR: valor } });
 const neg = (x) => bloco('negativo', { entradas: x ? { X: x } : {} });
 
 describe('negativo (R-04)', () => {
@@ -179,5 +180,51 @@ describe('relacional (R-05)', () => {
     expect(BLOCO_RELACIONAL.variantes.map((x) => x.nome)).toEqual(['=', '<>', '<', '>', '<=', '>=']);
     expect(BLOCO_RELACIONAL.variantes[1].presente(rel('<>'))).toBe(true);
     expect(BLOCO_RELACIONAL.variantes[1].presente(rel('='))).toBe(false);
+  });
+});
+
+describe('valor fixo lógico (R-07)', () => {
+  const registro = registroCom(BLOCO_LOGICO);
+
+  it.each(['verdadeiro', 'falso'])('gera %s com precedência PRIMARIO', (valor) => {
+    expect(gerar(registro, log(valor))).toEqual({ expr: valor, avisos: [] });
+    expect(BLOCO_LOGICO.gerar(log(valor), { campo: () => valor }).precedencia).toBe(PRECEDENCIA.PRIMARIO);
+  });
+
+  it.each([['VERDADEIRO'], ['sim'], [undefined]])('valor %j vira ??? com aviso', (valor) => {
+    expect(gerar(registro, log(valor))).toEqual({
+      expr: '???',
+      avisos: ['Escolha verdadeiro ou falso no bloco lógico'],
+    });
+  });
+
+  it('definição, rótulo e variantes', () => {
+    expect(BLOCO_LOGICO.rotulo).toBe('lógico');
+    expect(BLOCO_LOGICO.categoria).toBe('valor');
+    expect(BLOCO_LOGICO.definicao).toEqual({
+      type: 'logico',
+      message0: '%1',
+      args0: [
+        {
+          type: 'field_dropdown',
+          name: 'VALOR',
+          options: [
+            ['verdadeiro', 'verdadeiro'],
+            ['falso', 'falso'],
+          ],
+        },
+      ],
+      output: ['Logico'],
+      colour: COR_VALORES,
+      tooltip: 'Um valor lógico: verdadeiro ou falso',
+    });
+    expect(BLOCO_LOGICO.variantes.map((x) => x.nome)).toEqual(['verdadeiro', 'falso']);
+    expect(BLOCO_LOGICO.variantes[0].presente(log('verdadeiro'))).toBe(true);
+    expect(BLOCO_LOGICO.variantes[1].presente(log('verdadeiro'))).toBe(false);
+  });
+
+  it('História 4: texto Olá gera "Olá" e número 3,5 gera 3.5 (blocos da 003)', () => {
+    expect(gerar(registro, bloco('texto', { campos: { TEXTO: 'Olá' } })).expr).toBe('"Olá"');
+    expect(gerar(registro, num('3,5')).expr).toBe('3.5');
   });
 });
