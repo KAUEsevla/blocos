@@ -5,7 +5,14 @@ import * as Blockly from 'blockly';
 import * as ptBr from 'blockly/msg/pt-br';
 import { registroPadrao } from '../blocos/registro.js';
 import { variaveisDoMapa, blocosComVariaveis } from '../projeto/variaveis.js';
+import {
+  CAIXA_BLOCOS,
+  CATEGORIA_VARIAVEIS,
+  BOTAO_CRIAR_VARIAVEL,
+  conteudoCategoriaVariaveis,
+} from '../blocos/caixa-blocos.js';
 import { registrarCampoVariavel } from './campo-variavel.js';
+import { criarVariavel } from './acoes-variavel.js';
 
 let blocosDefinidos = false;
 
@@ -44,10 +51,14 @@ function definirBlocos() {
 export function criarWorkspace(container, projeto) {
   definirBlocos();
   const ws = Blockly.inject(container, {
+    toolbox: CAIXA_BLOCOS,
     trashcan: true,
     zoom: { controls: true, wheel: true },
     move: { scrollbars: true, drag: true, wheel: false },
   });
+  // Categoria dinâmica "Variáveis" e botão "Criar variável…" (spec 002, research R-05).
+  ws.registerToolboxCategoryCallback(CATEGORIA_VARIAVEIS, () => conteudoCategoriaVariaveis(variaveisDoWorkspace(ws)));
+  ws.registerButtonCallback(BOTAO_CRIAR_VARIAVEL, () => criarVariavel(ws));
   Blockly.serialization.workspaces.load(blocosComVariaveis(projeto.blocos, projeto.variaveis), ws);
   // O Blockly só mede o contêiner na injeção; o painel muda de tamanho com a janela e com o
   // empilhamento abaixo de 1024 px (spec 001, research R-03).
