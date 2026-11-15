@@ -2,7 +2,7 @@
 // plugam seus blocos sem mexer no gerador.
 import { BLOCO_PROGRAMA } from './programa.js';
 import { BLOCO_VARIAVEL_RECEBE, BLOCO_VARIAVEL } from './variaveis.js';
-import { BLOCO_ESCREVA } from './entrada-saida.js';
+import { BLOCO_ESCREVA, BLOCO_LEIA } from './entrada-saida.js';
 import { BLOCO_NUMERO, BLOCO_TEXTO } from './valores.js';
 import { BLOCO_ARITMETICO } from './contas.js';
 
@@ -81,3 +81,4 @@ registroPadrao.registrarBloco(BLOCO_ESCREVA);
 registroPadrao.registrarBloco(BLOCO_TEXTO);
 registroPadrao.registrarBloco(BLOCO_NUMERO);
 registroPadrao.registrarBloco(BLOCO_ARITMETICO);
+registroPadrao.registrarBloco(BLOCO_LEIA);

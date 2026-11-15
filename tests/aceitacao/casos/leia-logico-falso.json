@@ -1,0 +1,70 @@
+{
+  "descricao": "leia de variável lógica: qualquer texto diferente de \"verdadeiro\" vira falso (spec 003, caso de borda)",
+  "requisitos": [
+    "RF-03",
+    "RNF-07"
+  ],
+  "projeto": {
+    "formato": "meupia-blocos",
+    "versao": 1,
+    "nome": "Logico",
+    "variaveis": [
+      {
+        "id": "v-ok",
+        "nome": "ok",
+        "tipo": "logico"
+      }
+    ],
+    "blocos": {
+      "blocks": {
+        "languageVersion": 0,
+        "blocks": [
+          {
+            "type": "programa",
+            "id": "programa",
+            "x": 24,
+            "y": 24,
+            "deletable": false,
+            "inputs": {
+              "COMANDOS": {
+                "block": {
+                  "type": "leia",
+                  "id": "l1",
+                  "fields": {
+                    "VAR": {
+                      "id": "v-ok"
+                    }
+                  },
+                  "next": {
+                    "block": {
+                      "type": "escreva",
+                      "id": "e3",
+                      "inputs": {
+                        "VALOR1": {
+                          "block": {
+                            "type": "variavel",
+                            "id": "v2",
+                            "fields": {
+                              "VAR": {
+                                "id": "v-ok"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "entrada": [
+    "sim"
+  ],
+  "portugolEsperado": "algoritmo \"Logico\"\n\nvar\n    ok: logico\n\ninicio\n    leia(ok)\n    escreva(ok)\nfim_algoritmo\n",
+  "saidaEsperada": "falso\n"
+}
