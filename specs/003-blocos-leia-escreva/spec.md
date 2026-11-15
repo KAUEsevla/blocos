@@ -60,7 +60,8 @@ executar, digitar "Ana" e ver `Oi, Ana`.
 - leia de variável lógica: só o texto "verdadeiro" (sem diferenciar maiúsculas)
   vira verdadeiro; qualquer outro texto vira falso (regra do Core, mostrada como
   dica no bloco).
-- leia num projeto sem variáveis: o bloco orienta a criar uma variável primeiro.
+- leia num projeto sem variáveis: a caixa de blocos, no lugar do bloco leia, orienta a
+  criar uma variável primeiro.
 
 ## Requisitos *(obrigatório)*
 
@@ -94,3 +95,7 @@ executar, digitar "Ana" e ver `Oi, Ana`.
 
 - A forma de digitar o valor durante a execução é definida na feature 010.
 - A conversão do texto digitado para o tipo da variável segue as regras do Core.
+- Os valores fixos de número e de texto e a conta aritmética (`+ - * / %`) do RF-06
+  (spec 006) são entregues junto com esta feature, porque o "Olá, mundo!" e o caso
+  `escreva(idade + 1)` da spec 002 precisam deles. A decisão está registrada no
+  research R-03 desta feature; a spec 006 continua dona desses blocos.
