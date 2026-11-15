@@ -91,9 +91,15 @@ Regras de `conteudoCategoriaVariaveis`:
 1. Primeiro item: sempre o botão `{ kind: 'button', text: 'Criar variável…', callbackKey: 'CRIAR_VARIAVEL' }`.
 2. Sem variáveis, é o único item.
 3. Com variáveis: um `variavel_recebe` com `fields.VAR = { id }` da **última** de
-   `variaveis` (a criada por último), depois um `variavel` por variável, na ordem da
+   `variaveis`, depois um `variavel` por variável, na ordem da
    seção `var` (agrupada por tipo, ordem de criação dentro do tipo).
 4. Não altera `variaveis`; o resultado só depende dela.
+
+A "última de `variaveis`" é a última da lista do mapa do Blockly (research R-04): os
+tipos vêm na ordem em que o primeiro de cada um foi criado e, dentro do tipo, na ordem de
+criação. Ela é a criada por último quando o tipo dela é o do grupo mais recente; senão é
+a última do grupo de tipo mais recente (ex.: `idade`, `nome` (cadeia), `b` → "nome
+recebe"). Achado na T029; o estudante troca a variável no próprio bloco.
 
 ## Variáveis do projeto
 

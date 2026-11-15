@@ -16,8 +16,15 @@ export const CAIXA_BLOCOS = Object.freeze({
   ]),
 });
 
-// Itens da categoria Variáveis. O primeiro é sempre o botão; os blocos de cada variável
-// entram nas Histórias 2 e 3 (T029 e T033).
-export function conteudoCategoriaVariaveis() {
-  return [{ kind: 'button', text: 'Criar variável…', callbackKey: BOTAO_CRIAR_VARIAVEL }];
+const blocoComVariavel = (tipo, id) => ({ kind: 'block', type: tipo, fields: { VAR: { id } } });
+
+// Itens da categoria Variáveis. O primeiro é sempre o botão; com variáveis, vem um
+// "recebe" com a última da lista do mapa (História 2). Os blocos de valor de cada
+// variável entram na História 3 (T033).
+export function conteudoCategoriaVariaveis(variaveis) {
+  const lista = Array.isArray(variaveis) ? variaveis : [];
+  const itens = [{ kind: 'button', text: 'Criar variável…', callbackKey: BOTAO_CRIAR_VARIAVEL }];
+  if (lista.length === 0) return itens;
+  itens.push(blocoComVariavel('variavel_recebe', lista[lista.length - 1].id));
+  return itens;
 }

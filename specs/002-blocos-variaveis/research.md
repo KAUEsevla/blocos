@@ -182,7 +182,7 @@ Rejeitada: exigiria um desfazer próprio para variáveis, sincronizado com o do 
   com `custom: 'VARIAVEIS'`; a interface registra o *callback* com
   `ws.registerToolboxCategoryCallback`, que devolve
   `conteudoCategoriaVariaveis(variaveis)` (puro): o botão "Criar variável…"; se houver
-  variáveis, um `variavel_recebe` com a última criada e um `variavel` para cada
+  variáveis, um `variavel_recebe` com a última da lista do mapa e um `variavel` para cada
   variável, na ordem da seção `var`.
 - Precedência: `src/portugol/precedencia.js` exporta `PRECEDENCIA.PRIMARIO`. A 006
   acrescenta os níveis dos operadores na mesma constante.

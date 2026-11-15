@@ -107,7 +107,7 @@ Variáveis: `[{ "id": "v-idade", "nome": "idade", "tipo": "inteiro" }, { "id": "
 | Elemento | Forma |
 | --- | --- |
 | `CAIXA_BLOCOS` | `{ kind: 'categoryToolbox', contents: [ { kind: 'category', name: 'Variáveis', custom: 'VARIAVEIS', colour: … } ] }`. A 003–006 acrescentam categorias. |
-| `conteudoCategoriaVariaveis(variaveis)` | Lista de itens do *flyout*: `{ kind: 'button', text: 'Criar variável…', callbackKey: 'CRIAR_VARIAVEL' }`; com variáveis, `{ kind: 'block', type: 'variavel_recebe', fields: { VAR: { id } } }` da última criada e um `{ kind: 'block', type: 'variavel', fields: { VAR: { id } } }` por variável, na ordem da seção `var`. |
+| `conteudoCategoriaVariaveis(variaveis)` | Lista de itens do *flyout*: `{ kind: 'button', text: 'Criar variável…', callbackKey: 'CRIAR_VARIAVEL' }`; com variáveis, `{ kind: 'block', type: 'variavel_recebe', fields: { VAR: { id } } }` da última da lista (ver o contrato, "Caixa de blocos") e um `{ kind: 'block', type: 'variavel', fields: { VAR: { id } } }` por variável, na ordem da seção `var`. |
 
 ## Confirmação de apagar
 
