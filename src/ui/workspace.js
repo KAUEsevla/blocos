@@ -16,6 +16,7 @@ import {
 import { registrarCampoVariavel } from './campo-variavel.js';
 import { registrarMutadorEscreva } from './mutador-escreva.js';
 import { registrarValidadorNumero } from './validador-numero.js';
+import { registrarVerificadorEncaixe, NOME_VERIFICADOR } from './verificador-encaixe.js';
 import { criarVariavel } from './acoes-variavel.js';
 
 let blocosDefinidos = false;
@@ -50,6 +51,8 @@ function definirBlocos() {
   registrarCampoVariavel();
   registrarMutadorEscreva();
   registrarValidadorNumero();
+  // Tipos dos encaixes pelo tipo da variável (spec 006, research R-09).
+  registrarVerificadorEncaixe();
   const definicoes = registroPadrao.tiposRegistrados().map((tipo) => registroPadrao.obter(tipo).definicao);
   Blockly.defineBlocksWithJsonArray(definicoes);
   blocosDefinidos = true;
@@ -62,6 +65,7 @@ export function criarWorkspace(container, projeto) {
     trashcan: true,
     zoom: { controls: true, wheel: true },
     move: { scrollbars: true, drag: true, wheel: false },
+    plugins: { connectionChecker: NOME_VERIFICADOR },
   });
   // Categoria dinâmica "Variáveis" e botão "Criar variável…" (spec 002, research R-05).
   ws.registerToolboxCategoryCallback(CATEGORIA_VARIAVEIS, () => conteudoCategoriaVariaveis(variaveisDoWorkspace(ws)));
