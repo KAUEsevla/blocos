@@ -1,0 +1,170 @@
+{
+  "descricao": "Pendência P-2 da spec 002: sem atribuir, as variáveis valem 0, 0.0, texto vazio e falso no Core real",
+  "requisitos": [
+    "RF-02",
+    "RF-03",
+    "RNF-07"
+  ],
+  "projeto": {
+    "formato": "meupia-blocos",
+    "versao": 1,
+    "nome": "ValoresIniciais",
+    "variaveis": [
+      {
+        "id": "v-idade",
+        "nome": "idade",
+        "tipo": "inteiro"
+      },
+      {
+        "id": "v-altura",
+        "nome": "altura",
+        "tipo": "real"
+      },
+      {
+        "id": "v-nome",
+        "nome": "nome",
+        "tipo": "cadeia"
+      },
+      {
+        "id": "v-ok",
+        "nome": "ok",
+        "tipo": "logico"
+      }
+    ],
+    "blocos": {
+      "blocks": {
+        "languageVersion": 0,
+        "blocks": [
+          {
+            "type": "programa",
+            "id": "programa",
+            "x": 24,
+            "y": 24,
+            "deletable": false,
+            "inputs": {
+              "COMANDOS": {
+                "block": {
+                  "type": "escreva",
+                  "id": "e2",
+                  "inputs": {
+                    "VALOR1": {
+                      "block": {
+                        "type": "variavel",
+                        "id": "v1",
+                        "fields": {
+                          "VAR": {
+                            "id": "v-idade"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "next": {
+                    "block": {
+                      "type": "escreva",
+                      "id": "e4",
+                      "inputs": {
+                        "VALOR1": {
+                          "block": {
+                            "type": "variavel",
+                            "id": "v3",
+                            "fields": {
+                              "VAR": {
+                                "id": "v-altura"
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "next": {
+                        "block": {
+                          "type": "escreva",
+                          "id": "e6",
+                          "inputs": {
+                            "VALOR1": {
+                              "block": {
+                                "type": "variavel",
+                                "id": "v5",
+                                "fields": {
+                                  "VAR": {
+                                    "id": "v-nome"
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "next": {
+                            "block": {
+                              "type": "escreva",
+                              "id": "e8",
+                              "inputs": {
+                                "VALOR1": {
+                                  "block": {
+                                    "type": "variavel",
+                                    "id": "v7",
+                                    "fields": {
+                                      "VAR": {
+                                        "id": "v-ok"
+                                      }
+                                    }
+                                  }
+                                }
+                              },
+                              "next": {
+                                "block": {
+                                  "type": "escreva",
+                                  "id": "e12",
+                                  "extraState": {
+                                    "valores": 3
+                                  },
+                                  "inputs": {
+                                    "VALOR1": {
+                                      "block": {
+                                        "type": "texto",
+                                        "id": "t9",
+                                        "fields": {
+                                          "TEXTO": "["
+                                        }
+                                      }
+                                    },
+                                    "VALOR2": {
+                                      "block": {
+                                        "type": "variavel",
+                                        "id": "v10",
+                                        "fields": {
+                                          "VAR": {
+                                            "id": "v-nome"
+                                          }
+                                        }
+                                      }
+                                    },
+                                    "VALOR3": {
+                                      "block": {
+                                        "type": "texto",
+                                        "id": "t11",
+                                        "fields": {
+                                          "TEXTO": "]"
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "entrada": [],
+  "portugolEsperado": "algoritmo \"ValoresIniciais\"\n\nvar\n    idade: inteiro\n    altura: real\n    nome: cadeia\n    ok: logico\n\ninicio\n    escreva(idade)\n    escreva(altura)\n    escreva(nome)\n    escreva(ok)\n    escreva(\"[\", nome, \"]\")\nfim_algoritmo\n",
+  "saidaEsperada": "0\n0.0\n\nfalso\n[]\n"
+}

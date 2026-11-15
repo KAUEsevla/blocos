@@ -16,7 +16,9 @@ Mesma entidade `Variavel` da 008, agora com as regras da 002.
 
 **Valor inicial** (dado pelo Core, não pelo gerador): `inteiro` → `0`, `real` →
 `0.0`, `cadeia` → texto vazio, `logico` → `falso` (`code_generator.py`,
-`valor_inicial`). Conferido por caso de aceitação na 003 (plan, "Pendências").
+`valor_inicial`). Conferido no Core real pelo caso
+[`escreva-valores-iniciais.json`](../../tests/aceitacao/casos/escreva-valores-iniciais.json)
+(spec 003, pendência P-2).
 
 **Escopo**: sempre global (FR-009).
 
