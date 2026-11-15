@@ -1,0 +1,399 @@
+{
+  "descricao": "Spec 006, História 2 (cenários 1 e 2): os seis operadores de comparação, a comparação no recebe de uma variável lógica e a comparação de textos",
+  "requisitos": [
+    "RF-06",
+    "RNF-07"
+  ],
+  "projeto": {
+    "formato": "meupia-blocos",
+    "versao": 1,
+    "nome": "Comparacao",
+    "variaveis": [
+      {
+        "id": "v-idade",
+        "nome": "idade",
+        "tipo": "inteiro"
+      },
+      {
+        "id": "v-maior",
+        "nome": "maior",
+        "tipo": "logico"
+      }
+    ],
+    "blocos": {
+      "blocks": {
+        "languageVersion": 0,
+        "blocks": [
+          {
+            "type": "programa",
+            "id": "programa",
+            "x": 24,
+            "y": 24,
+            "deletable": false,
+            "inputs": {
+              "COMANDOS": {
+                "block": {
+                  "type": "variavel_recebe",
+                  "id": "r2",
+                  "fields": {
+                    "VAR": {
+                      "id": "v-idade"
+                    }
+                  },
+                  "inputs": {
+                    "VALOR": {
+                      "block": {
+                        "type": "numero",
+                        "id": "n1",
+                        "fields": {
+                          "NUM": "18"
+                        }
+                      }
+                    }
+                  },
+                  "next": {
+                    "block": {
+                      "type": "escreva",
+                      "id": "e6",
+                      "inputs": {
+                        "VALOR1": {
+                          "block": {
+                            "type": "relacional",
+                            "id": "o5",
+                            "fields": {
+                              "OP": "="
+                            },
+                            "inputs": {
+                              "A": {
+                                "block": {
+                                  "type": "variavel",
+                                  "id": "v3",
+                                  "fields": {
+                                    "VAR": {
+                                      "id": "v-idade"
+                                    }
+                                  }
+                                }
+                              },
+                              "B": {
+                                "block": {
+                                  "type": "numero",
+                                  "id": "n4",
+                                  "fields": {
+                                    "NUM": "18"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "next": {
+                        "block": {
+                          "type": "escreva",
+                          "id": "e10",
+                          "inputs": {
+                            "VALOR1": {
+                              "block": {
+                                "type": "relacional",
+                                "id": "o9",
+                                "fields": {
+                                  "OP": "<>"
+                                },
+                                "inputs": {
+                                  "A": {
+                                    "block": {
+                                      "type": "variavel",
+                                      "id": "v7",
+                                      "fields": {
+                                        "VAR": {
+                                          "id": "v-idade"
+                                        }
+                                      }
+                                    }
+                                  },
+                                  "B": {
+                                    "block": {
+                                      "type": "numero",
+                                      "id": "n8",
+                                      "fields": {
+                                        "NUM": "18"
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "next": {
+                            "block": {
+                              "type": "escreva",
+                              "id": "e14",
+                              "inputs": {
+                                "VALOR1": {
+                                  "block": {
+                                    "type": "relacional",
+                                    "id": "o13",
+                                    "fields": {
+                                      "OP": "<"
+                                    },
+                                    "inputs": {
+                                      "A": {
+                                        "block": {
+                                          "type": "variavel",
+                                          "id": "v11",
+                                          "fields": {
+                                            "VAR": {
+                                              "id": "v-idade"
+                                            }
+                                          }
+                                        }
+                                      },
+                                      "B": {
+                                        "block": {
+                                          "type": "numero",
+                                          "id": "n12",
+                                          "fields": {
+                                            "NUM": "18"
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              },
+                              "next": {
+                                "block": {
+                                  "type": "escreva",
+                                  "id": "e18",
+                                  "inputs": {
+                                    "VALOR1": {
+                                      "block": {
+                                        "type": "relacional",
+                                        "id": "o17",
+                                        "fields": {
+                                          "OP": ">"
+                                        },
+                                        "inputs": {
+                                          "A": {
+                                            "block": {
+                                              "type": "variavel",
+                                              "id": "v15",
+                                              "fields": {
+                                                "VAR": {
+                                                  "id": "v-idade"
+                                                }
+                                              }
+                                            }
+                                          },
+                                          "B": {
+                                            "block": {
+                                              "type": "numero",
+                                              "id": "n16",
+                                              "fields": {
+                                                "NUM": "18"
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  },
+                                  "next": {
+                                    "block": {
+                                      "type": "escreva",
+                                      "id": "e22",
+                                      "inputs": {
+                                        "VALOR1": {
+                                          "block": {
+                                            "type": "relacional",
+                                            "id": "o21",
+                                            "fields": {
+                                              "OP": "<="
+                                            },
+                                            "inputs": {
+                                              "A": {
+                                                "block": {
+                                                  "type": "variavel",
+                                                  "id": "v19",
+                                                  "fields": {
+                                                    "VAR": {
+                                                      "id": "v-idade"
+                                                    }
+                                                  }
+                                                }
+                                              },
+                                              "B": {
+                                                "block": {
+                                                  "type": "numero",
+                                                  "id": "n20",
+                                                  "fields": {
+                                                    "NUM": "18"
+                                                  }
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      },
+                                      "next": {
+                                        "block": {
+                                          "type": "escreva",
+                                          "id": "e26",
+                                          "inputs": {
+                                            "VALOR1": {
+                                              "block": {
+                                                "type": "relacional",
+                                                "id": "o25",
+                                                "fields": {
+                                                  "OP": ">="
+                                                },
+                                                "inputs": {
+                                                  "A": {
+                                                    "block": {
+                                                      "type": "variavel",
+                                                      "id": "v23",
+                                                      "fields": {
+                                                        "VAR": {
+                                                          "id": "v-idade"
+                                                        }
+                                                      }
+                                                    }
+                                                  },
+                                                  "B": {
+                                                    "block": {
+                                                      "type": "numero",
+                                                      "id": "n24",
+                                                      "fields": {
+                                                        "NUM": "18"
+                                                      }
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                            }
+                                          },
+                                          "next": {
+                                            "block": {
+                                              "type": "variavel_recebe",
+                                              "id": "r30",
+                                              "fields": {
+                                                "VAR": {
+                                                  "id": "v-maior"
+                                                }
+                                              },
+                                              "inputs": {
+                                                "VALOR": {
+                                                  "block": {
+                                                    "type": "relacional",
+                                                    "id": "o29",
+                                                    "fields": {
+                                                      "OP": ">="
+                                                    },
+                                                    "inputs": {
+                                                      "A": {
+                                                        "block": {
+                                                          "type": "variavel",
+                                                          "id": "v27",
+                                                          "fields": {
+                                                            "VAR": {
+                                                              "id": "v-idade"
+                                                            }
+                                                          }
+                                                        }
+                                                      },
+                                                      "B": {
+                                                        "block": {
+                                                          "type": "numero",
+                                                          "id": "n28",
+                                                          "fields": {
+                                                            "NUM": "18"
+                                                          }
+                                                        }
+                                                      }
+                                                    }
+                                                  }
+                                                }
+                                              },
+                                              "next": {
+                                                "block": {
+                                                  "type": "escreva",
+                                                  "id": "e32",
+                                                  "inputs": {
+                                                    "VALOR1": {
+                                                      "block": {
+                                                        "type": "variavel",
+                                                        "id": "v31",
+                                                        "fields": {
+                                                          "VAR": {
+                                                            "id": "v-maior"
+                                                          }
+                                                        }
+                                                      }
+                                                    }
+                                                  },
+                                                  "next": {
+                                                    "block": {
+                                                      "type": "escreva",
+                                                      "id": "e36",
+                                                      "inputs": {
+                                                        "VALOR1": {
+                                                          "block": {
+                                                            "type": "relacional",
+                                                            "id": "o35",
+                                                            "fields": {
+                                                              "OP": "="
+                                                            },
+                                                            "inputs": {
+                                                              "A": {
+                                                                "block": {
+                                                                  "type": "texto",
+                                                                  "id": "t33",
+                                                                  "fields": {
+                                                                    "TEXTO": "Ana"
+                                                                  }
+                                                                }
+                                                              },
+                                                              "B": {
+                                                                "block": {
+                                                                  "type": "texto",
+                                                                  "id": "t34",
+                                                                  "fields": {
+                                                                    "TEXTO": "Ana"
+                                                                  }
+                                                                }
+                                                              }
+                                                            }
+                                                          }
+                                                        }
+                                                      }
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "entrada": [],
+  "portugolEsperado": "algoritmo \"Comparacao\"\n\nvar\n    idade: inteiro\n    maior: logico\n\ninicio\n    idade <- 18\n    escreva(idade = 18)\n    escreva(idade <> 18)\n    escreva(idade < 18)\n    escreva(idade > 18)\n    escreva(idade <= 18)\n    escreva(idade >= 18)\n    maior <- idade >= 18\n    escreva(maior)\n    escreva(\"Ana\" = \"Ana\")\nfim_algoritmo\n",
+  "saidaEsperada": "verdadeiro\nfalso\nfalso\nfalso\nverdadeiro\nverdadeiro\nverdadeiro\nverdadeiro\n"
+}
