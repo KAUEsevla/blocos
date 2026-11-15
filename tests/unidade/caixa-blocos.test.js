@@ -119,3 +119,34 @@ describe('itens de bloco das categorias estáticas', () => {
     }
   });
 });
+
+// Spec 003, caso de borda "leia num projeto sem variáveis" (research R-09).
+describe('conteudoCategoriaEntradaSaida com e sem variáveis', () => {
+  const ESCREVA = {
+    kind: 'block',
+    type: 'escreva',
+    inputs: { VALOR1: { block: { type: 'texto', fields: { TEXTO: 'Olá, mundo!' } } } },
+  };
+
+  it('sem variáveis: escreva, a orientação e o botão Criar variável…, sem leia', async () => {
+    const { conteudoCategoriaEntradaSaida, TEXTO_LEIA_SEM_VARIAVEL } = await import('../../src/blocos/caixa-blocos.js');
+    expect(TEXTO_LEIA_SEM_VARIAVEL).toBe('Para usar o leia, crie uma variável primeiro.');
+    expect(conteudoCategoriaEntradaSaida([])).toEqual([
+      ESCREVA,
+      { kind: 'label', text: 'Para usar o leia, crie uma variável primeiro.' },
+      { kind: 'button', text: 'Criar variável…', callbackKey: BOTAO_CRIAR_VARIAVEL },
+    ]);
+  });
+
+  it('com variáveis: escreva e um único leia com a última da lista do mapa', async () => {
+    const { conteudoCategoriaEntradaSaida } = await import('../../src/blocos/caixa-blocos.js');
+    const lista = [
+      { id: 'v-a', nome: 'a', tipo: 'inteiro' },
+      { id: 'v-nome', nome: 'nome', tipo: 'cadeia' },
+    ];
+    expect(conteudoCategoriaEntradaSaida(lista)).toEqual([
+      ESCREVA,
+      { kind: 'block', type: 'leia', fields: { VAR: { id: 'v-nome' } } },
+    ]);
+  });
+});
