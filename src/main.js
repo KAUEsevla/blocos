@@ -1,6 +1,8 @@
 // Bootstrap da página do meuPiá Blocos (fora da cobertura: interface).
 // Tela de três painéis da spec 001, com o Portugol em tempo real da spec 007: o
 // atualizador do núcleo decide quando gerar (contracts/editor.md, seção src/main.js).
+// Spec 002: as variáveis vêm do mapa do workspace a cada geração; criar, renomear e apagar
+// variável disparam eventos não-UI, que já chegam ao tempoReal.notificar (research R-04).
 import './estilos.css';
 import { projetoVazio } from './projeto/formato.js';
 import { assinaturaProjeto, haAlteracoes } from './projeto/alteracoes.js';
@@ -11,6 +13,7 @@ import {
   criarWorkspace,
   recarregarBlocos,
   serializarBlocos,
+  variaveisDoWorkspace,
   ouvirEventos,
   desfazer,
   refazer,
@@ -28,13 +31,13 @@ const preCodigo = document.getElementById('codigo-portugol');
 const mensagemCopia = document.getElementById('mensagem-copia');
 const saida = criarPainelSaida(document.getElementById('saida'));
 
-// Projeto aberto (data-model): o nome vem do campo, os blocos do workspace.
+// Projeto aberto (data-model): o nome vem do campo; variáveis e blocos, do workspace.
 let projeto = projetoVazio();
-const ws = criarWorkspace(document.getElementById('area-blocos'), projeto.blocos);
+const ws = criarWorkspace(document.getElementById('area-blocos'), projeto);
 let ultimoCodigo = '';
 
 function projetoAtual() {
-  return { ...projeto, blocos: serializarBlocos(ws) };
+  return { ...projeto, variaveis: variaveisDoWorkspace(ws), blocos: serializarBlocos(ws) };
 }
 
 // A referência sai do projeto depois de carregado no workspace, nunca direto de
@@ -69,7 +72,7 @@ async function novoProjeto() {
   }
   projeto = projetoVazio();
   definirNome(projeto.nome);
-  recarregarBlocos(ws, projeto.blocos);
+  recarregarBlocos(ws, projeto);
   tempoReal.atualizarAgora();
   saida.mostrarOrientacao();
   referencia = assinaturaProjeto(projetoAtual());

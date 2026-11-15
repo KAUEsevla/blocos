@@ -1,7 +1,11 @@
 // Integração com o Blockly (interface; fora da cobertura).
+// Spec 002 (research R-04): as variáveis vivem no mapa de variáveis do workspace; o projeto
+// entra com projeto.variaveis e sai por variaveisDoWorkspace().
 import * as Blockly from 'blockly';
 import * as ptBr from 'blockly/msg/pt-br';
 import { registroPadrao } from '../blocos/registro.js';
+import { variaveisDoMapa, blocosComVariaveis } from '../projeto/variaveis.js';
+import { registrarCampoVariavel } from './campo-variavel.js';
 
 let blocosDefinidos = false;
 
@@ -30,30 +34,38 @@ function definirBlocos() {
   if (blocosDefinidos) return;
   Blockly.setLocale(ptBr);
   Object.assign(Blockly.Msg, TRADUCOES_FALTANTES);
+  // O campo próprio precisa existir antes das definições que o citam.
+  registrarCampoVariavel();
   const definicoes = registroPadrao.tiposRegistrados().map((tipo) => registroPadrao.obter(tipo).definicao);
   Blockly.defineBlocksWithJsonArray(definicoes);
   blocosDefinidos = true;
 }
 
-export function criarWorkspace(container, blocosIniciais) {
+export function criarWorkspace(container, projeto) {
   definirBlocos();
   const ws = Blockly.inject(container, {
     trashcan: true,
     zoom: { controls: true, wheel: true },
     move: { scrollbars: true, drag: true, wheel: false },
   });
-  Blockly.serialization.workspaces.load(blocosIniciais, ws);
+  Blockly.serialization.workspaces.load(blocosComVariaveis(projeto.blocos, projeto.variaveis), ws);
   // O Blockly só mede o contêiner na injeção; o painel muda de tamanho com a janela e com o
   // empilhamento abaixo de 1024 px (spec 001, research R-03).
   new ResizeObserver(() => Blockly.svgResize(ws)).observe(container);
   return ws;
 }
 
-// Troca todos os blocos do workspace (o load já limpa o que havia) e zera o desfazer,
-// para que Ctrl+Z não volte ao projeto descartado (spec 001, FR-007).
-export function recarregarBlocos(ws, blocos) {
-  Blockly.serialization.workspaces.load(blocos, ws);
+// Troca todos os blocos e variáveis do workspace (o load já limpa o que havia) e zera o
+// desfazer, para que Ctrl+Z não volte ao projeto descartado (spec 001, FR-007). Recebe o
+// projeto inteiro: as variáveis entram junto com os blocos (spec 002).
+export function recarregarBlocos(ws, projeto) {
+  Blockly.serialization.workspaces.load(blocosComVariaveis(projeto.blocos, projeto.variaveis), ws);
   ws.clearUndo();
+}
+
+// Lista de variáveis do projeto, na ordem do mapa do Blockly (spec 002, research R-04).
+export function variaveisDoWorkspace(ws) {
+  return variaveisDoMapa(ws.getVariableMap().getAllVariables());
 }
 
 export function serializarBlocos(ws) {
