@@ -170,6 +170,14 @@ Rejeitada: exigiria um desfazer próprio para variáveis, sincronizado com o do 
   `FieldVariable` do Blockly com `variableTypes` = os quatro tipos. A definição JSON
   do bloco só cita o nome do campo (continua pura); a interface registra a classe
   com `Blockly.fieldRegistry.register` antes do `defineBlocksWithJsonArray`.
+- Campo sem variável (decidido na T005, plano A): `initModel()` não cria variável e
+  `getText()` mostra `???`. No 12.5.1 o `FieldVariable` também supõe uma variável em
+  `saveState()`, `toXml()` (usado pelo evento de criação do bloco) e `dropdownCreate()`,
+  então o campo próprio cobre os três: serializa `VAR: null` (o gerador já trata como
+  "Falta a variável…"), grava `<field>` vazio e mostra o menu das variáveis existentes.
+  Como sobrescrever `fromXml()` sozinho faz o Blockly carregar o JSON pelo XML
+  ("estado legado"), `loadState()` também é sobrescrito. O construtor aponta
+  `menuGenerator_` para o menu da subclasse (o original usa o da classe base).
 - A caixa de blocos passa a ter categorias. A 002 cria a categoria "Variáveis"
   com `custom: 'VARIAVEIS'`; a interface registra o *callback* com
   `ws.registerToolboxCategoryCallback`, que devolve
