@@ -122,7 +122,7 @@ nasce aqui, usado como valor da atribuição; a História 3 completa o uso dele.
 - [X] T027 [US2] Em `src/ui/workspace.js`, nada a mudar para os blocos aparecerem no Blockly (o `definirBlocos` já define tudo do `registroPadrao`); conferir no navegador que o `campo_variavel` está registrado antes da definição (sem erro "Unknown field type" no console). Se a cor dos blocos ficar diferente da categoria, alinhar a `colour` da categoria em `src/blocos/caixa-blocos.js` com a dos blocos (depende de T020, T026) (FR-005) (RF-02)
 - [X] T028 [P] [US2] Em `tests/unidade/caixa-blocos.test.js`, trocar a expectativa "com variáveis, só o botão" por: com variáveis, depois do botão vem `{ kind: 'block', type: 'variavel_recebe', fields: { VAR: { id } } }` com o id da **última** variável da lista; com uma variável e com quatro de tipos misturados. Deve falhar até T029 (FR-005) (RF-02)
 - [X] T029 [US2] Em `src/blocos/caixa-blocos.js`, acrescentar o bloco `variavel_recebe` da última variável depois do botão (regra 3 de "Caixa de blocos" no contrato, primeira parte). Implementar até T028 passar (depende de T028, T026) (FR-005) (RF-02)
-- [ ] T030 [US2] Validar no navegador os passos 6, 7 e 16 da seção 2 e os passos A, C e D da seção 3 do [quickstart.md](quickstart.md) (atribuição sem valor com aviso, valor encaixado, SC-003 cronometrado, linha em até 1 s, desfazer, arraste sem soltar). Registrar o resultado para o PR (depende de T027, T029) (FR-005, SC-003) (RF-02, RF-07)
+- [X] T030 [US2] Validar no navegador os passos 6, 7 e 16 da seção 2 e os passos A, C e D da seção 3 do [quickstart.md](quickstart.md) (atribuição sem valor com aviso, valor encaixado, SC-003 cronometrado, linha em até 1 s, desfazer, arraste sem soltar). Registrar o resultado para o PR (depende de T027, T029) (FR-005, SC-003) (RF-02, RF-07)
 
 **Checkpoint**: Histórias 1 e 2 funcionam juntas; o editor já monta programas com
 atribuições aceitos pelo Core.
@@ -140,13 +140,13 @@ que espere um valor (FR-006).
 
 ### Testes da História 3
 
-- [ ] T031 [P] [US3] Em `tests/unidade/blocos-variaveis.test.js`, acrescentar `describe('História 3 …')`: (1) `teste_escreva [teste_soma [idade] [teste_numero 1]]` → `    escreva(idade + 1)` sem avisos (cenário 1); (2) `variavel` na condição de `teste_se` → `    se idade entao`; (3) `variavel` no valor de `variavel_recebe` de outra variável (`a <- b`) e da própria (`a <- a`); (4) `variavel` com campo sem id dentro de `teste_soma` → `??? + 1` e o aviso "Falta a variável do bloco variável" (FR-006) (RF-02)
+- [X] T031 [P] [US3] Em `tests/unidade/blocos-variaveis.test.js`, acrescentar `describe('História 3 …')`: (1) `teste_escreva [teste_soma [idade] [teste_numero 1]]` → `    escreva(idade + 1)` sem avisos (cenário 1); (2) `variavel` na condição de `teste_se` → `    se idade entao`; (3) `variavel` no valor de `variavel_recebe` de outra variável (`a <- b`) e da própria (`a <- a`); (4) `variavel` com campo sem id dentro de `teste_soma` → `??? + 1` e o aviso "Falta a variável do bloco variável" (FR-006) (RF-02)
 - [ ] T032 [P] [US3] Em `tests/unidade/caixa-blocos.test.js`, acrescentar: depois do `variavel_recebe`, um `{ kind: 'block', type: 'variavel', fields: { VAR: { id } } }` por variável na **ordem da seção `var`** (agrupada `inteiro`, `real`, `cadeia`, `logico`; ordem de criação dentro do tipo), com quatro variáveis criadas fora dessa ordem. Deve falhar até T033 (FR-006) (RF-02)
 
 ### Implementação da História 3
 
 - [ ] T033 [US3] Em `src/blocos/caixa-blocos.js`, completar a regra 3 de "Caixa de blocos": um `variavel` por variável na ordem da seção `var`, reaproveitando `TIPOS_VARIAVEL` para agrupar (mesma regra de `gerarSecaoVar`, sem importar o emissor). Implementar até T032 passar (depende de T032, T029) (FR-006) (RF-02)
-- [ ] T034 [US3] Validar no navegador: com `idade`, `b` (inteiros) e `nome` (cadeia), criadas nessa ordem, a categoria mostra "nome recebe" (a última criada) e os blocos `idade`, `b`, `nome` nessa ordem; encaixar `idade` no valor de "b recebe" → `    b <- idade`. Registrar o resultado para o PR (depende de T033) (FR-006) (RF-02)
+- [ ] T034 [US3] Validar no navegador: com `idade`, `b` (inteiros) e `nome` (cadeia), criadas nessa ordem, a categoria mostra "nome recebe" (a última criada) e os blocos `idade`, `b`, `nome` nessa ordem; encaixar `idade` no valor de "b recebe" → `    b <- idade`. Fazer também os passos 7 (encaixar o bloco `b` no valor de "idade recebe" → `    idade <- b`, o aviso some) e 16 (SC-003: cronometrar do passo 1 até `idade <- b`) da seção 2 do quickstart, que ficaram da T030 por precisarem do bloco de valor na caixa. Registrar o resultado para o PR (depende de T033) (FR-006) (RF-02)
 
 **Checkpoint**: ciclo declarar → guardar → usar completo dentro do que existe antes da
 003/006 (o `escreva(idade + 1)` no Core fica para elas; plan, "Pendências").

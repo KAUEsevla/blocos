@@ -101,3 +101,35 @@ describe('entradas do registro', () => {
     expect(BLOCO_VARIAVEL.gerar(ler(IDADE), ctx)).toEqual({ codigo: 'idade', precedencia: PRECEDENCIA.PRIMARIO });
   });
 });
+
+describe('História 3 - Usar o valor de uma variável (FR-006)', () => {
+  const B = { id: 'v-b', nome: 'b', tipo: 'inteiro' };
+  const A = { id: 'v-a', nome: 'a', tipo: 'inteiro' };
+
+  it('cenário 1: escreva(idade + 1), sem avisos', () => {
+    const soma = bloco('teste_soma', { entradas: { A: ler(IDADE), B: numero(1) } });
+    const r = corpo([IDADE], [bloco('teste_escreva', { entradas: { VALOR: soma } })]);
+    expect(r.linhas).toEqual(['    escreva(idade + 1)']);
+    expect(r.avisos).toEqual([]);
+  });
+
+  it('na condição de um se: se idade entao', () => {
+    const se = bloco('teste_se', { entradas: { CONDICAO: ler(IDADE) } });
+    const r = corpo([IDADE], [se]);
+    expect(r.linhas).toEqual(['    se idade entao', '    fim_se']);
+    expect(r.avisos).toEqual([]);
+  });
+
+  it('no valor de um recebe: de outra variável (a <- b) e da própria (a <- a)', () => {
+    const r = corpo([A, B], [recebe(A, ler(B)), recebe(A, ler(A))]);
+    expect(r.linhas).toEqual(['    a <- b', '    a <- a']);
+    expect(r.avisos).toEqual([]);
+  });
+
+  it('variável sem id dentro de uma soma: ??? + 1 com o aviso do bloco variável', () => {
+    const soma = bloco('teste_soma', { entradas: { A: ler(null), B: numero(1) } });
+    const r = corpo([IDADE], [bloco('teste_escreva', { entradas: { VALOR: soma } })]);
+    expect(r.linhas).toEqual(['    escreva(??? + 1)']);
+    expect(r.avisos).toEqual(['Falta a variável do bloco variável']);
+  });
+});
