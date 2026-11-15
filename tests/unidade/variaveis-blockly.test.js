@@ -2,7 +2,7 @@
 // (RF-02; research R-04). Blockly headless, como bloco-programa.test.js.
 import { describe, it, expect, beforeAll, beforeEach } from 'vitest';
 import * as Blockly from 'blockly';
-import { variaveisDoMapa, blocosComVariaveis } from '../../src/projeto/variaveis.js';
+import { variaveisDoMapa, blocosComVariaveis, contarBlocosApagados } from '../../src/projeto/variaveis.js';
 import { projetoVazio } from '../../src/projeto/formato.js';
 import { registroPadrao, criarRegistro } from '../../src/blocos/registro.js';
 import { BLOCO_PROGRAMA } from '../../src/blocos/programa.js';
@@ -129,5 +129,130 @@ describe('blocos de variável no Blockly headless (spec 002, T025)', () => {
     expect(valor.getField('VAR').getText()).toBe('???');
     expect(recebe.getField('VAR').getText()).toBe('???');
     expect(Blockly.serialization.blocks.save(valor).fields).toEqual({ VAR: null });
+  });
+});
+
+describe('renomear, mudar o tipo e apagar no Blockly headless (spec 002, T037; research R-06)', () => {
+  const VARIAVEIS = [
+    { id: 'v-idade', nome: 'idade', tipo: 'inteiro' },
+    { id: 'v-b', nome: 'b', tipo: 'inteiro' },
+    { id: 'v-x', nome: 'x', tipo: 'inteiro' },
+  ];
+  const usa = (id) => ({ VAR: { id } });
+  const ler = (id, bid) => ({ type: 'variavel', id: bid, fields: usa(id) });
+  const recebe = (id, valor, bid, next) => ({
+    type: 'variavel_recebe',
+    id: bid,
+    fields: usa(id),
+    ...(valor ? { inputs: { VALOR: { block: valor } } } : {}),
+    ...(next ? { next: { block: next } } : {}),
+  });
+  // programa → idade recebe [b] → x recebe [idade]; e um "idade" solto.
+  const blocosDeTeste = () => ({
+    blocks: {
+      languageVersion: 0,
+      blocks: [
+        {
+          type: 'programa',
+          id: 'programa',
+          x: 24,
+          y: 24,
+          inputs: {
+            COMANDOS: { block: recebe('v-idade', ler('v-b', 'l1'), 'r1', recebe('v-x', ler('v-idade', 'l2'), 'r2')) },
+          },
+        },
+        { ...ler('v-idade', 'solto'), x: 300, y: 300 },
+      ],
+    },
+  });
+
+  let ws;
+
+  beforeAll(() => {
+    registrarCampoVariavel();
+    Blockly.defineBlocksWithJsonArray(
+      [BLOCO_PROGRAMA, BLOCO_VARIAVEL_RECEBE, BLOCO_VARIAVEL].map((b) => b.definicao),
+    );
+  });
+
+  beforeEach(() => {
+    ws = new Blockly.Workspace();
+    Blockly.serialization.workspaces.load(blocosComVariaveis(blocosDeTeste(), VARIAVEIS), ws);
+    ws.clearUndo();
+  });
+
+  const salvar = () => {
+    const blocos = Blockly.serialization.workspaces.save(ws);
+    delete blocos.variables;
+    return blocos;
+  };
+  const gerar = () =>
+    gerarPortugol({ ...projetoVazio(), variaveis: variaveisDoMapa(ws.getVariableMap().getAllVariables()), blocos: salvar() });
+
+  it('renameVariable muda os três campos que usam idade e o Portugol', () => {
+    const v = ws.getVariableMap().getVariableById('v-idade');
+    ws.getVariableMap().renameVariable(v, 'anos');
+    for (const id of ['r1', 'l2', 'solto']) expect(ws.getBlockById(id).getField('VAR').getText()).toBe('anos');
+    const { codigo } = gerar();
+    expect(codigo).toContain('    anos: inteiro\n');
+    expect(codigo).toContain('    anos <- b\n    x <- anos\n');
+  });
+
+  it('getVariableUsesById encontra os três usos', () => {
+    expect(Blockly.Variables.getVariableUsesById(ws, 'v-idade')).toHaveLength(3);
+  });
+
+  it('deleteVariable apaga a variável e os usos; o comando seguinte sobe; um desfazer volta tudo', async () => {
+    const antes = ws.getAllBlocks(false).length;
+    ws.getVariableMap().deleteVariable(ws.getVariableMap().getVariableById('v-idade'));
+    await eventosEntregues();
+
+    expect(ws.getVariableMap().getVariableById('v-idade')).toBeNull();
+    for (const id of ['r1', 'l1', 'l2', 'solto']) expect(ws.getBlockById(id), id).toBeNull();
+    expect(ws.getBlockById('programa').getInputTargetBlock('COMANDOS').id).toBe('r2');
+    expect(ws.getAllBlocks(false).length).toBe(antes - 4);
+
+    ws.undo(false);
+    await eventosEntregues();
+    expect(ws.getVariableMap().getVariableById('v-idade')).not.toBeNull();
+    expect(ws.getAllBlocks(false).length).toBe(antes);
+    expect(ws.getBlockById('programa').getInputTargetBlock('COMANDOS').id).toBe('r1');
+  });
+
+  it('changeVariableType com a variável em uso mantém os blocos', () => {
+    const antes = ws.getAllBlocks(false).length;
+    ws.getVariableMap().changeVariableType(ws.getVariableMap().getVariableById('v-idade'), 'real');
+    expect(ws.getAllBlocks(false).length).toBe(antes);
+    expect(ws.getBlockById('r1').getField('VAR').getText()).toBe('idade');
+    expect(gerar().codigo).toContain('    idade: real\n');
+  });
+
+  it.each([
+    ['idade recebe [b] + dois idade soltos', 'v-idade', (b) => b.blocks.blocks.push({ ...ler('v-idade', 's2'), x: 400, y: 400 })],
+    ['x recebe [idade] (uso dentro de outro bloco)', 'v-idade', () => {}],
+    ['apagar b (usado como valor de idade recebe)', 'v-b', () => {}],
+  ])('contarBlocosApagados bate com o que o deleteVariable remove: %s', (_nome, id, ajustar) => {
+    const blocos = blocosDeTeste();
+    ajustar(blocos);
+    Blockly.serialization.workspaces.load(blocosComVariaveis(blocos, VARIAVEIS), ws);
+    const { total } = contarBlocosApagados(salvar(), id);
+    const antes = ws.getAllBlocks(false).length;
+    ws.getVariableMap().deleteVariable(ws.getVariableMap().getVariableById(id));
+    expect(antes - ws.getAllBlocks(false).length).toBe(total);
+  });
+
+  it('contagem igual também com idade recebe [idade]', () => {
+    const blocos = {
+      blocks: {
+        languageVersion: 0,
+        blocks: [{ type: 'programa', id: 'programa', x: 0, y: 0, inputs: { COMANDOS: { block: recebe('v-idade', ler('v-idade', 'l9'), 'r9') } } }],
+      },
+    };
+    Blockly.serialization.workspaces.load(blocosComVariaveis(blocos, VARIAVEIS), ws);
+    const contagem = contarBlocosApagados(salvar(), 'v-idade');
+    expect(contagem).toEqual({ usos: 2, total: 2 });
+    const antes = ws.getAllBlocks(false).length;
+    ws.getVariableMap().deleteVariable(ws.getVariableMap().getVariableById('v-idade'));
+    expect(antes - ws.getAllBlocks(false).length).toBe(2);
   });
 });
