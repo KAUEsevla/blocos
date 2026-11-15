@@ -5,7 +5,7 @@ import { BLOCO_PROGRAMA } from './programa.js';
 import { BLOCO_VARIAVEL_RECEBE, BLOCO_VARIAVEL } from './variaveis.js';
 import { BLOCO_ESCREVA, BLOCO_LEIA } from './entrada-saida.js';
 import { BLOCO_NUMERO, BLOCO_TEXTO } from './valores.js';
-import { BLOCO_ARITMETICO } from './contas.js';
+import { BLOCO_ARITMETICO, BLOCO_NEGATIVO } from './contas.js';
 
 const CATEGORIAS = ['comando', 'valor', 'raiz'];
 const OBRIGATORIOS = ['tipo', 'rotulo', 'categoria', 'definicao', 'gerar'];
@@ -97,4 +97,5 @@ registroPadrao.registrarBloco(BLOCO_ESCREVA);
 registroPadrao.registrarBloco(BLOCO_TEXTO);
 registroPadrao.registrarBloco(BLOCO_NUMERO);
 registroPadrao.registrarBloco(BLOCO_ARITMETICO);
+registroPadrao.registrarBloco(BLOCO_NEGATIVO);
 registroPadrao.registrarBloco(BLOCO_LEIA);

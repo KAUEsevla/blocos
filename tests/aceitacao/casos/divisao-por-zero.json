@@ -1,0 +1,70 @@
+{
+  "descricao": "Spec 006, caso de borda: a divisão por zero não é bloqueada no editor; o Core informa o erro na execução",
+  "requisitos": [
+    "RF-06",
+    "RNF-07"
+  ],
+  "projeto": {
+    "formato": "meupia-blocos",
+    "versao": 1,
+    "nome": "DivisaoZero",
+    "variaveis": [],
+    "blocos": {
+      "blocks": {
+        "languageVersion": 0,
+        "blocks": [
+          {
+            "type": "programa",
+            "id": "programa",
+            "x": 24,
+            "y": 24,
+            "deletable": false,
+            "inputs": {
+              "COMANDOS": {
+                "block": {
+                  "type": "escreva",
+                  "id": "e4",
+                  "inputs": {
+                    "VALOR1": {
+                      "block": {
+                        "type": "aritmetico",
+                        "id": "o3",
+                        "fields": {
+                          "OP": "/"
+                        },
+                        "inputs": {
+                          "A": {
+                            "block": {
+                              "type": "numero",
+                              "id": "n1",
+                              "fields": {
+                                "NUM": "1"
+                              }
+                            }
+                          },
+                          "B": {
+                            "block": {
+                              "type": "numero",
+                              "id": "n2",
+                              "fields": {
+                                "NUM": "0"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "entrada": [],
+  "portugolEsperado": "algoritmo \"DivisaoZero\"\n\ninicio\n    escreva(1 / 0)\nfim_algoritmo\n",
+  "saidaEsperada": "",
+  "statusEsperado": "erro_execucao"
+}
