@@ -206,7 +206,8 @@ Variantes: "inteiro" (sem ponto) e "real" (com ponto).
 **Lacuna do Core**: `007` passa no lexer e no parser, mas o Python gerado é inválido e o
 Core devolve "Erro interno do compilador". O passo 4 é o adapter do lado do editor
 (princípio I). A issue em `meuPia/core` ("Inteiro com zeros à esquerda gera Python
-inválido") é aberta pela dupla numa task de documentação, como na 008/R-09.
+inválido") foi aberta pela dupla, como na 008/R-09:
+[meuPia/core#15](https://github.com/meuPia/core/issues/15).
 
 **Texto da issue** (T032; a dupla abre em `meuPia/core` e põe o link aqui):
 
@@ -233,7 +234,7 @@ inválido") é aberta pela dupla numa task de documentação, como na 008/R-09.
 > **Contorno no meuPiá Blocos**: o bloco de número tira os zeros à esquerda antes de gerar
 > o Portugol (`normalizarNumero`, `src/blocos/valores.js`).
 
-**Link da issue**: _pendente (a dupla abre; ver T034)._
+**Link da issue**: [meuPia/core#15](https://github.com/meuPia/core/issues/15).
 
 **Alternativas consideradas**: `field_number` do Blockly (rejeitada: recusa vírgula e
 mostra números com formatação do navegador); gerar o texto como digitado (rejeitada:
