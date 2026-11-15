@@ -5,7 +5,11 @@ import * as Blockly from 'blockly';
 import { readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { registroPadrao } from '../../src/blocos/registro.js';
-import { blocosComVariaveis } from '../../src/projeto/variaveis.js';
+import { blocosComVariaveis, variaveisDoMapa } from '../../src/projeto/variaveis.js';
+import { projetoVazio } from '../../src/projeto/formato.js';
+import { gerarPortugol } from '../../src/portugol/gerador.js';
+import { aplicarTipoVariavel } from '../../src/ui/acoes-variavel.js';
+import { trocarVariavelDoBloco } from '../../src/ui/campo-variavel.js';
 import { registrarCampoVariavel } from '../../src/ui/campo-variavel.js';
 import { registrarMutadorEscreva } from '../../src/ui/mutador-escreva.js';
 import { registrarValidadorNumero } from '../../src/ui/validador-numero.js';
@@ -90,5 +94,152 @@ describe('verificador de encaixe (research R-09)', () => {
       ).not.toThrow();
       expect(vazio.getTopBlocks(false).length).toBe(projeto.blocos.blocks.blocks.length);
     });
+  });
+});
+
+// Parte 2: blocos novos, mudar o tipo e trocar a variável sem quebrar encaixes (research R-10).
+describe('tipos com os blocos da 006 e mudanças de variável (research R-10)', () => {
+  let ws;
+
+  const VARIAVEIS = [
+    { id: 'v-idade', nome: 'idade', tipo: 'inteiro' },
+    { id: 'v-altura', nome: 'altura', tipo: 'real' },
+    { id: 'v-ok', nome: 'ok', tipo: 'logico' },
+  ];
+  const variavel = (id, idBloco) => ({ type: 'variavel', id: idBloco, fields: { VAR: { id } } });
+  const programaCom = (comando) => ({
+    blocks: {
+      languageVersion: 0,
+      blocks: [{ type: 'programa', id: 'programa', x: 0, y: 0, deletable: false, inputs: { COMANDOS: { block: comando } } }],
+    },
+  });
+  const carregar = (comando) =>
+    Blockly.serialization.workspaces.load(blocosComVariaveis(programaCom(comando), VARIAVEIS), ws);
+  const portugol = () => {
+    const blocos = Blockly.serialization.workspaces.save(ws);
+    delete blocos.variables;
+    return gerarPortugol({ ...projetoVazio(), variaveis: variaveisDoMapa(ws.getVariableMap().getAllVariables()), blocos });
+  };
+  const tipo = (id) => ws.getVariableMap().getVariableById(id).getType();
+  // O Blockly entrega os eventos à pilha do desfazer num setTimeout(0).
+  const desfazer = async () => {
+    await new Promise((r) => setTimeout(r, 0));
+    ws.undo(false);
+  };
+
+  // escreva(idade + 1)
+  const escrevaIdadeMaisUm = () => ({
+    type: 'escreva',
+    id: 'e1',
+    inputs: {
+      VALOR1: {
+        block: {
+          type: 'aritmetico',
+          id: 'c1',
+          fields: { OP: '+' },
+          inputs: {
+            A: { block: variavel('v-idade', 'vi') },
+            B: { block: { type: 'numero', id: 'n1', fields: { NUM: '1' } } },
+          },
+        },
+      },
+    },
+  });
+  // ok recebe (idade >= 18)
+  const okRecebeComparacao = () => ({
+    type: 'variavel_recebe',
+    id: 'r1',
+    fields: { VAR: { id: 'v-ok' } },
+    inputs: {
+      VALOR: {
+        block: {
+          type: 'relacional',
+          id: 'q1',
+          fields: { OP: '>=' },
+          inputs: {
+            A: { block: variavel('v-idade', 'vi') },
+            B: { block: { type: 'numero', id: 'n1', fields: { NUM: '18' } } },
+          },
+        },
+      },
+    },
+  });
+
+  beforeAll(registrarTudo);
+
+  beforeEach(() => {
+    ws = novoWorkspace();
+  });
+
+  it('blocos da 006 recusam e aceitam conforme os tipos', () => {
+    for (const v of VARIAVEIS) ws.getVariableMap().createVariable(v.nome, v.tipo, v.id);
+    expect(podeEncaixar(ws, criar(ws, 'numero'), criar(ws, 'e_ou', { campos: { OP: 'e' } }), 'A')).toBe(false);
+    expect(podeEncaixar(ws, criar(ws, 'relacional'), criar(ws, 'aritmetico'), 'A')).toBe(false);
+    expect(podeEncaixar(ws, criar(ws, 'variavel', { variavel: 'v-ok' }), criar(ws, 'negativo'), 'X')).toBe(false);
+    const recebeOk = criar(ws, 'variavel_recebe', { variavel: 'v-ok' });
+    expect(podeEncaixar(ws, criar(ws, 'numero'), recebeOk, 'VALOR')).toBe(false);
+    expect(podeEncaixar(ws, criar(ws, 'relacional'), recebeOk, 'VALOR')).toBe(true);
+    expect(podeEncaixar(ws, criar(ws, 'logico'), criar(ws, 'nao'), 'X')).toBe(true);
+  });
+
+  it('mudar idade para lógico solta o bloco da conta, e um Ctrl+Z volta tudo', async () => {
+    carregar(escrevaIdadeMaisUm());
+    aplicarTipoVariavel(ws, 'v-idade', 'logico');
+    expect(tipo('v-idade')).toBe('logico');
+    expect(ws.getBlockById('vi').getParent()).toBeNull();
+    expect(ws.getBlockById('c1').getInputTargetBlock('A')).toBeNull();
+    const { codigo, avisos } = portugol();
+    expect(codigo).toContain('    escreva(??? + 1)\n');
+    expect(avisos.map((a) => a.mensagem)).toContain('Falta o primeiro valor do bloco conta');
+
+    await desfazer();
+    expect(tipo('v-idade')).toBe('inteiro');
+    expect(ws.getBlockById('c1').getInputTargetBlock('A')?.id).toBe('vi');
+  });
+
+  it('mudar ok para inteiro solta a comparação do recebe, e um Ctrl+Z volta', async () => {
+    carregar(okRecebeComparacao());
+    aplicarTipoVariavel(ws, 'v-ok', 'inteiro');
+    expect(ws.getBlockById('r1').getInputTargetBlock('VALOR')).toBeNull();
+    expect(ws.getBlockById('q1').getParent()).toBeNull();
+    await desfazer();
+    expect(tipo('v-ok')).toBe('logico');
+    expect(ws.getBlockById('r1').getInputTargetBlock('VALOR')?.id).toBe('q1');
+  });
+
+  it('mudar para um tipo compatível não solta nada', () => {
+    carregar(escrevaIdadeMaisUm());
+    aplicarTipoVariavel(ws, 'v-idade', 'real');
+    expect(tipo('v-idade')).toBe('real');
+    expect(ws.getBlockById('c1').getInputTargetBlock('A')?.id).toBe('vi');
+  });
+
+  it('trocar idade por ok no bloco da conta solta o bloco, e um Ctrl+Z volta', async () => {
+    carregar(escrevaIdadeMaisUm());
+    const bloco = ws.getBlockById('vi');
+    trocarVariavelDoBloco(bloco, 'v-ok');
+    expect(bloco.getField('VAR').getValue()).toBe('v-ok');
+    expect(bloco.getParent()).toBeNull();
+    await desfazer();
+    expect(bloco.getField('VAR').getValue()).toBe('v-idade');
+    expect(ws.getBlockById('c1').getInputTargetBlock('A')?.id).toBe('vi');
+  });
+
+  it('trocar por uma variável compatível não solta nada', () => {
+    carregar(escrevaIdadeMaisUm());
+    const bloco = ws.getBlockById('vi');
+    trocarVariavelDoBloco(bloco, 'v-altura');
+    expect(bloco.getField('VAR').getValue()).toBe('v-altura');
+    expect(ws.getBlockById('c1').getInputTargetBlock('A')?.id).toBe('vi');
+  });
+
+  it('trocar a variável do recebe solta o valor que não cabe, e um Ctrl+Z volta', async () => {
+    carregar(okRecebeComparacao());
+    trocarVariavelDoBloco(ws.getBlockById('r1'), 'v-idade');
+    expect(ws.getBlockById('r1').getField('VAR').getValue()).toBe('v-idade');
+    expect(ws.getBlockById('q1').getParent()).toBeNull();
+    await desfazer();
+    expect(ws.getBlockById('r1').getField('VAR').getValue()).toBe('v-ok');
+    expect(ws.getBlockById('r1').getInputTargetBlock('VALOR')?.id).toBe('q1');
   });
 });
