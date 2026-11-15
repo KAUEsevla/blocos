@@ -1,0 +1,479 @@
+{
+  "descricao": "Spec 006, História 3 (cenários 1 e 2): nao (x > 10) entre parênteses, (a ou b) e c com o ou calculado antes do e, e as formas sem parênteses que não mudam o sentido",
+  "requisitos": [
+    "RF-06",
+    "RNF-07"
+  ],
+  "projeto": {
+    "formato": "meupia-blocos",
+    "versao": 1,
+    "nome": "Logica",
+    "variaveis": [
+      {
+        "id": "v-x",
+        "nome": "x",
+        "tipo": "inteiro"
+      },
+      {
+        "id": "v-a",
+        "nome": "a",
+        "tipo": "logico"
+      },
+      {
+        "id": "v-b",
+        "nome": "b",
+        "tipo": "logico"
+      },
+      {
+        "id": "v-c",
+        "nome": "c",
+        "tipo": "logico"
+      }
+    ],
+    "blocos": {
+      "blocks": {
+        "languageVersion": 0,
+        "blocks": [
+          {
+            "type": "programa",
+            "id": "programa",
+            "x": 24,
+            "y": 24,
+            "deletable": false,
+            "inputs": {
+              "COMANDOS": {
+                "block": {
+                  "type": "variavel_recebe",
+                  "id": "r2",
+                  "fields": {
+                    "VAR": {
+                      "id": "v-x"
+                    }
+                  },
+                  "inputs": {
+                    "VALOR": {
+                      "block": {
+                        "type": "numero",
+                        "id": "n1",
+                        "fields": {
+                          "NUM": "15"
+                        }
+                      }
+                    }
+                  },
+                  "next": {
+                    "block": {
+                      "type": "variavel_recebe",
+                      "id": "r4",
+                      "fields": {
+                        "VAR": {
+                          "id": "v-a"
+                        }
+                      },
+                      "inputs": {
+                        "VALOR": {
+                          "block": {
+                            "type": "logico",
+                            "id": "l3",
+                            "fields": {
+                              "VALOR": "verdadeiro"
+                            }
+                          }
+                        }
+                      },
+                      "next": {
+                        "block": {
+                          "type": "variavel_recebe",
+                          "id": "r6",
+                          "fields": {
+                            "VAR": {
+                              "id": "v-b"
+                            }
+                          },
+                          "inputs": {
+                            "VALOR": {
+                              "block": {
+                                "type": "logico",
+                                "id": "l5",
+                                "fields": {
+                                  "VALOR": "falso"
+                                }
+                              }
+                            }
+                          },
+                          "next": {
+                            "block": {
+                              "type": "variavel_recebe",
+                              "id": "r8",
+                              "fields": {
+                                "VAR": {
+                                  "id": "v-c"
+                                }
+                              },
+                              "inputs": {
+                                "VALOR": {
+                                  "block": {
+                                    "type": "logico",
+                                    "id": "l7",
+                                    "fields": {
+                                      "VALOR": "falso"
+                                    }
+                                  }
+                                }
+                              },
+                              "next": {
+                                "block": {
+                                  "type": "escreva",
+                                  "id": "e13",
+                                  "inputs": {
+                                    "VALOR1": {
+                                      "block": {
+                                        "type": "nao",
+                                        "id": "q12",
+                                        "inputs": {
+                                          "X": {
+                                            "block": {
+                                              "type": "relacional",
+                                              "id": "o11",
+                                              "fields": {
+                                                "OP": ">"
+                                              },
+                                              "inputs": {
+                                                "A": {
+                                                  "block": {
+                                                    "type": "variavel",
+                                                    "id": "v9",
+                                                    "fields": {
+                                                      "VAR": {
+                                                        "id": "v-x"
+                                                      }
+                                                    }
+                                                  }
+                                                },
+                                                "B": {
+                                                  "block": {
+                                                    "type": "numero",
+                                                    "id": "n10",
+                                                    "fields": {
+                                                      "NUM": "10"
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  },
+                                  "next": {
+                                    "block": {
+                                      "type": "escreva",
+                                      "id": "e19",
+                                      "inputs": {
+                                        "VALOR1": {
+                                          "block": {
+                                            "type": "e_ou",
+                                            "id": "o18",
+                                            "fields": {
+                                              "OP": "e"
+                                            },
+                                            "inputs": {
+                                              "A": {
+                                                "block": {
+                                                  "type": "e_ou",
+                                                  "id": "o16",
+                                                  "fields": {
+                                                    "OP": "ou"
+                                                  },
+                                                  "inputs": {
+                                                    "A": {
+                                                      "block": {
+                                                        "type": "variavel",
+                                                        "id": "v14",
+                                                        "fields": {
+                                                          "VAR": {
+                                                            "id": "v-a"
+                                                          }
+                                                        }
+                                                      }
+                                                    },
+                                                    "B": {
+                                                      "block": {
+                                                        "type": "variavel",
+                                                        "id": "v15",
+                                                        "fields": {
+                                                          "VAR": {
+                                                            "id": "v-b"
+                                                          }
+                                                        }
+                                                      }
+                                                    }
+                                                  }
+                                                }
+                                              },
+                                              "B": {
+                                                "block": {
+                                                  "type": "variavel",
+                                                  "id": "v17",
+                                                  "fields": {
+                                                    "VAR": {
+                                                      "id": "v-c"
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      },
+                                      "next": {
+                                        "block": {
+                                          "type": "escreva",
+                                          "id": "e25",
+                                          "inputs": {
+                                            "VALOR1": {
+                                              "block": {
+                                                "type": "e_ou",
+                                                "id": "o24",
+                                                "fields": {
+                                                  "OP": "ou"
+                                                },
+                                                "inputs": {
+                                                  "A": {
+                                                    "block": {
+                                                      "type": "variavel",
+                                                      "id": "v20",
+                                                      "fields": {
+                                                        "VAR": {
+                                                          "id": "v-a"
+                                                        }
+                                                      }
+                                                    }
+                                                  },
+                                                  "B": {
+                                                    "block": {
+                                                      "type": "e_ou",
+                                                      "id": "o23",
+                                                      "fields": {
+                                                        "OP": "e"
+                                                      },
+                                                      "inputs": {
+                                                        "A": {
+                                                          "block": {
+                                                            "type": "variavel",
+                                                            "id": "v21",
+                                                            "fields": {
+                                                              "VAR": {
+                                                                "id": "v-b"
+                                                              }
+                                                            }
+                                                          }
+                                                        },
+                                                        "B": {
+                                                          "block": {
+                                                            "type": "variavel",
+                                                            "id": "v22",
+                                                            "fields": {
+                                                              "VAR": {
+                                                                "id": "v-c"
+                                                              }
+                                                            }
+                                                          }
+                                                        }
+                                                      }
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                            }
+                                          },
+                                          "next": {
+                                            "block": {
+                                              "type": "escreva",
+                                              "id": "e30",
+                                              "inputs": {
+                                                "VALOR1": {
+                                                  "block": {
+                                                    "type": "e_ou",
+                                                    "id": "o29",
+                                                    "fields": {
+                                                      "OP": "e"
+                                                    },
+                                                    "inputs": {
+                                                      "A": {
+                                                        "block": {
+                                                          "type": "variavel",
+                                                          "id": "v26",
+                                                          "fields": {
+                                                            "VAR": {
+                                                              "id": "v-a"
+                                                            }
+                                                          }
+                                                        }
+                                                      },
+                                                      "B": {
+                                                        "block": {
+                                                          "type": "nao",
+                                                          "id": "q28",
+                                                          "inputs": {
+                                                            "X": {
+                                                              "block": {
+                                                                "type": "variavel",
+                                                                "id": "v27",
+                                                                "fields": {
+                                                                  "VAR": {
+                                                                    "id": "v-b"
+                                                                  }
+                                                                }
+                                                              }
+                                                            }
+                                                          }
+                                                        }
+                                                      }
+                                                    }
+                                                  }
+                                                }
+                                              },
+                                              "next": {
+                                                "block": {
+                                                  "type": "escreva",
+                                                  "id": "e34",
+                                                  "inputs": {
+                                                    "VALOR1": {
+                                                      "block": {
+                                                        "type": "nao",
+                                                        "id": "q33",
+                                                        "inputs": {
+                                                          "X": {
+                                                            "block": {
+                                                              "type": "nao",
+                                                              "id": "q32",
+                                                              "inputs": {
+                                                                "X": {
+                                                                  "block": {
+                                                                    "type": "variavel",
+                                                                    "id": "v31",
+                                                                    "fields": {
+                                                                      "VAR": {
+                                                                        "id": "v-a"
+                                                                      }
+                                                                    }
+                                                                  }
+                                                                }
+                                                              }
+                                                            }
+                                                          }
+                                                        }
+                                                      }
+                                                    }
+                                                  },
+                                                  "next": {
+                                                    "block": {
+                                                      "type": "escreva",
+                                                      "id": "e42",
+                                                      "inputs": {
+                                                        "VALOR1": {
+                                                          "block": {
+                                                            "type": "e_ou",
+                                                            "id": "o41",
+                                                            "fields": {
+                                                              "OP": "e"
+                                                            },
+                                                            "inputs": {
+                                                              "A": {
+                                                                "block": {
+                                                                  "type": "relacional",
+                                                                  "id": "o37",
+                                                                  "fields": {
+                                                                    "OP": ">"
+                                                                  },
+                                                                  "inputs": {
+                                                                    "A": {
+                                                                      "block": {
+                                                                        "type": "variavel",
+                                                                        "id": "v35",
+                                                                        "fields": {
+                                                                          "VAR": {
+                                                                            "id": "v-x"
+                                                                          }
+                                                                        }
+                                                                      }
+                                                                    },
+                                                                    "B": {
+                                                                      "block": {
+                                                                        "type": "numero",
+                                                                        "id": "n36",
+                                                                        "fields": {
+                                                                          "NUM": "1"
+                                                                        }
+                                                                      }
+                                                                    }
+                                                                  }
+                                                                }
+                                                              },
+                                                              "B": {
+                                                                "block": {
+                                                                  "type": "relacional",
+                                                                  "id": "o40",
+                                                                  "fields": {
+                                                                    "OP": "<"
+                                                                  },
+                                                                  "inputs": {
+                                                                    "A": {
+                                                                      "block": {
+                                                                        "type": "variavel",
+                                                                        "id": "v38",
+                                                                        "fields": {
+                                                                          "VAR": {
+                                                                            "id": "v-x"
+                                                                          }
+                                                                        }
+                                                                      }
+                                                                    },
+                                                                    "B": {
+                                                                      "block": {
+                                                                        "type": "numero",
+                                                                        "id": "n39",
+                                                                        "fields": {
+                                                                          "NUM": "20"
+                                                                        }
+                                                                      }
+                                                                    }
+                                                                  }
+                                                                }
+                                                              }
+                                                            }
+                                                          }
+                                                        }
+                                                      }
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "entrada": [],
+  "portugolEsperado": "algoritmo \"Logica\"\n\nvar\n    x: inteiro\n    a: logico\n    b: logico\n    c: logico\n\ninicio\n    x <- 15\n    a <- verdadeiro\n    b <- falso\n    c <- falso\n    escreva(nao (x > 10))\n    escreva((a ou b) e c)\n    escreva(a ou b e c)\n    escreva(a e nao b)\n    escreva(nao (nao a))\n    escreva(x > 1 e x < 20)\nfim_algoritmo\n",
+  "saidaEsperada": "falso\nfalso\nverdadeiro\nverdadeiro\nverdadeiro\nverdadeiro\n"
+}
