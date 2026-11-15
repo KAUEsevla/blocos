@@ -136,4 +136,5 @@ o `confirmar()` da 001. A mensagem informa o total real de blocos removidos (FR-
 | `usos = n > 1`, `total = t > n` | "A variável idade é usada em 3 blocos. Ao apagar, 5 blocos serão removidos: esses blocos e os que estão encaixados neles." |
 
 `titulo`: "Apagar a variável idade?"; `confirmar`: "Apagar"; `cancelar`: "Cancelar".
-Com `usos === 0` não há confirmação.
+Com `usos === 0` não há confirmação. Pela tela esse caso não acontece: o menu de apagar
+só existe num bloco que usa a variável (quickstart, nota do passo 14).

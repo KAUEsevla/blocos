@@ -51,7 +51,7 @@ no relatório; README atualizado.
 | 11 | Apagar `Anos` (em uso em 3 blocos, um deles "Anos recebe [b]") e Cancelar | Diálogo "A variável Anos é usada em 3 blocos. Ao apagar, 4 blocos serão removidos…" (o `b` encaixado conta); nada muda | História 4, cenário 2; FR-008 |
 | 12 | Apagar de novo e confirmar | Somem a variável e exatamente os 4 blocos anunciados; o Portugol atualiza | FR-008 |
 | 13 | Ctrl+Z | Variável e blocos voltam | desfazer (R-04) |
-| 14 | Apagar uma variável sem uso | Some sem pedir confirmação | FR-008 |
+| 14 | Criar `z` sem usar; tirar um bloco `z` da caixa e escolher "Apagar a variável “z”" no menu do campo | Diálogo "A variável z é usada em 1 bloco. Esse bloco também será apagado."; ao confirmar, somem `z` e o bloco | FR-008 |
 | 15 | Novo → Descartar | Sem variáveis; sem `var` no Portugol; categoria só com o botão | caso de borda "sem variáveis" |
 | 16 | Cronometrar do passo 1 até `idade <- b` | Menos de 1 minuto | SC-003 |
 | 17 | Conferir textos (diálogo, menu do campo, *tooltips*) | Nada em inglês; console sem erros | RNF-03 |
@@ -72,3 +72,10 @@ Com o bloco "recebe" no lugar do comando:
 | J | "recebe" sem valor, solto | Troca "Falta …" por "Esta pilha está fora do programa" |
 
 O passo B (mudar um número) fica para a 006.
+
+**Nota sobre o passo 14 (achado na T040)**: o menu "Apagar a variável" só existe no
+campo de um bloco que está na área de trabalho, porque os campos dos blocos dentro da
+caixa não abrem menu (o clique cria o bloco). Por isso uma variável sempre tem pelo
+menos esse bloco como uso quando o estudante a apaga, e a confirmação sempre aparece. O
+ramo sem confirmação de `apagarVariavel` (`usos === 0`) fica como proteção e não é
+alcançável pela tela; a spec (FR-008) só exige confirmar quando a variável está em uso.
