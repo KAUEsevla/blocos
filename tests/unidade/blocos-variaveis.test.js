@@ -158,3 +158,16 @@ describe('campoVariavel (spec 003, P-3)', () => {
     expect(BLOCO_VARIAVEL.definicao.args0[0]).toEqual(a);
   });
 });
+
+describe('tipo pela variável (006, pendência P-2 da 002; research R-09)', () => {
+  it('a saída do variavel e o encaixe VALOR do recebe seguem o tipo da variável', () => {
+    expect(BLOCO_VARIAVEL.tipoPelaVariavel).toBe('saida');
+    expect(BLOCO_VARIAVEL_RECEBE.tipoPelaVariavel).toBe('VALOR');
+  });
+
+  it('a definição não fixa o tipo: ele vem da variável escolhida', () => {
+    expect(BLOCO_VARIAVEL.definicao.output).toBeNull();
+    const valor = BLOCO_VARIAVEL_RECEBE.definicao.args0.find((a) => a.name === 'VALOR');
+    expect(valor).toEqual({ type: 'input_value', name: 'VALOR' });
+  });
+});

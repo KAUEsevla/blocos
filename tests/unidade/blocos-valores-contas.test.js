@@ -118,7 +118,7 @@ describe('bloco numero (RF-06)', () => {
     expect(d.type).toBe('numero');
     expect(d.args0[0]).toMatchObject({ type: 'field_input', name: 'NUM', text: '0' });
     expect(d.extensions).toEqual(['validar_numero']);
-    expect(d.output).toBeNull();
+    expect(d.output).toEqual(['Numero']); // 006, research R-08
     expect(d.tooltip).toBe('Um número. Use vírgula ou ponto para as casas decimais, como 3,5');
     expect(BLOCO_NUMERO.rotulo).toBe('número');
   });
@@ -146,7 +146,7 @@ describe('bloco texto (RF-06)', () => {
     const d = BLOCO_TEXTO.definicao;
     expect(d.message0).toBe('“%1”');
     expect(d.args0[0]).toMatchObject({ type: 'field_input', name: 'TEXTO', text: '' });
-    expect(d.output).toBeNull();
+    expect(d.output).toEqual(['Texto']); // 006, research R-08
     expect(d.tooltip).toBe('Um texto, mostrado exatamente como foi digitado');
   });
 });
@@ -220,7 +220,30 @@ describe('bloco aritmetico (RF-06; R-06)', () => {
     });
     expect(d.args0[2]).toMatchObject({ type: 'input_value', name: 'B' });
     expect(d.inputsInline).toBe(true);
-    expect(d.output).toBeNull();
+    expect(d.output).toEqual(['Numero', 'Texto']); // 006, research R-08
     expect(d.tooltip).toBe('Faz a conta com os dois valores. “resto” é o que sobra da divisão');
+  });
+});
+
+describe('tipos (006, research R-08)', () => {
+  it('numero sai como Numero e texto como Texto', () => {
+    expect(BLOCO_NUMERO.definicao.output).toEqual(['Numero']);
+    expect(BLOCO_TEXTO.definicao.output).toEqual(['Texto']);
+  });
+
+  it('aritmetico aceita e devolve Numero ou Texto (o + concatena textos)', () => {
+    const d = BLOCO_ARITMETICO.definicao;
+    expect(d.output).toEqual(['Numero', 'Texto']);
+    expect(d.args0[0]).toEqual({ type: 'input_value', name: 'A', check: ['Numero', 'Texto'] });
+    expect(d.args0[2]).toEqual({ type: 'input_value', name: 'B', check: ['Numero', 'Texto'] });
+  });
+
+  it('o resto das definições da 003 não muda', () => {
+    expect(BLOCO_NUMERO.definicao.type).toBe('numero');
+    expect(BLOCO_TEXTO.definicao.type).toBe('texto');
+    expect(BLOCO_ARITMETICO.definicao.type).toBe('aritmetico');
+    expect(BLOCO_NUMERO.variantes.map((v) => v.nome)).toEqual(['inteiro', 'real']);
+    expect(BLOCO_TEXTO.variantes.map((v) => v.nome)).toEqual(['simples', 'com aspas ou barra']);
+    expect(BLOCO_ARITMETICO.variantes.map((v) => v.nome)).toEqual(['+', '-', '*', '/', '%']);
   });
 });
