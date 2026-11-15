@@ -81,7 +81,8 @@ describe('caixa de blocos da spec 003', () => {
   it('categorias em ordem: Variáveis, Entrada e saída, Valores, Contas', async () => {
     const { CATEGORIA_ENTRADA_SAIDA } = await import('../../src/blocos/caixa-blocos.js');
     expect(CATEGORIA_ENTRADA_SAIDA).toBe('ENTRADA_SAIDA');
-    expect(CAIXA_BLOCOS.contents.map((c) => c.name)).toEqual(['Variáveis', 'Entrada e saída', 'Valores', 'Contas']);
+    // A 006 acrescenta categorias depois destas quatro (ver o describe da spec 006).
+    expect(CAIXA_BLOCOS.contents.slice(0, 4).map((c) => c.name)).toEqual(['Variáveis', 'Entrada e saída', 'Valores', 'Contas']);
     const [, es, valores, contas] = CAIXA_BLOCOS.contents;
     expect(es).toMatchObject({ kind: 'category', custom: 'ENTRADA_SAIDA' });
     expect(valores.contents).toEqual([
@@ -152,5 +153,22 @@ describe('conteudoCategoriaEntradaSaida com e sem variáveis', () => {
       ESCREVA,
       { kind: 'block', type: 'leia', fields: { VAR: { id: 'v-nome' } } },
     ]);
+  });
+});
+
+// Spec 006, research R-12 (contracts/editor-operadores.md, "Caixa de blocos").
+describe('caixa de blocos da spec 006', () => {
+  const categoria = (nome) => CAIXA_BLOCOS.contents.find((c) => c.name === nome);
+
+  it('Comparações vem logo depois de Contas, com a comparação =', async () => {
+    const { COR_COMPARACOES } = await import('../../src/blocos/comparacoes.js');
+    const nomes = CAIXA_BLOCOS.contents.map((c) => c.name);
+    expect(nomes.indexOf('Comparações')).toBe(nomes.indexOf('Contas') + 1);
+    expect(categoria('Comparações')).toEqual({
+      kind: 'category',
+      name: 'Comparações',
+      colour: COR_COMPARACOES,
+      contents: [{ kind: 'block', type: 'relacional', fields: { OP: '=' } }],
+    });
   });
 });

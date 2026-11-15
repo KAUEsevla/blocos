@@ -7,6 +7,7 @@
 import { TIPOS_VARIAVEL } from '../projeto/formato.js';
 import { COR_VALORES } from './valores.js';
 import { COR_CONTAS } from './contas.js';
+import { COR_COMPARACOES } from './comparacoes.js';
 
 export const CATEGORIA_VARIAVEIS = 'VARIAVEIS';
 export const BOTAO_CRIAR_VARIAVEL = 'CRIAR_VARIAVEL';
@@ -49,6 +50,12 @@ export const CAIXA_BLOCOS = Object.freeze({
         { kind: 'block', type: 'aritmetico', fields: { OP: '+' } },
         { kind: 'block', type: 'negativo' },
       ],
+    },
+    {
+      kind: 'category',
+      name: 'Comparações',
+      colour: COR_COMPARACOES,
+      contents: [{ kind: 'block', type: 'relacional', fields: { OP: '=' } }],
     },
   ]),
 });
