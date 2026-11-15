@@ -67,15 +67,26 @@ export function conteudoCategoriaVariaveis(variaveis) {
   return itens;
 }
 
+export const TEXTO_LEIA_SEM_VARIAVEL = 'Para usar o leia, crie uma variável primeiro.';
+
 // Itens da categoria Entrada e saída (spec 003, research R-09). Sempre um escreva com o texto
 // “Olá, mundo!” já encaixado (bloco normal, não shadow: o gerador só lê inputs.X.block).
+// Com variáveis, um leia com a última da lista do mapa (mesma regra do "recebe" da 002); sem
+// variáveis, a orientação e o mesmo botão "Criar variável…" da categoria Variáveis.
 export function conteudoCategoriaEntradaSaida(variaveis) {
-  void variaveis;
-  return [
+  const lista = Array.isArray(variaveis) ? variaveis : [];
+  const itens = [
     {
       kind: 'block',
       type: 'escreva',
       inputs: { VALOR1: { block: { type: 'texto', fields: { TEXTO: 'Olá, mundo!' } } } },
     },
   ];
+  if (lista.length === 0) {
+    itens.push({ kind: 'label', text: TEXTO_LEIA_SEM_VARIAVEL });
+    itens.push({ kind: 'button', text: 'Criar variável…', callbackKey: BOTAO_CRIAR_VARIAVEL });
+  } else {
+    itens.push(blocoComVariavel('leia', lista[lista.length - 1].id));
+  }
+  return itens;
 }
