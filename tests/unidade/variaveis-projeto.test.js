@@ -2,6 +2,7 @@
 import { describe, it, expect } from 'vitest';
 import { variaveisDoMapa, blocosComVariaveis } from '../../src/projeto/variaveis.js';
 import { projetoVazio } from '../../src/projeto/formato.js';
+import { gerarPortugol } from '../../src/portugol/gerador.js';
 
 const modelo = (id, nome, tipo) => ({ getId: () => id, getName: () => nome, getType: () => tipo });
 
@@ -75,5 +76,30 @@ describe('blocosComVariaveis', () => {
       ],
     });
     expect(blocosComVariaveis({}, [])).toEqual({ variables: [] });
+  });
+});
+
+// As variáveis entram por variaveisDoMapa, como faz a tela (spec 002, research R-04).
+describe('História 1 - Criar uma variável com tipo (gerador)', () => {
+  const comVariaveis = (modelos) => ({ ...projetoVazio(), variaveis: variaveisDoMapa(modelos) });
+
+  it('cenário 1: idade inteiro gera a seção var com "idade: inteiro"', () => {
+    const { codigo } = gerarPortugol(comVariaveis([modelo('v1', 'idade', 'inteiro')]));
+    expect(codigo).toContain('var\n    idade: inteiro\n\ninicio');
+  });
+
+  it('cenário 2: uma por linha, agrupadas por tipo, na ordem de criação dentro do tipo', () => {
+    const { codigo } = gerarPortugol(
+      comVariaveis([modelo('va', 'a', 'inteiro'), modelo('vn', 'nome', 'cadeia'), modelo('vb', 'b', 'inteiro')]),
+    );
+    expect(codigo).toBe(
+      'algoritmo "MeuPrograma"\n\nvar\n    a: inteiro\n    b: inteiro\n    nome: cadeia\n\ninicio\nfim_algoritmo\n',
+    );
+  });
+
+  it('caso de borda: sem variáveis não há a seção var', () => {
+    const { codigo } = gerarPortugol(comVariaveis([]));
+    expect(codigo).not.toMatch(/^var$/m);
+    expect(codigo).toBe('algoritmo "MeuPrograma"\n\ninicio\nfim_algoritmo\n');
   });
 });
