@@ -55,6 +55,32 @@ export function criarRegistroTeste() {
     definicao: { type: 'teste_leia' },
     gerar: (bloco, ctx) => ctx.linha(`leia(${ctx.variavel(bloco, 'VAR', 'a variável')})`),
   });
+  // Substitutos do número (006), do escreva (003) e da soma (006), para os cenários da 002
+  // e da 007 antes de esses blocos existirem.
+  r.registrarBloco({
+    tipo: 'teste_numero',
+    rotulo: 'número',
+    categoria: 'valor',
+    definicao: { type: 'teste_numero' },
+    gerar: (b) => ({ codigo: String(b.fields.NUM), precedencia: 99 }),
+  });
+  r.registrarBloco({
+    tipo: 'teste_escreva',
+    rotulo: 'escreva',
+    categoria: 'comando',
+    definicao: { type: 'teste_escreva' },
+    gerar: (b, ctx) => ctx.linha(`escreva(${ctx.valor(b, 'VALOR', 'o valor')})`),
+  });
+  r.registrarBloco({
+    tipo: 'teste_soma',
+    rotulo: 'soma',
+    categoria: 'valor',
+    definicao: { type: 'teste_soma' },
+    gerar: (b, ctx) => ({
+      codigo: `${ctx.valor(b, 'A', 'o primeiro valor')} + ${ctx.valor(b, 'B', 'o segundo valor')}`,
+      precedencia: 50,
+    }),
+  });
   return r;
 }
 

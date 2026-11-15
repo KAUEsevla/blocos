@@ -8,21 +8,8 @@ import { criarRegistroTeste, bloco, encadear, projetoDeTeste } from '../auxiliar
 // Cenários da spec 007 (RF-07; SC-001) no núcleo: o atualizador ligado ao gerador, com o
 // registro de teste. O "editor" é a variável estado; atualizar() faz o que a tela faz.
 
+// teste_numero e teste_escreva vêm do registro de teste compartilhado (spec 002, T002).
 const registro = criarRegistroTeste();
-registro.registrarBloco({
-  tipo: 'teste_numero',
-  rotulo: 'número',
-  categoria: 'valor',
-  definicao: { type: 'teste_numero' },
-  gerar: (b) => ({ codigo: String(b.fields.NUM), precedencia: 99 }),
-});
-registro.registrarBloco({
-  tipo: 'teste_escreva',
-  rotulo: 'escreva',
-  categoria: 'comando',
-  definicao: { type: 'teste_escreva' },
-  gerar: (b, ctx) => ctx.linha(`escreva(${ctx.valor(b, 'VALOR', 'o valor')})`),
-});
 
 const numero = (n, id) => bloco('teste_numero', { campos: { NUM: n }, id });
 const escreva = (n, id) => bloco('teste_escreva', { entradas: { VALOR: numero(n) }, id });
