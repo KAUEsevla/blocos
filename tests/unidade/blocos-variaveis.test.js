@@ -133,3 +133,22 @@ describe('História 3 - Usar o valor de uma variável (FR-006)', () => {
     expect(r.avisos).toEqual(['Falta a variável do bloco variável']);
   });
 });
+
+// Spec 003, research R-05 (P-3): o campo de variável é um módulo comum.
+describe('campoVariavel (spec 003, P-3)', () => {
+  it('devolve um objeto novo a cada chamada, com os quatro tipos', async () => {
+    const { campoVariavel } = await import('../../src/blocos/campo-variavel.js');
+    const a = campoVariavel();
+    const b = campoVariavel();
+    expect(a).not.toBe(b);
+    expect(a).toEqual(b);
+    expect(a).toEqual({
+      type: 'campo_variavel',
+      name: 'VAR',
+      variable: null,
+      variableTypes: [...TIPOS_VARIAVEL],
+      defaultType: 'inteiro',
+    });
+    expect(BLOCO_VARIAVEL.definicao.args0[0]).toEqual(a);
+  });
+});
