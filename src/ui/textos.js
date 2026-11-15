@@ -10,4 +10,11 @@ export const TEXTOS = Object.freeze({
   novoConfirmar: 'Descartar e começar',
   cancelar: 'Cancelar',
   emBreve: 'Disponível em breve',
+  // Diálogo de variável (spec 002, contracts/editor-variaveis.md).
+  criarVariavelTitulo: 'Criar variável',
+  criarVariavelBotao: 'Criar',
+  renomearVariavelTitulo: (nome) => `Renomear a variável ${nome}`,
+  renomearVariavelBotao: 'Renomear',
+  tipoVariavelTitulo: (nome) => `Mudar o tipo de ${nome}`,
+  tipoVariavelBotao: 'Mudar o tipo',
 });
