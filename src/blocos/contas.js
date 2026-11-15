@@ -57,3 +57,22 @@ export const BLOCO_ARITMETICO = {
     return { codigo: `${a} ${op.simbolo} ${b}`, precedencia: op.precedencia };
   },
 };
+
+// Negativo -x (spec 006, research R-04). O operando pede PRIMARIO: -x, -3, -(a + b), -(-x).
+export const BLOCO_NEGATIVO = {
+  tipo: 'negativo',
+  rotulo: 'negativo',
+  categoria: 'valor',
+  definicao: {
+    type: 'negativo',
+    message0: '−%1',
+    args0: [{ type: 'input_value', name: 'X', check: ['Numero'] }],
+    inputsInline: true,
+    output: ['Numero'],
+    colour: COR_CONTAS,
+    tooltip: 'O valor com o sinal trocado, como −5',
+  },
+  gerar(bloco, ctx) {
+    return { codigo: `-${ctx.valor(bloco, 'X', 'o valor', PRECEDENCIA.PRIMARIO)}`, precedencia: PRECEDENCIA.UNARIO };
+  },
+};
