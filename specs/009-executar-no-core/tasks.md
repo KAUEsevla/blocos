@@ -313,6 +313,20 @@ fica para a 005 e a 010.
 
 ---
 
+## Conferências manuais pendentes
+
+O código está pronto e testado; faltam três conferências que precisam de uma pessoa ou de
+um navegador com controle de rede e de cache. Por isso T025 e T042 continuam desmarcadas.
+Quem conferir anota navegador, conexão e resultado no PR e marca a task.
+
+| Conferência | Meta | Task | Como |
+| --- | --- | --- | --- |
+| Preparação do ambiente com o cache do navegador limpo | ≤ 30 s até "Executando...", com as duas etapas visíveis (SC-003) | T025 | Passo A do [quickstart.md](quickstart.md), com o cache limpo antes de abrir a página. Com o cache aquecido, a preparação levou 4,3 s. |
+| "Olá, mundo!" montado e executado por uma pessoa | < 2 min da página aberta até "Olá, mundo!" na Saída (SC-002 da 003) | T025 | Passo A cronometrado, com a montagem dos blocos feita à mão e a primeira preparação incluída. |
+| Primeira execução sem internet | Mensagem "Não foi possível carregar o ambiente do meuPiá. Verifique a conexão e tente de novo.", Executar habilitado de novo e, com a rede religada, execução normal | T042 | Passo G do [quickstart.md](quickstart.md), com a rede "Offline" nas DevTools. Hoje coberto só pelos testes de unidade do serviço e do executor. |
+
+---
+
 ## Dependências e ordem
 
 ### Entre fases
