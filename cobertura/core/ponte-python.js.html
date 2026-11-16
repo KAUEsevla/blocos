@@ -112,7 +112,35 @@
 <a name='L47'></a><a href='#L47'>47</a>
 <a name='L48'></a><a href='#L48'>48</a>
 <a name='L49'></a><a href='#L49'>49</a>
-<a name='L50'></a><a href='#L50'>50</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L50'></a><a href='#L50'>50</a>
+<a name='L51'></a><a href='#L51'>51</a>
+<a name='L52'></a><a href='#L52'>52</a>
+<a name='L53'></a><a href='#L53'>53</a>
+<a name='L54'></a><a href='#L54'>54</a>
+<a name='L55'></a><a href='#L55'>55</a>
+<a name='L56'></a><a href='#L56'>56</a>
+<a name='L57'></a><a href='#L57'>57</a>
+<a name='L58'></a><a href='#L58'>58</a>
+<a name='L59'></a><a href='#L59'>59</a>
+<a name='L60'></a><a href='#L60'>60</a>
+<a name='L61'></a><a href='#L61'>61</a>
+<a name='L62'></a><a href='#L62'>62</a>
+<a name='L63'></a><a href='#L63'>63</a>
+<a name='L64'></a><a href='#L64'>64</a>
+<a name='L65'></a><a href='#L65'>65</a>
+<a name='L66'></a><a href='#L66'>66</a>
+<a name='L67'></a><a href='#L67'>67</a>
+<a name='L68'></a><a href='#L68'>68</a>
+<a name='L69'></a><a href='#L69'>69</a>
+<a name='L70'></a><a href='#L70'>70</a>
+<a name='L71'></a><a href='#L71'>71</a>
+<a name='L72'></a><a href='#L72'>72</a>
+<a name='L73'></a><a href='#L73'>73</a>
+<a name='L74'></a><a href='#L74'>74</a>
+<a name='L75'></a><a href='#L75'>75</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -161,14 +189,56 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">// Código Python do adapter, igual no navegador e no Node (contracts/executor-core.md).
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">// Código Python do adapter, igual no navegador e no Node (contracts/executor-core.md da 008;
+// ampliado pela spec 009, contracts/adapter-core.md).
 // O Python executa os passos e devolve dados brutos; a interpretação fica em executor-core.js.
 // Usa só a interface pública do Core: meuPia.compiler.main(arquivo, saida) (princípio I).
+// A falta de um compilar(texto) público (meuPia/core#14) é contornada aqui: main.por e
+// output/main.py existem só no sistema de arquivos virtual do Pyodide (research R-04 da 009).
 &nbsp;
 export const PONTE_PYTHON = `
 import io
 import os
 import sys
+import traceback
+&nbsp;
+&nbsp;
+class _Escrita:
+    # stdout do programa: grava no buffer e, se houver, repassa cada pedaço na hora (R-05).
+    def __init__(self, ao_escrever):
+        self.buffer = io.StringIO()
+        self.ao_escrever = ao_escrever
+&nbsp;
+    def write(self, texto):
+        self.buffer.write(texto)
+        if self.ao_escrever is not None and texto:
+            self.ao_escrever(texto)
+        return len(texto)
+&nbsp;
+    def flush(self):
+        pass
 &nbsp;
 &nbsp;
 def _meupia_compilar(codigo):
@@ -183,32 +253,37 @@ def _meupia_compilar(codigo):
     original = sys.stdout
     buffer = io.StringIO()
     sys.stdout = buffer
+    falha = ""
     try:
         retorno = main("main.por", "output")
+    except (SystemExit, Exception):
+        # Falha inesperada do compilador: vira "não compilou" com o rastro (R-04, item 3).
+        retorno = None
+        falha = traceback.format_exc()
     finally:
         sys.stdout = original
 &nbsp;
     compilou = retorno == 0 and os.path.exists("output/main.py")
-    return {"compilou": compilou, "saidaCompilador": buffer.getvalue()}
+    return {"compilou": compilou, "saidaCompilador": buffer.getvalue() + falha}
 &nbsp;
 &nbsp;
-def _meupia_executar():
+def _meupia_executar(ao_escrever=None):
     with open("output/main.py", "r", encoding="utf-8") as arquivo:
         codigo = arquivo.read()
 &nbsp;
     original = sys.stdout
-    buffer = io.StringIO()
-    sys.stdout = buffer
+    escrita = _Escrita(ao_escrever)
+    sys.stdout = escrita
     erro = None
     try:
         exec(codigo, {"__name__": "__main__"})
     except SystemExit:
         pass
     except Exception as e:
-        erro = {"tipo": type(e).__name__, "mensagem": str(e)}
+        erro = {"tipo": type(e).__name__, "mensagem": str(e), "rastro": traceback.format_exc()}
     finally:
         sys.stdout = original
-    return {"saida": buffer.getvalue(), "erro": erro}
+    return {"saida": escrita.buffer.getvalue(), "erro": erro}
 `;
 &nbsp;</pre></td></tr></table></pre>
 
@@ -217,7 +292,7 @@ def _meupia_executar():
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-11-16T00:56:31.811Z
+                at 2026-11-16T02:39:46.430Z
             </div>
         <script src="../prettify.js"></script>
         <script>

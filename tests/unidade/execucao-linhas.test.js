@@ -42,6 +42,18 @@ describe('criarDivisorLinhas (RF-03, RF-09)', () => {
     expect(divisor.finalizar()).toEqual([]);
   });
 
+  it('pedaço ausente conta como vazio', () => {
+    const divisor = criarDivisorLinhas();
+    expect(divisor.acrescentar(undefined)).toEqual([]);
+    expect(divisor.finalizar()).toEqual([]);
+  });
+
+  it('\\r solto no fim da execução é descartado', () => {
+    const divisor = criarDivisorLinhas();
+    expect(divisor.acrescentar('fim\r')).toEqual([]);
+    expect(divisor.finalizar()).toEqual(['fim']);
+  });
+
   it('depois de finalizar, recomeça vazio', () => {
     const divisor = criarDivisorLinhas();
     divisor.acrescentar('x');
