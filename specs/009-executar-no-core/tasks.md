@@ -147,13 +147,13 @@ Saída lista os avisos na ordem do texto; clicar num aviso seleciona o bloco.
 
 ### Testes da História 1
 
-- [ ] T014 [P] [US1] Escrever `tests/unidade/execucao-mensagens.test.js` para `src/execucao/mensagens.js`:
+- [X] T014 [P] [US1] Escrever `tests/unidade/execucao-mensagens.test.js` para `src/execucao/mensagens.js`:
   - `MENSAGENS_EXECUCAO` congelado e com os textos exatos da tabela do [contrato](contracts/executar.md#mensagens-e-relato-mensagensjs) (`preparando`, `etapaPython`, `etapaCore`, `executando`, `fim`, `interrompido`, `detalhesTecnicos`, `erroCompilacao`, `erroExecucao`, `linhaDoErro`);
   - `relatoDoResultado({ status: 'ok' })` → `[{ texto: 'Fim do programa', tipo: 'sistema' }]`;
   - `interrompido` → `[{ texto: 'Execução interrompida pelo usuário', tipo: 'sistema' }]`;
   - `falha_ambiente` → `[{ texto: erro.mensagem, tipo: 'erro' }]`.
   (FR-004) (RF-09)
-- [ ] T015 [P] [US1] Escrever `tests/unidade/execucao-controlador.test.js` (parte da US1) para `criarControladorExecucao` de `src/execucao/controlador.js`, com executor falso (`pronto`, `executar` que chama `aoProgresso`/`aoEscrever` e resolve um resultado) e Saída falsa que registra as chamadas em ordem:
+- [X] T015 [P] [US1] Escrever `tests/unidade/execucao-controlador.test.js` (parte da US1) para `criarControladorExecucao` de `src/execucao/controlador.js`, com executor falso (`pronto`, `executar` que chama `aoProgresso`/`aoEscrever` e resolve um resultado) e Saída falsa que registra as chamadas em ordem:
   - primeira execução: estados `preparando` → `executando` → `ocioso` via `aoMudarEstado`; Saída: `limpar`, "Preparando o ambiente do meuPiá. Na primeira vez isso pode levar até 30 segundos." (`sistema`), as duas etapas, "Executando..." (`sistema`), as linhas do programa (`escreverVarias(linhas, 'programa')`) e "Fim do programa" (FR-004; cenários 1 e 2);
   - com `executor.pronto()` `true`: só `executando` → `ocioso`, sem a mensagem `preparando`;
   - pedaço sem `\n` no fim é escrito depois do `finalizar()`, antes de "Fim do programa";
@@ -163,7 +163,7 @@ Saída lista os avisos na ordem do texto; clicar num aviso seleciona o bloco.
   - `falha_ambiente` escreve a mensagem como `erro` e volta a `ocioso`;
   - o executor rejeitando (exceção inesperada) termina com "Erro de execução" e a mensagem genérica "O programa parou com um erro durante a execução." (`erro`), e volta a `ocioso` (data-model, Estado: `ocioso` no fim "em qualquer resultado").
   (FR-001, FR-004, FR-006) (RF-09)
-- [ ] T016 [P] [US1] Criar `tests/aceitacao/executar.test.js` (Core real) com `criarExecutor({ criarWorker: criarWorkerNode })` num `beforeAll` que já faz uma execução para preparar o ambiente; fechar o worker no `afterAll`:
+- [X] T016 [P] [US1] Criar `tests/aceitacao/executar.test.js` (Core real) com `criarExecutor({ criarWorker: criarWorkerNode })` num `beforeAll` que já faz uma execução para preparar o ambiente; fechar o worker no `afterAll`:
   - "Olá, mundo!" (o `portugolEsperado` de `tests/aceitacao/casos/escreva-ola-mundo.json`) termina com `status: 'ok'` e os pedaços recebidos por `aoEscrever` somam `"Olá, mundo!\n"`;
   - **SC-002**: com o ambiente pronto, `executar` do "Olá, mundo!" resolve em menos de 2.000 ms (medir com `performance.now()`);
   - **SC-001**: para cada caso de `tests/aceitacao/casos/`, gerar o Portugol, executar pelo executor e passar os pedaços pelo `criarDivisorLinhas`; as linhas são iguais a `saidaEsperada` passada pelo mesmo divisor, e o `status` é o `statusEsperado` (P-2).
@@ -171,23 +171,25 @@ Saída lista os avisos na ordem do texto; clicar num aviso seleciona o bloco.
 
 ### Implementação da História 1
 
-- [ ] T017 [P] [US1] Implementar `src/execucao/mensagens.js` (`MENSAGENS_EXECUCAO`, `relatoDoResultado` para `ok`, `interrompido` e `falha_ambiente`) até T014 passar. Incluir já o relato **genérico** de `erro_execucao` (`erroExecucao` e `erro.mensagem`, os dois como `erro`), que o controlador usa para a exceção inesperada do T015. O T035 só refina as mensagens (linha do erro de compilação, `{ detalhe }`) (RF-09)
-- [ ] T018 [US1] Implementar `src/execucao/controlador.js` até T015 passar. Usa `criarDivisorLinhas` (T004) e `relatoDoResultado` (T017). Uma exceção do executor vira `{ status: 'erro_execucao', erro: { mensagem: 'O programa parou com um erro durante a execução.' } }` antes do relato. O passo de verificação dos avisos (`verificarExecucao`) entra no T027, ainda nesta fase (depende de T004, T017) (RF-09)
-- [ ] T019 [US1] Rodar `npm run test:aceitacao` e ajustar até T016 passar (depende de T013) (RF-09, RNF-07)
-- [ ] T020 [P] [US1] Em `index.html`, na `.barra-acoes`: tirar `disabled` e `title="Disponível em breve"` do `#botao-executar` e acrescentar, logo depois dele, `<button type="button" id="botao-parar" disabled>Parar</button>`. Em `src/ui/barra.js`: `ligarBarra({ aoMudarNome, aoNovo, aoExecutar, aoParar })` liga os cliques dos dois botões; nova `mostrarEstadoExecucao(estado)` com "Executar `disabled` fora do `ocioso`; Parar `disabled` no `ocioso`" (research R-10); atualizar o comentário do topo do arquivo. Em `tests/unidade/tela-estrutura.test.js`: a ordem dos botões passa a ser Executar, Parar, Salvar, Carregar, Novo; Executar sem `disabled` e sem `title`; Parar com `type="button"` e `disabled`; Salvar e Carregar continuam `disabled` com "Disponível em breve" (FR-006, cenário 3) (RF-09, RF-01)
-- [ ] T021 [P] [US1] Em `src/ui/painel-saida.js`, acrescentar ao objeto devolvido (contrato [tela-execucao.md](contracts/tela-execucao.md#painel-saída-srcuipainel-saidajs)):
+- [X] T017 [P] [US1] Implementar `src/execucao/mensagens.js` (`MENSAGENS_EXECUCAO`, `relatoDoResultado` para `ok`, `interrompido` e `falha_ambiente`) até T014 passar. Incluir já o relato **genérico** de `erro_execucao` (`erroExecucao` e `erro.mensagem`, os dois como `erro`), que o controlador usa para a exceção inesperada do T015. O T035 só refina as mensagens (linha do erro de compilação, `{ detalhe }`) (RF-09)
+- [X] T018 [US1] Implementar `src/execucao/controlador.js` até T015 passar. Usa `criarDivisorLinhas` (T004) e `relatoDoResultado` (T017). Uma exceção do executor vira `{ status: 'erro_execucao', erro: { mensagem: 'O programa parou com um erro durante a execução.' } }` antes do relato. O passo de verificação dos avisos (`verificarExecucao`) entra no T027, ainda nesta fase (depende de T004, T017) (RF-09)
+- [X] T019 [US1] Rodar `npm run test:aceitacao` e ajustar até T016 passar (depende de T013) (RF-09, RNF-07)
+- [X] T020 [P] [US1] Em `index.html`, na `.barra-acoes`: tirar `disabled` e `title="Disponível em breve"` do `#botao-executar` e acrescentar, logo depois dele, `<button type="button" id="botao-parar" disabled>Parar</button>`. Em `src/ui/barra.js`: `ligarBarra({ aoMudarNome, aoNovo, aoExecutar, aoParar })` liga os cliques dos dois botões; nova `mostrarEstadoExecucao(estado)` com "Executar `disabled` fora do `ocioso`; Parar `disabled` no `ocioso`" (research R-10); atualizar o comentário do topo do arquivo. Em `tests/unidade/tela-estrutura.test.js`: a ordem dos botões passa a ser Executar, Parar, Salvar, Carregar, Novo; Executar sem `disabled` e sem `title`; Parar com `type="button"` e `disabled`; Salvar e Carregar continuam `disabled` com "Disponível em breve" (FR-006, cenário 3) (RF-09, RF-01)
+- [X] T021 [P] [US1] Em `src/ui/painel-saida.js`, acrescentar ao objeto devolvido (contrato [tela-execucao.md](contracts/tela-execucao.md#painel-saída-srcuipainel-saidajs)):
   - `escreverVarias(linhas, tipo = 'programa')`: um `DocumentFragment` com uma `div.saida-linha saida-linha--{tipo}` por linha (`textContent`), um único `append` e um único ajuste de `scrollTop` (research R-13);
   - `escreverDetalhe(texto)`: `<details class="saida-detalhe"><summary>Detalhes técnicos</summary><pre>` com `textContent = texto`, fechado.
   Em `src/estilos.css`: `.saida-linha:empty { min-height: 1lh; }` (ou altura equivalente à de uma linha) e `.saida-detalhe` com fonte menor e cor secundária das variáveis de cor existentes. Atualizar o comentário do topo do arquivo (P-2) (RF-03, RF-09)
-- [ ] T022 [US1] Ligar em `src/main.js` (contrato [tela-execucao.md](contracts/tela-execucao.md#ligação-srcmainjs)):
+- [X] T022 [US1] Ligar em `src/main.js` (contrato [tela-execucao.md](contracts/tela-execucao.md#ligação-srcmainjs)):
   - `atualizarPortugol` guarda `ultimosAvisos = resultado.avisos`, além do `ultimoCodigo`;
   - `criarExecutor({ criarWorker: () => new Worker(new URL('./execucao/worker.js', import.meta.url), { type: 'module' }) })`;
   - `criarControladorExecucao({ obterPrograma: () => { tempoReal.atualizarAgora(); return { codigo: ultimoCodigo, avisos: ultimosAvisos }; }, executor, saida, destacar: (id) => destacarBloco(ws, id), aoMudarEstado: mostrarEstadoExecucao })`;
   - `ligarBarra` recebe `aoExecutar: () => controlador.executar()`; `mostrarEstadoExecucao('ocioso')` no fim do bootstrap.
   (depende de T012, T018, T020, T021) (FR-001, FR-008) (RF-09)
-- [ ] T023 [US1] Rodar `npm run build` e confirmar que o worker sai como arquivo separado em `dist/assets/` e que o build não tem erro (research R-02) (depende de T022) (RF-09, RNF-06)
-- [ ] T024 [US1] Na seção 2 do [quickstart.md](quickstart.md), percorrer os passos A (sem cronômetro), B, C, F, H e I no `npm run dev`. Corrigir o que divergir. É a primeira vez que o `motor-navegador.js` roda num navegador (plan, ponto de atenção 3) (depende de T022) (RF-09, RNF-06)
+- [X] T023 [US1] Rodar `npm run build` e confirmar que o worker sai como arquivo separado em `dist/assets/` e que o build não tem erro (research R-02) (depende de T022) (RF-09, RNF-06)
+- [X] T024 [US1] Na seção 2 do [quickstart.md](quickstart.md), percorrer os passos A (sem cronômetro), B, C, F, H e I no `npm run dev`. Corrigir o que divergir. É a primeira vez que o `motor-navegador.js` roda num navegador (plan, ponto de atenção 3) (depende de T022) (RF-09, RNF-06)
+  - Feito: A, B, C, F e I conferidos. H coberto pelo teste do controlador (o código fica fixo no clique); a execução leva cerca de 14 ms, curta demais para mudar um bloco durante ela à mão. Ajustes encontrados: o Vite não resolvia os imports só de Node do Pyodide (plugin `pyodide-sem-node` no `vite.config.js`).
 - [ ] T025 [US1] **SC-002 da 003 e SC-003 desta spec (P-3)**: com o cache do navegador limpo, refazer o passo A cronometrando: tempo da preparação até "Executando..." (≤ 30 s, com as duas etapas visíveis) e tempo total da página aberta até "Olá, mundo!" na Saída, com a montagem dos blocos (< 2 min). Anotar navegador, conexão e tempos para o PR (T047) (depende de T024) (RF-03, RF-09)
+  - **Aberta.** Medido no painel do navegador do Claude (Chromium), com o cache HTTP **aquecido**: preparação 4,3 s (etapa 1 aos 0,08 s, etapa 2 aos 2,9 s, "Executando..." aos 4,3 s); execução com o ambiente pronto, 14 ms do clique a "Fim do programa". Falta a medição com o cache limpo e a montagem cronometrada por uma pessoa (< 2 min), que não dá para fazer pelo painel.
 
 ### Bloqueio por blocos incompletos (pendência P-1 da 008)
 
@@ -196,16 +198,16 @@ ordem do texto; clicar num aviso destaca o bloco ("Pendências para a spec 009" 
 [tasks.md da 008](../008-portugol-valido/tasks.md); research R-09). Fica no mesmo commit
 da História 1: sem ele, um programa incompleto iria ao Core.
 
-- [ ] T026 [P] [US1] Acrescentar a `tests/unidade/execucao-controlador.test.js` um `describe('bloqueio por blocos incompletos (pendência da 008)')`:
+- [X] T026 [P] [US1] Acrescentar a `tests/unidade/execucao-controlador.test.js` um `describe('bloqueio por blocos incompletos (pendência da 008)')`:
   - `obterPrograma` devolve dois avisos (`blocoId` `b1` e `b2`, nessa ordem); `executar()` **não** chama `executor.executar`, o estado continua `ocioso` e nenhum `aoMudarEstado` diferente de `ocioso` acontece;
   - a Saída falsa recebe, em ordem, `limpar()`, `escrever('O programa tem blocos incompletos. Complete-os para executar.', 'erro')` e `mostrarAvisos(avisos, aoClicar)` com os dois avisos na mesma ordem;
   - chamar o `aoClicar` recebido com o segundo aviso chama `destacar('b2')`;
   - sem avisos, o fluxo da US1 segue normal.
   (FR-006 da 008) (RF-08, RF-09)
-- [ ] T027 [US1] Em `src/execucao/controlador.js`, antes do passo "permitido", chamar `verificarExecucao({ avisos })` de `src/portugol/execucao.js` e, com `permitida: false`, fazer o passo 3 do [contrato](contracts/executar.md#controlador-controladorjs). Implementar até T026 passar sem quebrar T015 (depende de T018) (RF-08, RF-09)
-- [ ] T028 [P] [US1] Em `src/ui/painel-saida.js`, acrescentar `mostrarAvisos(avisos, aoClicar)`, que chama `renderizarAvisos(areaAvisos, avisos, aoClicar)` de `src/ui/avisos-ui.js` (008/T042). Atualizar o comentário de `src/ui/avisos-ui.js` ("ficam prontos para a spec 009" passa a "usados pela spec 009") (RF-08)
-- [ ] T029 [US1] Conferir em `src/main.js` que o `destacar` passado ao controlador é `(blocoId) => destacarBloco(ws, blocoId)` (T022) e que `limpar()` da Saída esvazia também a lista de avisos de uma tentativa anterior (comportamento da 001). Ajustar se preciso (depende de T027, T028) (RF-08)
-- [ ] T030 [US1] Percorrer o passo D do [quickstart.md](quickstart.md): remover o valor de um `escreva` e de outro bloco, clicar em Executar, conferir a mensagem, a lista na ordem do texto e que o clique em cada aviso seleciona e centraliza o bloco certo; completar os blocos e conferir que Executar roda (depende de T029) (RF-08, RF-09)
+- [X] T027 [US1] Em `src/execucao/controlador.js`, antes do passo "permitido", chamar `verificarExecucao({ avisos })` de `src/portugol/execucao.js` e, com `permitida: false`, fazer o passo 3 do [contrato](contracts/executar.md#controlador-controladorjs). Implementar até T026 passar sem quebrar T015 (depende de T018) (RF-08, RF-09)
+- [X] T028 [P] [US1] Em `src/ui/painel-saida.js`, acrescentar `mostrarAvisos(avisos, aoClicar)`, que chama `renderizarAvisos(areaAvisos, avisos, aoClicar)` de `src/ui/avisos-ui.js` (008/T042). Atualizar o comentário de `src/ui/avisos-ui.js` ("ficam prontos para a spec 009" passa a "usados pela spec 009") (RF-08)
+- [X] T029 [US1] Conferir em `src/main.js` que o `destacar` passado ao controlador é `(blocoId) => destacarBloco(ws, blocoId)` (T022) e que `limpar()` da Saída esvazia também a lista de avisos de uma tentativa anterior (comportamento da 001). Ajustar se preciso (depende de T027, T028) (RF-08)
+- [X] T030 [US1] Percorrer o passo D do [quickstart.md](quickstart.md): remover o valor de um `escreva` e de outro bloco, clicar em Executar, conferir a mensagem, a lista na ordem do texto e que o clique em cada aviso seleciona e centraliza o bloco certo; completar os blocos e conferir que Executar roda (depende de T029) (RF-08, RF-09)
 
 **Checkpoint**: a História 1 funciona de ponta a ponta no navegador, com o bloqueio de
 blocos incompletos; o MVP pode ser demonstrado.

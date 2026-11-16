@@ -1,7 +1,7 @@
 // Avisos nos blocos (fora da cobertura): bloco incompleto (RF-08, FR-005) e pilha fora do
 // programa (RF-07; spec 007, FR-004). Cada tipo usa a sua chave no setWarningText, para que
 // limpar um não apague o outro (contracts/editor.md). renderizarAvisos e destacarBloco
-// ficam prontos para a spec 009.
+// são usados pela spec 009 (lista de avisos na Saída e destaque do bloco).
 
 // workspace → (chave → ids marcados)
 const marcadosPorWorkspace = new WeakMap();

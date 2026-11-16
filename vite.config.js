@@ -2,9 +2,37 @@ import { defineConfig } from 'vite';
 
 // Build estático (sem backend, RNF-06) e configuração do Vitest.
 // Dois projetos de teste: "unidade" (Node puro, rápido) e "aceitacao" (Pyodide + meupia-core real).
+// Spec 009 (research R-02): o carregador do Pyodide tem imports dinâmicos que só rodam no
+// Node (node-fetch, ws e módulos nativos). No navegador eles nunca são chamados; este plugin
+// os troca por um módulo vazio quando quem importa é o próprio Pyodide, para o Vite (dev e
+// build) não tentar resolvê-los. No Vitest o pacote pyodide é carregado pelo Node, sem passar
+// por aqui.
+const PYODIDE_SO_NODE = new Set(['node-fetch', 'ws', 'url', 'fs', 'fs/promises', 'vm', 'path', 'crypto', 'child_process']);
+const PREFIXO_VAZIO = '\0pyodide-so-node:';
+
+function pyodideSemNode() {
+  return {
+    name: 'pyodide-sem-node',
+    enforce: 'pre',
+    resolveId(id, importador) {
+      if (PYODIDE_SO_NODE.has(id) && importador && /[\\/]pyodide[\\/]/.test(importador)) return PREFIXO_VAZIO + id;
+      return null;
+    },
+    load(id) {
+      return id.startsWith(PREFIXO_VAZIO) ? 'export default {};' : null;
+    },
+  };
+}
+
 export default defineConfig({
+  plugins: [pyodideSemNode()],
   // O worker de execução importa módulos (pyodide, src/core/): formato ES (spec 009, research R-02).
-  worker: { format: 'es' },
+  worker: {
+    format: 'es',
+    plugins: () => [pyodideSemNode()],
+  },
+  // O Pyodide carrega os próprios arquivos (asm.js, wasm, stdlib) do CDN: não pré-empacotar.
+  optimizeDeps: { exclude: ['pyodide'] },
   test: {
     projects: [
       {

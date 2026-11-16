@@ -50,7 +50,7 @@ describe('estrutura da tela (RF-01, RNF-03)', () => {
     expect(html).not.toMatch(/<style\b/);
   });
 
-  it('barra com o nome do programa e as quatro ações, nessa ordem', () => {
+  it('barra com o nome do programa e as cinco ações (com Parar, spec 009), nessa ordem', () => {
     const barra = trecho('header', 'barra');
     expect(barra).not.toBeNull();
     expect(barra).toMatch(/<label for="nome-programa">Nome do programa<\/label>/);
@@ -62,6 +62,7 @@ describe('estrutura da tela (RF-01, RNF-03)', () => {
 
     const botoes = [
       ['botao-executar', 'Executar'],
+      ['botao-parar', 'Parar'],
       ['botao-salvar', 'Salvar'],
       ['botao-carregar', 'Carregar'],
       ['botao-novo', 'Novo'],
@@ -75,7 +76,12 @@ describe('estrutura da tela (RF-01, RNF-03)', () => {
       expect(pos, `${id} dentro da barra`).toBeGreaterThan(anterior);
       anterior = pos;
     }
-    for (const id of ['botao-executar', 'botao-salvar', 'botao-carregar']) {
+    // Spec 009 (contracts/tela-execucao.md): Executar habilitado; Parar logo depois, desabilitado no ocioso.
+    expect(tagComId('botao-executar')).not.toMatch(/\bdisabled\b/);
+    expect(tagComId('botao-executar')).not.toMatch(/title=/);
+    expect(tagComId('botao-parar')).toMatch(/type="button"/);
+    expect(tagComId('botao-parar')).toMatch(/\bdisabled\b/);
+    for (const id of ['botao-salvar', 'botao-carregar']) {
       expect(tagComId(id)).toMatch(/\bdisabled\b/);
       expect(tagComId(id)).toMatch(/title="Disponível em breve"/);
     }

@@ -3,6 +3,8 @@
 // atualizador do núcleo decide quando gerar (contracts/editor.md, seção src/main.js).
 // Spec 002: as variáveis vêm do mapa do workspace a cada geração; criar, renomear e apagar
 // variável disparam eventos não-UI, que já chegam ao tempoReal.notificar (research R-04).
+// Spec 009: Executar e Parar pelo controlador de src/execucao/, com o Core num Web Worker
+// (contracts/tela-execucao.md, seção "Ligação").
 import './estilos.css';
 import { projetoVazio } from './projeto/formato.js';
 import { assinaturaProjeto, haAlteracoes } from './projeto/alteracoes.js';
@@ -20,10 +22,12 @@ import {
   estadoDesfazer,
 } from './ui/workspace.js';
 import { ligarBotoesDesfazer, atualizarBotoesDesfazer } from './ui/barra-blocos.js';
-import { aplicarAvisos } from './ui/avisos-ui.js';
+import { aplicarAvisos, destacarBloco } from './ui/avisos-ui.js';
 import { criarPainelSaida } from './ui/painel-saida.js';
 import { mostrarCodigo, copiarCodigo } from './ui/painel-portugol.js';
-import { ligarBarra, definirNome } from './ui/barra.js';
+import { ligarBarra, definirNome, mostrarEstadoExecucao } from './ui/barra.js';
+import { criarExecutor } from './execucao/executor.js';
+import { criarControladorExecucao } from './execucao/controlador.js';
 import { confirmar } from './ui/confirmacao.js';
 import { TEXTOS } from './ui/textos.js';
 
@@ -35,6 +39,7 @@ const saida = criarPainelSaida(document.getElementById('saida'));
 let projeto = projetoVazio();
 const ws = criarWorkspace(document.getElementById('area-blocos'), projeto);
 let ultimoCodigo = '';
+let ultimosAvisos = [];
 
 function projetoAtual() {
   return { ...projeto, variaveis: variaveisDoWorkspace(ws), blocos: serializarBlocos(ws) };
@@ -48,6 +53,7 @@ function atualizarPortugol() {
   const projetoGerado = projetoAtual();
   const resultado = gerarPortugol(projetoGerado);
   ultimoCodigo = resultado.codigo;
+  ultimosAvisos = resultado.avisos;
   mostrarCodigo(preCodigo, resultado.codigo);
   aplicarAvisos(ws, resultado.avisos, 'incompleto');
   // A marca de pilha solta não entra em resultado.avisos: não bloqueia Executar (R-04).
@@ -78,6 +84,23 @@ async function novoProjeto() {
   referencia = assinaturaProjeto(projetoAtual());
 }
 
+// O worker é criado no primeiro clique em Executar (research R-02, R-06).
+const executor = criarExecutor({
+  criarWorker: () => new Worker(new URL('./execucao/worker.js', import.meta.url), { type: 'module' }),
+});
+
+const controlador = criarControladorExecucao({
+  // Força a geração pendente: o código executado é o que o painel mostra (FR-001).
+  obterPrograma: () => {
+    tempoReal.atualizarAgora();
+    return { codigo: ultimoCodigo, avisos: ultimosAvisos };
+  },
+  executor,
+  saida,
+  destacar: (blocoId) => destacarBloco(ws, blocoId),
+  aoMudarEstado: mostrarEstadoExecucao,
+});
+
 ligarBarra({
   aoMudarNome(nome) {
     // Valor bruto: o gerador saneia (sanearNomePrograma).
@@ -85,6 +108,7 @@ ligarBarra({
     tempoReal.solicitar();
   },
   aoNovo: novoProjeto,
+  aoExecutar: () => controlador.executar(),
 });
 
 document.getElementById('botao-copiar').addEventListener('click', () => {
@@ -99,3 +123,4 @@ ligarBotoesDesfazer({
 ouvirEventos(ws, tempoReal.notificar);
 tempoReal.atualizarAgora();
 saida.mostrarOrientacao();
+mostrarEstadoExecucao('ocioso');
