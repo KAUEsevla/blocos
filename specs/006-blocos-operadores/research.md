@@ -392,7 +392,10 @@ dupla abre e põe o link aqui, como na 003/R-07 (task `docs`).
    > **Contorno no meuPiá Blocos**: o bloco lógico só oferece `verdadeiro` e `falso` em
    > minúsculas (`src/blocos/valores.js`).
 
-**Links das issues**: a preencher pela dupla na task `docs(006)`.
+**Links das issues** (abertas pela dupla):
+
+1. Tipos incompatíveis aceitos: [meuPia/core#16](https://github.com/meuPia/core/issues/16).
+2. `VERDADEIRO`/`FALSO` em maiúsculas viram variável: [meuPia/core#17](https://github.com/meuPia/core/issues/17).
 
 ---
 
