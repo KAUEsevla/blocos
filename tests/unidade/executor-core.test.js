@@ -24,12 +24,40 @@ describe('interpretarErroCompilacao (RF-09, RNF-01)', () => {
     expect(r).toMatchObject({ mensagem: 'Arquivo main.por não encontrado.', etapa: null, linha: null, coluna: null });
   });
 
-  it('sem o marcador, usa o texto inteiro', () => {
-    expect(interpretarErroCompilacao('  falhou  ').mensagem).toBe('falhou');
+  // Sem a marca, o texto pode ser um rastro em inglês do compilador (spec 009, R-04 e R-07).
+  it('sem o marcador, mensagem genérica em pt-BR e o texto bruto no detalhe', () => {
+    const saida = 'Traceback (most recent call last):\nRuntimeError: boom\n';
+    expect(interpretarErroCompilacao(saida)).toEqual({
+      mensagem: 'O meuPiá Core não conseguiu compilar o programa.',
+      etapa: null,
+      linha: null,
+      coluna: null,
+      detalhe: saida,
+    });
   });
 
   it('saída vazia vira mensagem genérica', () => {
-    expect(interpretarErroCompilacao('').mensagem).toBe('O Core não aceitou o programa.');
+    expect(interpretarErroCompilacao('').mensagem).toBe('O meuPiá Core não conseguiu compilar o programa.');
+  });
+
+  it('marca sem texto depois dela também vira mensagem genérica', () => {
+    expect(interpretarErroCompilacao('[COMPILATION ERROR]:\n').mensagem).toBe(
+      'O meuPiá Core não conseguiu compilar o programa.',
+    );
+  });
+});
+
+describe('traduzirErroExecucao: detalhe (spec 009, R-07)', () => {
+  it('usa o rastro como detalhe quando existir', () => {
+    const rastro = 'Traceback (most recent call last):\nZeroDivisionError: division by zero\n';
+    expect(traduzirErroExecucao('ZeroDivisionError', 'division by zero', rastro).detalhe).toBe(rastro);
+  });
+
+  it('sem rastro, detalhe = "Tipo: mensagem"', () => {
+    expect(traduzirErroExecucao('NameError', "name 'x' is not defined").detalhe).toBe(
+      "NameError: name 'x' is not defined",
+    );
+    expect(traduzirErroExecucao('NameError', 'x', '').detalhe).toBe('NameError: x');
   });
 });
 

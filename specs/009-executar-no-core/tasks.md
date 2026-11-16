@@ -70,30 +70,30 @@ existe, e o serviço e o executor do worker rodam o Core real dentro de um `work
 
 ### Divisor de linhas (núcleo)
 
-- [ ] T003 [P] Escrever `tests/unidade/execucao-linhas.test.js` para `criarDivisorLinhas()` de `src/execucao/linhas.js`:
+- [X] T003 [P] Escrever `tests/unidade/execucao-linhas.test.js` para `criarDivisorLinhas()` de `src/execucao/linhas.js`:
   - `acrescentar("a\n\n")` → `["a", ""]` e `finalizar()` → `[]`;
   - `acrescentar("Ol")` → `[]`, `acrescentar("á\nx")` → `["Olá"]`, `finalizar()` → `["x"]`;
   - `acrescentar("")` → `[]`; `"a\r\nb\r\n"` → `["a", "b"]`;
   - 5.000 linhas num pedaço só saem inteiras e na ordem;
   - o `\n` final não cria linha vazia a mais (data-model, "Linha da Saída": "Linha vazia é válida (`escreva("")`) e aparece").
   (P-2) (RF-03, RF-09)
-- [ ] T004 [P] Implementar `src/execucao/linhas.js` (`criarDivisorLinhas`) até T003 passar, sem importar Pyodide nem tocar o DOM (RF-03, RF-09)
+- [X] T004 [P] Implementar `src/execucao/linhas.js` (`criarDivisorLinhas`) até T003 passar, sem importar Pyodide nem tocar o DOM (RF-03, RF-09)
 
 ### Adapter do Core (`src/core/`)
 
-- [ ] T005 Em `src/core/ponte-python.js` (contrato [adapter-core.md](contracts/adapter-core.md#ponte_python)):
+- [X] T005 Em `src/core/ponte-python.js` (contrato [adapter-core.md](contracts/adapter-core.md#ponte_python)):
   - `_meupia_compilar(codigo)`: envolver `main("main.por", "output")` em `try/except (SystemExit, Exception)`; numa falha, `compilou = False` e `saidaCompilador` = stdout capturado + `traceback.format_exc()` (research R-04, item 3);
   - `_meupia_executar(ao_escrever=None)`: trocar o `io.StringIO` por uma classe `_Escrita` com `write(texto)` (grava no buffer e, se `ao_escrever` não for `None`, chama `ao_escrever(texto)`) e `flush()`; uma exceção devolve `{"tipo", "mensagem", "rastro": traceback.format_exc()}`;
   - restaurar o `sys.stdout` no `finally`, como hoje (o proxy de `ao_escrever` só é usado durante a chamada);
   - manter só `meuPia.compiler.main` como interface do Core (princípio I).
   (P-4) (RNF-01, RF-09)
-- [ ] T006 Em `src/core/executor-core.js`:
+- [X] T006 Em `src/core/executor-core.js`:
   - `compilarEExecutar(motor, codigo, entrada = [], { aoEscrever } = {})`: passar `aoEscrever ?? null` a `_meupia_executar` em `chamarPython`; sem o quarto parâmetro, comportamento igual ao da 008;
   - passar `execucao.erro.rastro` como terceiro argumento de `traduzirErroExecucao(tipo, mensagem, rastro)`, que usa `detalhe = rastro` quando existir e senão `"<Tipo>: <mensagem>"`;
   - `interpretarErroCompilacao`: sem a marca `[COMPILATION ERROR]:`, `mensagem` = "O meuPiá Core não conseguiu compilar o programa." e `detalhe` = a saída bruta; com a marca, como hoje (tabela do contrato).
   Atualizar `tests/unidade/executor-core.test.js`: os testes "sem o marcador, usa o texto inteiro" e "saída vazia vira mensagem genérica" passam a esperar a mensagem genérica nova; acrescentar `detalhe` com e sem `rastro` (P-4) (RNF-01, RF-09)
-- [ ] T007 [P] Em `src/core/motor-navegador.js`, `criarMotorNavegador({ aoProgresso } = {})`: chamar `aoProgresso?.('python')` antes do `loadPyodide` e `aoProgresso?.('core')` antes do `instalarCore`. Em `tests/aceitacao/suporte/motor-node.js`, a mesma assinatura e as mesmas duas chamadas em `criarMotorNode`. Em `tests/unidade/motor-navegador.test.js`, acrescentar: as duas etapas chegam na ordem `['python', 'core']`; sem o parâmetro, nada quebra (research R-06) (RF-09, RNF-06)
-- [ ] T008 Em `tests/aceitacao/adapter-core.test.js`, acrescentar (Core real):
+- [X] T007 [P] Em `src/core/motor-navegador.js`, `criarMotorNavegador({ aoProgresso } = {})`: chamar `aoProgresso?.('python')` antes do `loadPyodide` e `aoProgresso?.('core')` antes do `instalarCore`. Em `tests/aceitacao/suporte/motor-node.js`, a mesma assinatura e as mesmas duas chamadas em `criarMotorNode`. Em `tests/unidade/motor-navegador.test.js`, acrescentar: as duas etapas chegam na ordem `['python', 'core']`; sem o parâmetro, nada quebra (research R-06) (RF-09, RNF-06)
+- [X] T008 Em `tests/aceitacao/adapter-core.test.js`, acrescentar (Core real):
   - com `aoEscrever`, os pedaços concatenados de `escreva("a")` / `escreva("b")` são iguais a `resultado.saida` (`"a\nb\n"`);
   - o stdout do compilador não chega a `aoEscrever`, nem num programa válido nem no texto inválido do teste de erro de compilação;
   - num erro de execução, `erro.detalhe` contém `Traceback` e `ZeroDivisionError`.
@@ -101,17 +101,17 @@ existe, e o serviço e o executor do worker rodam o Core real dentro de um `work
 
 ### Serviço e executor do worker (núcleo)
 
-- [ ] T009 [P] Escrever `tests/unidade/execucao-servico.test.js` para `criarServicoExecucao({ criarMotor, postar, agora })` de `src/execucao/servico.js` (contrato [executar.md](contracts/executar.md#serviço-do-worker-servicojs)), com motor falso (objeto que o `compilarEExecutar` falso recebe; usar `vi.mock('../../src/core/executor-core.js')`) e relógio falso:
+- [X] T009 [P] Escrever `tests/unidade/execucao-servico.test.js` para `criarServicoExecucao({ criarMotor, postar, agora })` de `src/execucao/servico.js` (contrato [executar.md](contracts/executar.md#serviço-do-worker-servicojs)), com motor falso (objeto que o `compilarEExecutar` falso recebe; usar `vi.mock('../../src/core/executor-core.js')`) e relógio falso:
   - `{ tipo: 'preparar' }` duas vezes cria o motor uma vez só; posta `progresso` (`python`, `core`) repassados pelo `aoProgresso` e depois `pronto`;
   - `criarMotor` rejeitando com `ErroAmbiente` posta `{ tipo: 'falha_ambiente', mensagem }` com a mensagem do `ErroAmbiente`;
   - `{ tipo: 'executar', id, codigo, entrada }` sem `preparar` antes também prepara;
-  - escritas com o relógio em 0, 10 e 60 ms viram dois lotes `{ tipo: 'saida', id, texto }` (o segundo junta as escritas a partir de 60 ms) e o resto vai no fim, antes do `resultado`;
+  - escritas `a`, `b`, `c`, `d` com o relógio em 0, 10, 60 e 70 ms viram dois lotes `{ tipo: 'saida', id, texto }`: `abc` (enviado aos 60 ms, 50 ms depois do início) e o resto `d` no fim, antes do `resultado`;
   - o `resultado` leva `saida: ''` e o `status`, `erro` do `compilarEExecutar`;
   - `compilarEExecutar` rejeitando vira `resultado` com `status: 'erro_execucao'` e a mensagem genérica "O programa parou com um erro durante a execução.";
   - a função `agora` padrão é `Date.now` e o lote não usa `setTimeout` (research R-05).
   (RF-09, RNF-06)
-- [ ] T010 Implementar `src/execucao/servico.js` até T009 passar. Importa `compilarEExecutar` de `src/core/executor-core.js` e recebe o motor por `criarMotor`; não importa o Pyodide (depende de T006) (RF-09, RNF-06)
-- [ ] T011 [P] Escrever `tests/unidade/execucao-executor.test.js` para `criarExecutor({ criarWorker })` de `src/execucao/executor.js`, com uma classe `WorkerFalso` (registra `postMessage`, tem `terminate` espião e `onmessage` atribuível; o teste simula as respostas):
+- [X] T010 Implementar `src/execucao/servico.js` até T009 passar. Importa `compilarEExecutar` de `src/core/executor-core.js` e recebe o motor por `criarMotor`; não importa o Pyodide (depende de T006) (RF-09, RNF-06)
+- [X] T011 [P] Escrever `tests/unidade/execucao-executor.test.js` para `criarExecutor({ criarWorker })` de `src/execucao/executor.js`, com uma classe `WorkerFalso` (registra `postMessage`, tem `terminate` espião e `onmessage` atribuível; o teste simula as respostas):
   - nenhum worker é criado antes do primeiro `executar`; o primeiro envia `preparar` e depois `executar` com `id`, `codigo` e `entrada`;
   - `pronto()` é `false` até a mensagem `pronto`, e `true` depois;
   - `aoProgresso` recebe as etapas, `aoEscrever` recebe o `texto` de cada `saida`, e a promessa resolve com o `resultado`;
@@ -119,8 +119,8 @@ existe, e o serviço e o executor do worker rodam o Core real dentro de um `work
   - `falha_ambiente` resolve `{ status: 'falha_ambiente', saida: '', erro: { mensagem } }`, chama `terminate` e o próximo `executar` cria outro worker;
   - a segunda execução reaproveita o mesmo worker.
   (RF-09)
-- [ ] T012 Implementar `src/execucao/executor.js` (sem `parar`, que é da US3) até T011 passar (RF-09)
-- [ ] T013 Criar a cola dos dois ambientes:
+- [X] T012 Implementar `src/execucao/executor.js` (sem `parar`, que é da US3) até T011 passar (RF-09)
+- [X] T013 Criar a cola dos dois ambientes:
   - **primeiro, a prova rápida** (research R-11): um script temporário que cria um `worker_threads` do Node, faz `loadPyodide()` do pacote npm dentro dele e devolve `runPython('1+1')`. Se der `2`, seguir. Se falhar, parar e aplicar o plano B do R-11, registrando no research o erro encontrado. O script não é versionado;
   - `src/execucao/worker.js`: `const servico = criarServicoExecucao({ criarMotor: criarMotorNavegador, postar: (m) => self.postMessage(m) }); self.onmessage = (e) => servico.receber(e.data);`
   - `tests/aceitacao/suporte/worker-node-entrada.js`: o mesmo com `criarMotorNode` e `parentPort` de `node:worker_threads`;

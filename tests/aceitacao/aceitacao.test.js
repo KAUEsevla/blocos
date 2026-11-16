@@ -46,10 +46,15 @@ describe('aceitação no meupia-core real', () => {
       expect(avisos, 'o caso não pode ter blocos incompletos').toEqual([]);
       if (caso.portugolEsperado !== undefined) expect(codigo).toBe(caso.portugolEsperado);
 
-      const resultado = await compilarEExecutar(motor, codigo, caso.entrada);
+      // aoEscrever (spec 009, T008): prova o adapter; a Saída da tela é provada em executar.test.js.
+      const pedacos = [];
+      const resultado = await compilarEExecutar(motor, codigo, caso.entrada, {
+        aoEscrever: (texto) => pedacos.push(texto),
+      });
       expect(resultado.status, resultado.erro?.mensagem).not.toBe('erro_compilacao');
       expect(resultado.status).toBe(caso.statusEsperado ?? 'ok');
       expect(resultado.saida).toBe(caso.saidaEsperada);
+      expect(pedacos.join(''), 'pedaços de aoEscrever = saida').toBe(resultado.saida);
     });
   });
 });

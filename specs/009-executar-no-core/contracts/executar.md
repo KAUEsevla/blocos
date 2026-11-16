@@ -100,7 +100,7 @@ a afetam (caso de borda).
 ```js
 criarExecutor({ criarWorker }) → {
   pronto() → boolean,
-  executar(codigo, { entrada = [], aoEscrever, aoProgresso }) → Promise<ResultadoTela>,
+  executar(codigo, { entrada = [], aoEscrever, aoProgresso, aoPronto }) → Promise<ResultadoTela>,
   parar() → void,
 }
 ```
@@ -109,7 +109,10 @@ criarExecutor({ criarWorker }) → {
   navegador é `new Worker(new URL('./worker.js', import.meta.url), { type: 'module' })`.
   Na aceitação é o adaptador de `worker_threads` (R-11).
 - O worker é criado na primeira chamada de `executar`, que envia `preparar` e depois
-  `executar`. `pronto()` fica `true` depois da mensagem `pronto`.
+  `executar`. `pronto()` fica `true` depois da mensagem `pronto`, que também chama o
+  `aoPronto` da execução em andamento (o controlador passa de `preparando` a `executando`).
+- `onerror` do worker (o script não carregou) é tratado como `falha_ambiente`, com a
+  mensagem do `ErroAmbiente`.
 - `falha_ambiente`: o worker é encerrado e descartado. O próximo `executar` cria outro
   (caso de borda "sem internet").
 - `parar()`: `terminate()`, resolve a promessa pendente com `{ status: 'interrompido' }`
