@@ -195,6 +195,31 @@ describe('criarControladorExecucao: rodar e ver (US1)', () => {
     expect(estados.at(-1)).toBe('ocioso');
   });
 
+  it('erro de execução: linhas anteriores, depois o relato; detalhe só por escreverDetalhe (US2, SC-004)', async () => {
+    const executor = executorFalso({
+      pronto: true,
+      roteiro: async (opcoes) => {
+        opcoes.aoEscrever('um\ndois\n');
+        return {
+          status: 'erro_execucao',
+          saida: '',
+          erro: { mensagem: 'Não é possível dividir por zero.', detalhe: 'Traceback: ZeroDivisionError' },
+        };
+      },
+    });
+    const { controlador, saida } = montar({ executor });
+    await controlador.executar();
+    expect(saida.chamadas.slice(1)).toEqual([
+      ['escrever', 'Executando...', 'sistema'],
+      ['escreverVarias', ['um', 'dois'], 'programa'],
+      ['escrever', 'Erro de execução', 'erro'],
+      ['escrever', 'Não é possível dividir por zero.', 'erro'],
+      ['escreverDetalhe', 'Traceback: ZeroDivisionError'],
+    ]);
+    const escritos = saida.chamadas.filter((c) => c[0] === 'escrever').map((c) => c[1]);
+    expect(escritos.join('\n')).not.toContain('Traceback');
+  });
+
   it('exceção inesperada do executor termina com Erro de execução genérico e volta a ocioso', async () => {
     const executor = executorFalso({
       pronto: true,

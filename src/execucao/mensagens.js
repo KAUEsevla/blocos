@@ -23,7 +23,21 @@ function erroComTitulo(titulo, erro) {
   ];
 }
 
-export function relatoDoResultado(resultado) {
+// O rastro técnico só vai para "Detalhes técnicos", e só quando existe (R-07).
+function comDetalhe(itens, erro) {
+  return erro?.detalhe ? [...itens, { detalhe: erro.detalhe }] : itens;
+}
+
+// "Linha L: <texto>" da linha do Portugol que o Core apontou, sem a indentação (cenário 1
+// da História 2). Fora do código, nada.
+function linhaDoCodigo(codigo, linha) {
+  if (!Number.isInteger(linha) || linha < 1) return [];
+  const texto = String(codigo ?? '').split('\n')[linha - 1];
+  if (texto === undefined) return [];
+  return [{ texto: MENSAGENS_EXECUCAO.linhaDoErro(linha, texto.trim()), tipo: 'erro' }];
+}
+
+export function relatoDoResultado(resultado, codigo = '') {
   const { status, erro } = resultado ?? {};
   switch (status) {
     case 'ok':
@@ -33,9 +47,12 @@ export function relatoDoResultado(resultado) {
     case 'falha_ambiente':
       return [{ texto: erro?.mensagem ?? '', tipo: 'erro' }];
     case 'erro_compilacao':
-      return erroComTitulo(MENSAGENS_EXECUCAO.erroCompilacao, erro);
+      return comDetalhe(
+        [...erroComTitulo(MENSAGENS_EXECUCAO.erroCompilacao, erro), ...linhaDoCodigo(codigo, erro?.linha)],
+        erro,
+      );
     default:
       // erro_execucao e qualquer status inesperado.
-      return erroComTitulo(MENSAGENS_EXECUCAO.erroExecucao, erro);
+      return comDetalhe(erroComTitulo(MENSAGENS_EXECUCAO.erroExecucao, erro), erro);
   }
 }

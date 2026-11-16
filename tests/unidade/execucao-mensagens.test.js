@@ -40,6 +40,40 @@ describe('relatoDoResultado: aviso de fim (FR-004)', () => {
     ]);
   });
 
+  describe('erros (US2, FR-005)', () => {
+    const codigo = 'algoritmo "X"\n    escreva(1\nfim_algoritmo\n';
+
+    it('erro_compilacao com linha → título, mensagem, linha do Portugol sem indentação e detalhe', () => {
+      const erro = { mensagem: 'Erro sintático na linha 2, coluna 13: esperado ")"', linha: 2, detalhe: 'bruto' };
+      expect(relatoDoResultado({ status: 'erro_compilacao', saida: '', erro }, codigo)).toEqual([
+        { texto: 'Erro de compilação', tipo: 'erro' },
+        { texto: erro.mensagem, tipo: 'erro' },
+        { texto: 'Linha 2: escreva(1', tipo: 'erro' },
+        { detalhe: 'bruto' },
+      ]);
+    });
+
+    it.each([null, 0, 99])('erro_compilacao com linha %s → sem o item da linha', (linha) => {
+      const erro = { mensagem: 'm', linha, detalhe: 'bruto' };
+      const itens = relatoDoResultado({ status: 'erro_compilacao', saida: '', erro }, codigo);
+      expect(itens.map((i) => i.texto ?? 'detalhe')).toEqual(['Erro de compilação', 'm', 'detalhe']);
+    });
+
+    it('erro_execucao → título, mensagem e detalhe', () => {
+      const erro = { mensagem: 'Não é possível dividir por zero.', detalhe: 'Traceback ...' };
+      expect(relatoDoResultado({ status: 'erro_execucao', saida: '', erro }, codigo)).toEqual([
+        { texto: 'Erro de execução', tipo: 'erro' },
+        { texto: erro.mensagem, tipo: 'erro' },
+        { detalhe: 'Traceback ...' },
+      ]);
+    });
+
+    it('detalhe vazio não gera o item { detalhe }', () => {
+      const itens = relatoDoResultado({ status: 'erro_execucao', saida: '', erro: { mensagem: 'm', detalhe: '' } }, '');
+      expect(itens.some((i) => 'detalhe' in i)).toBe(false);
+    });
+  });
+
   it('erro_execucao genérico (exceção inesperada) → Erro de execução e a mensagem', () => {
     const erro = { mensagem: 'O programa parou com um erro durante a execução.' };
     expect(relatoDoResultado({ status: 'erro_execucao', saida: '', erro }, '')).toEqual([

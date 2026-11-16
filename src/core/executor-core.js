@@ -24,17 +24,21 @@ export function interpretarErroCompilacao(saidaCompilador) {
   };
 }
 
+// Tradução amigável por tipo de exceção Python (spec 009, research R-07). A mensagem do
+// Python, em inglês, nunca entra aqui: ela fica só em `detalhe` (SC-004).
+const TRADUCOES_EXECUCAO = Object.freeze({
+  ZeroDivisionError: 'Não é possível dividir por zero.',
+  EOFError: 'O programa pediu mais dados do que os informados.',
+  TypeError: 'Essa operação não funciona com esses tipos de valor (por exemplo, comparar texto com número).',
+  OverflowError: 'O número ficou grande demais para ser calculado.',
+  MemoryError: 'O programa usou memória demais.',
+});
+const VALOR_NAO_NUMERICO = /invalid literal for int\(\)|could not convert string to float/;
+
 export function traduzirErroExecucao(tipo, mensagem, rastro) {
-  let amigavel = MENSAGEM_GENERICA_EXECUCAO;
-  if (tipo === 'ZeroDivisionError') {
-    amigavel = 'Divisão por zero';
-  } else if (tipo === 'EOFError') {
-    amigavel = 'O programa pediu mais dados do que os informados';
-  } else if (
-    tipo === 'ValueError' &&
-    /invalid literal for int\(\)|could not convert string to float/.test(mensagem)
-  ) {
-    amigavel = 'O valor digitado não é um número';
+  let amigavel = Object.hasOwn(TRADUCOES_EXECUCAO, tipo) ? TRADUCOES_EXECUCAO[tipo] : MENSAGEM_GENERICA_EXECUCAO;
+  if (tipo === 'ValueError' && VALOR_NAO_NUMERICO.test(mensagem)) {
+    amigavel = 'O valor digitado não é um número.';
   }
   return {
     mensagem: amigavel,

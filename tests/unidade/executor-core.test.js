@@ -61,21 +61,36 @@ describe('traduzirErroExecucao: detalhe (spec 009, R-07)', () => {
   });
 });
 
+// Tabela do research R-07 da spec 009 (FR-005, SC-004): todas terminam em ponto.
 describe('traduzirErroExecucao (RF-09)', () => {
   it.each([
-    ['ZeroDivisionError', 'division by zero', 'Divisão por zero'],
-    ['ValueError', "invalid literal for int() with base 10: 'abc'", 'O valor digitado não é um número'],
-    ['ValueError', "could not convert string to float: 'x'", 'O valor digitado não é um número'],
-    ['EOFError', 'EOF when reading a line', 'O programa pediu mais dados do que os informados'],
+    ['ZeroDivisionError', 'division by zero', 'Não é possível dividir por zero.'],
+    ['ValueError', "invalid literal for int() with base 10: 'abc'", 'O valor digitado não é um número.'],
+    ['ValueError', "could not convert string to float: 'x'", 'O valor digitado não é um número.'],
+    ['EOFError', 'EOF when reading a line', 'O programa pediu mais dados do que os informados.'],
+    [
+      'TypeError',
+      "'<' not supported between instances of 'str' and 'int'",
+      'Essa operação não funciona com esses tipos de valor (por exemplo, comparar texto com número).',
+    ],
+    ['OverflowError', 'int too large to convert to float', 'O número ficou grande demais para ser calculado.'],
+    ['MemoryError', '', 'O programa usou memória demais.'],
     ['ValueError', 'passo do laço para não pode ser zero', 'O programa parou com um erro durante a execução.'],
     ['NameError', "name 'x' is not defined", 'O programa parou com um erro durante a execução.'],
   ])('%s: %s', (tipo, mensagem, esperada) => {
-    expect(traduzirErroExecucao(tipo, mensagem)).toEqual({
+    const traduzido = traduzirErroExecucao(tipo, mensagem);
+    expect(traduzido).toEqual({
       mensagem: esperada,
       etapa: 'execução',
       linha: null,
       coluna: null,
       detalhe: `${tipo}: ${mensagem}`,
     });
+    // SC-004: o texto do Python (em inglês) nunca aparece na mensagem padrão.
+    if (mensagem) expect(traduzido.mensagem).not.toContain(mensagem);
+  });
+
+  it('nome de tipo que coincide com membro de Object não quebra a tradução', () => {
+    expect(traduzirErroExecucao('toString', 'x').mensagem).toBe('O programa parou com um erro durante a execução.');
   });
 });

@@ -39,7 +39,7 @@ describe('adapter do meupia-core (Core real)', () => {
   it('traduz divisão por zero', async () => {
     const r = await compilarEExecutar(motor, programa('    escreva(1 / 0)'));
     expect(r.status).toBe('erro_execucao');
-    expect(r.erro.mensagem).toBe('Divisão por zero');
+    expect(r.erro.mensagem).toBe('Não é possível dividir por zero.');
   });
 
   it('lê a entrada do leia e acusa entrada esgotada', async () => {
@@ -52,7 +52,7 @@ describe('adapter do meupia-core (Core real)', () => {
     });
     const r = await compilarEExecutar(motor, programa(corpo, decl), []);
     expect(r.status).toBe('erro_execucao');
-    expect(r.erro.mensagem).toBe('O programa pediu mais dados do que os informados');
+    expect(r.erro.mensagem).toBe('O programa pediu mais dados do que os informados.');
   });
 
   it('dois programas seguidos não compartilham variáveis nem saída', async () => {

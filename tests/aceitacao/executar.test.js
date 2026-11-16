@@ -6,6 +6,7 @@ import { readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { criarExecutor } from '../../src/execucao/executor.js';
 import { criarDivisorLinhas } from '../../src/execucao/linhas.js';
+import { relatoDoResultado } from '../../src/execucao/mensagens.js';
 import { gerarPortugol } from '../../src/portugol/gerador.js';
 import { criarWorkerNode } from './suporte/worker-node.js';
 
@@ -62,6 +63,33 @@ describe('execução pela tela no Core real (worker_threads)', () => {
     const duracao = performance.now() - inicio;
     expect(resultado.status).toBe('ok');
     expect(duracao).toBeLessThan(2000);
+  });
+
+  // US2 (cenários 1 e 2): erros distinguidos, linhas anteriores visíveis, rastro no detalhe.
+  it('divisão por zero preserva as linhas anteriores e traz o rastro no detalhe', async () => {
+    const codigo = 'algoritmo "X"\n\ninicio\n    escreva("antes")\n    escreva(1 / 0)\nfim_algoritmo\n';
+    const { resultado, pedacos } = await executarColetando(executor, codigo);
+    expect(resultado.status).toBe('erro_execucao');
+    expect(pedacos.join('')).toBe('antes\n');
+    expect(resultado.erro.mensagem).toBe('Não é possível dividir por zero.');
+    expect(resultado.erro.detalhe).toContain('Traceback');
+    expect(relatoDoResultado(resultado, codigo).map((i) => i.texto ?? 'detalhe')).toEqual([
+      'Erro de execução',
+      'Não é possível dividir por zero.',
+      'detalhe',
+    ]);
+  });
+
+  it('erro de compilação aponta a linha do Portugol', async () => {
+    // Texto escrito à mão: o gerador nunca produz Portugol inválido (princípio II).
+    const codigo = 'algoritmo "X"\n\ninicio\n    se verdadeiro\n        escreva("x")\n    fim_se\nfim_algoritmo\n';
+    const { resultado, pedacos } = await executarColetando(executor, codigo);
+    expect(resultado.status).toBe('erro_compilacao');
+    expect(pedacos).toEqual([]);
+    expect(resultado.erro.linha).toBeGreaterThan(0);
+    const itens = relatoDoResultado(resultado, codigo);
+    expect(itens[0]).toEqual({ texto: 'Erro de compilação', tipo: 'erro' });
+    expect(itens.some((i) => i.texto?.startsWith(`Linha ${resultado.erro.linha}: `))).toBe(true);
   });
 
   describe.each(casos)('SC-001: a Saída da tela de $arquivo é igual à esperada', ({ caso }) => {
