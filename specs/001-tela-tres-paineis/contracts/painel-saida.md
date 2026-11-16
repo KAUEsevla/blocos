@@ -23,9 +23,14 @@ duas regiões, nesta ordem:
 | `mostrarOrientacao()` | `limpar()` e escreve, como `'sistema'`, o texto `TEXTOS.orientacaoSaida` de `src/ui/textos.js`: "Monte o programa com os blocos e clique em Executar para ver o resultado aqui." |
 | `escrever(texto, tipo = 'programa')` | Acrescenta uma linha. `tipo` ∈ `'programa'` (saída do `escreva`), `'sistema'` (avisos do editor, ex.: "Executando..."), `'erro'`. Vira a classe `saida-linha--{tipo}`. Texto inserido com `textContent` (nunca HTML). Rola o corpo até o fim. |
 | `areaAvisos` | Elemento acima (somente leitura). |
+| `escreverVarias(linhas, tipo = 'programa')` | Spec 009: acrescenta um lote de linhas de uma vez, com uma única rolagem. |
+| `escreverDetalhe(texto)` | Spec 009: acrescenta "Detalhes técnicos" (`<details>` fechado) com o rastro técnico. |
+| `mostrarAvisos(avisos, aoClicar)` | Spec 009: lista os avisos de blocos incompletos em `areaAvisos` (`renderizarAvisos` da 008). |
 
 ## Regras
 
 - O painel rola sozinho (FR-005); escrever muitas linhas não aumenta a altura da página
   a partir de 1024 px.
-- Todos os textos do editor escritos aqui são pt-BR e vêm de `src/ui/textos.js`.
+- Todos os textos do editor escritos aqui são pt-BR e vêm de `src/ui/textos.js`. Exceção
+  (spec 009): os textos da execução vêm de `src/execucao/mensagens.js`, que é núcleo e
+  testado, como o `motivo` de `src/portugol/execucao.js` da 008.

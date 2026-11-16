@@ -88,3 +88,5 @@ saída.
 - O bloco "repita ... ate" não existe no Portugol do Core e não será oferecido.
 - A condição do enquanto só aceita valores lógicos, e os limites e o passo do para só
   aceitam números, regra dos blocos de operadores da spec 006.
+- Parar um laço infinito e a Saída com mais de 1.000 linhas são conferidos com os blocos
+  de repetição (spec 009).

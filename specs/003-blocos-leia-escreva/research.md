@@ -319,5 +319,5 @@ Blockly, `<dialog>` não é necessário.
 | Para | Item |
 | --- | --- |
 | 006 (✅ resolvida, [tasks da 006](../006-blocos-operadores/tasks.md)) | Negativo, relacionais, lógicos, valor fixo lógico, `check` de tipos (SC-002 da 006), passo B do quickstart da 007 (mudar um número no campo: agora possível, verificado aqui no quickstart, mas o cenário é da 006). |
-| 009 | Ver a Saída no navegador ao clicar em Executar (FR-003 e SC-001 aqui são provados pela aceitação no Core; SC-002, "Olá, mundo! em menos de 2 minutos", tem a parte de montar medida aqui e a de executar na 009). |
+| 009 (✅ resolvida, [tasks da 009](../009-executar-no-core/tasks.md): Saída com uma linha por `escreva` na tela, T021/T022; executar o "Olá, mundo!" pelo Core na tela. A medição do tempo total com cache limpo é o T025 da 009) | Ver a Saída no navegador ao clicar em Executar (FR-003 e SC-001 aqui são provados pela aceitação no Core; SC-002, "Olá, mundo! em menos de 2 minutos", tem a parte de montar medida aqui e a de executar na 009). |
 | 010 | Caixa de entrada do `leia` durante a execução (Premissas da spec). |

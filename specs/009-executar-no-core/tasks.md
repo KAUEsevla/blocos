@@ -294,19 +294,20 @@ escrito à mão, porque o bloco `enquanto` é da 005 (research R-11, R-14).
 **Objetivo**: registrar nas specs de origem que as pendências foram resolvidas e o que
 fica para a 005 e a 010.
 
-- [ ] T044 [P] Atualizar os contratos da 001 e da 008:
+- [X] T044 [P] Atualizar os contratos da 001 e da 008:
   - `specs/001-tela-tres-paineis/contracts/tela.md`: linha do `botao-executar` sem `disabled` (009) e linha nova do `botao-parar` (`disabled` no ocioso), com link para [tela-execucao.md](contracts/tela-execucao.md);
   - `specs/001-tela-tres-paineis/contracts/painel-saida.md`: os três membros novos (`escreverVarias`, `escreverDetalhe`, `mostrarAvisos`) e a exceção "os textos da execução vêm de `src/execucao/mensagens.js`";
   - `specs/008-portugol-valido/contracts/executor-core.md`: no fim da seção "Execução", uma linha apontando para as ampliações em [adapter-core.md](contracts/adapter-core.md) (`aoEscrever`, rastro, tradução, progresso) e registrando a mudança visível: as mensagens de erro de execução passam a terminar com ponto, inclusive as de `EOFError` e `ValueError`, e "Divisão por zero" vira "Não é possível dividir por zero.".
   (RF-01, RF-08, RF-09)
-- [ ] T045 [P] Marcar as pendências como resolvidas, com link para este `tasks.md`:
+- [X] T045 [P] Marcar as pendências como resolvidas, com link para este `tasks.md`:
   - `specs/008-portugol-valido/tasks.md`, seção "Pendências para a spec 009": nota "Resolvidas na 009 (Fase 3, T026–T030)";
   - `specs/003-blocos-leia-escreva/research.md`, R-12, linha da 009: "✅ resolvida" (FR-003 na Saída da tela: T021/T022; SC-002: tempos do T025);
   - `specs/003-blocos-leia-escreva/plan.md`, "Pendências para outras specs", linha da 009: o mesmo;
   - `specs/008-portugol-valido/research.md`, R-09, linha do `compilar(texto)`: acrescentar "contorno mantido e reforçado na 009 ([R-04](../009-executar-no-core/research.md))".
   (RF-03, RF-08, RNF-01)
-- [ ] T046 [P] Registrar o que fica para outras specs (research R-14), só como regra de usuário nas specs, sem detalhe técnico (princípio III): em `specs/005-blocos-repeticao/spec.md`, nas Premissas, "Parar um laço infinito e a Saída com mais de 1.000 linhas são conferidos com os blocos de repetição (spec 009)". O detalhe técnico da 010 (entrada interativa no worker) fica só no R-14 desta spec, para o plan da 010 citar (RF-05, RF-10)
-- [ ] T047 Rodar `npm test` uma vez antes do commit e, na descrição do PR, registrar: os tempos do T025, as pendências P-1 a P-4 fechadas e o que fica para a 005 e a 010 (depende de T044–T046) (RNF-05)
+- [X] T046 [P] Registrar o que fica para outras specs (research R-14), só como regra de usuário nas specs, sem detalhe técnico (princípio III): em `specs/005-blocos-repeticao/spec.md`, nas Premissas, "Parar um laço infinito e a Saída com mais de 1.000 linhas são conferidos com os blocos de repetição (spec 009)". O detalhe técnico da 010 (entrada interativa no worker) fica só no R-14 desta spec, para o plan da 010 citar (RF-05, RF-10)
+- [X] T047 Rodar `npm test` uma vez antes do commit e, na descrição do PR, registrar: os tempos do T025, as pendências P-1 a P-4 fechadas e o que fica para a 005 e a 010 (depende de T044–T046) (RNF-05)
+  - `npm test` rodado antes do commit. O PR não foi aberto (sem push, a pedido); o texto para a descrição ficou no resumo da implementação, com os tempos medidos e as tasks abertas (T025, T042).
 
 **Commit**: `docs(009) (RF-09, RF-01, RF-03, RF-05, RF-08, RNF-01): pendências resolvidas nas specs 001, 003, 005 e 008`
 

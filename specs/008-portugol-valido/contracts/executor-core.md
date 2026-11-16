@@ -87,6 +87,13 @@ dados. Assim a interpretação é testável em unidade, sem Pyodide.
 
 `ResultadoExecucao` e `ErroCore`: ver [data-model.md](../data-model.md).
 
+**Ampliado pela spec 009** ([adapter-core.md](../../009-executar-no-core/contracts/adapter-core.md)):
+`compilarEExecutar` ganha `{ aoEscrever }`, o erro de execução traz o rastro Python em
+`detalhe`, a falha do compilador vira mensagem genérica e o motor informa o progresso.
+Mudança visível: as mensagens de erro de execução passam a terminar com ponto, inclusive
+as de `EOFError` e `ValueError`, e "Divisão por zero" vira "Não é possível dividir por
+zero.".
+
 **Fora deste contrato** (spec 009/010): rodar em Web Worker, botão Parar, entrada
 interativa durante a execução. O adapter recebe a entrada pronta. A 010 troca
 `entrada[]` por uma função de stdin interativa sem mudar o resto.

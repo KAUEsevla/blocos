@@ -4,7 +4,7 @@
 
 **Criada em**: 2026-11-08
 
-**Status**: Rascunho
+**Status**: Implementada
 
 **Rastreia**: RF-09 · RNF-01 · RNF-02 · RNF-06 · RF-08 (bloqueio na tela) · RF-03 (Saída do escreva)
 
