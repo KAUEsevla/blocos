@@ -6,7 +6,7 @@
 
 **Status**: Rascunho
 
-**Rastreia**: RF-09 · RNF-01 · RNF-02 · RNF-06
+**Rastreia**: RF-09 · RNF-01 · RNF-02 · RNF-06 · RF-08 (bloqueio na tela) · RF-03 (Saída do escreva)
 
 **Entrada**: Requisito RF-09: "Botão Executar roda o Portugol pelo meuPiá Core e mostra no painel Saída a saída do programa, ou o erro de compilação/execução em pt-BR."
 
