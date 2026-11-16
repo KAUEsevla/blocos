@@ -55,8 +55,8 @@ suas tasks. A fase de documentação (Fase 7) não implementa task de código e 
 
 **Objetivo**: base herdada verde e configuração do worker e da cobertura.
 
-- [ ] T001 Na branch `009-executar-no-core`, rodar `npm install` e `npm test` (unidade + aceitação no Core real) e confirmar que tudo passa. Se algo falhar, parar e registrar: a falha é da base, não desta spec (RF-09)
-- [ ] T002 Em `vite.config.js`: acrescentar `worker: { format: 'es' }` no nível de cima da configuração (research R-02); em `test.coverage.include`, acrescentar `'src/execucao/**'`; em `test.coverage.exclude`, acrescentar `'src/execucao/worker.js'` com o comentário "cola de navegador, verificada no quickstart (research R-11)". Rodar `npm test` de novo para confirmar que nada muda (RNF-04, RNF-06)
+- [X] T001 Na branch `009-executar-no-core`, rodar `npm install` e `npm test` (unidade + aceitação no Core real) e confirmar que tudo passa. Se algo falhar, parar e registrar: a falha é da base, não desta spec (RF-09)
+- [X] T002 Em `vite.config.js`: acrescentar `worker: { format: 'es' }` no nível de cima da configuração (research R-02); em `test.coverage.include`, acrescentar `'src/execucao/**'`; em `test.coverage.exclude`, acrescentar `'src/execucao/worker.js'` com o comentário "cola de navegador, verificada no quickstart (research R-11)". Rodar `npm test` de novo para confirmar que nada muda (RNF-04, RNF-06)
 
 **Commit**: `009/T001-T002 (RF-09, RNF-04, RNF-06): worker em ES module e cobertura de src/execucao`
 

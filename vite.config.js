@@ -3,6 +3,8 @@ import { defineConfig } from 'vite';
 // Build estático (sem backend, RNF-06) e configuração do Vitest.
 // Dois projetos de teste: "unidade" (Node puro, rápido) e "aceitacao" (Pyodide + meupia-core real).
 export default defineConfig({
+  // O worker de execução importa módulos (pyodide, src/core/): formato ES (spec 009, research R-02).
+  worker: { format: 'es' },
   test: {
     projects: [
       {
@@ -31,9 +33,10 @@ export default defineConfig({
     ],
     coverage: {
       provider: 'v8',
-      include: ['src/portugol/**', 'src/blocos/**', 'src/projeto/**', 'src/core/**'],
+      include: ['src/portugol/**', 'src/blocos/**', 'src/projeto/**', 'src/core/**', 'src/execucao/**'],
       // Exclusão declarada (constitution, princípio IV): só interface e renderização.
-      exclude: ['src/ui/**', 'src/main.js'],
+      // src/execucao/worker.js: cola de navegador, verificada no quickstart (spec 009, research R-11).
+      exclude: ['src/ui/**', 'src/main.js', 'src/execucao/worker.js'],
       reporter: ['text', 'html', 'json-summary'],
       reportsDirectory: 'cobertura',
       thresholds: { lines: 80, branches: 80 },
