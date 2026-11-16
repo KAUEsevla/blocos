@@ -132,6 +132,72 @@ describe('criarExecutor (RF-09)', () => {
     expect(aoPronto).not.toHaveBeenCalled();
   });
 
+  describe('parar (US3, FR-007)', () => {
+    it('encerra o worker, resolve como interrompido e prepara um worker novo em segundo plano', async () => {
+      const { executor, workers } = montar();
+      const promessa = executor.executar('enquanto verdadeiro');
+      workers[0].responder({ tipo: 'pronto' });
+      executor.parar();
+      expect(workers[0].terminate).toHaveBeenCalledTimes(1);
+      await expect(promessa).resolves.toEqual({ status: 'interrompido', saida: '', erro: null });
+      expect(workers).toHaveLength(2);
+      expect(workers[1].enviadas).toEqual([{ tipo: 'preparar' }]);
+    });
+
+    it('pronto() volta a false até o worker novo mandar pronto', () => {
+      const { executor, workers } = montar();
+      executor.executar('x');
+      workers[0].responder({ tipo: 'pronto' });
+      expect(executor.pronto()).toBe(true);
+      executor.parar();
+      expect(executor.pronto()).toBe(false);
+      workers[1].responder({ tipo: 'pronto' });
+      expect(executor.pronto()).toBe(true);
+    });
+
+    it('lotes e resultado atrasados do worker encerrado são ignorados', async () => {
+      const { executor, workers } = montar();
+      const pedacos = [];
+      const primeira = executor.executar('x', { aoEscrever: (t) => pedacos.push(t) });
+      const antigo = workers[0];
+      const idAntigo = antigo.ultimoId();
+      executor.parar();
+      await primeira;
+      const segunda = executor.executar('y', { aoEscrever: (t) => pedacos.push(t) });
+      antigo.responder({ tipo: 'saida', id: idAntigo, texto: 'atrasado' });
+      antigo.responder({ tipo: 'resultado', id: idAntigo, resultado: OK });
+      const id = workers[1].ultimoId();
+      workers[1].responder({ tipo: 'saida', id, texto: 'novo' });
+      workers[1].responder({ tipo: 'resultado', id, resultado: OK });
+      await expect(segunda).resolves.toEqual(OK);
+      expect(pedacos).toEqual(['novo']);
+    });
+
+    it('etapas anunciadas pelo worker novo antes da próxima execução são repetidas para ela', () => {
+      const { executor, workers } = montar();
+      executor.executar('x');
+      executor.parar();
+      workers[1].responder({ tipo: 'progresso', etapa: 'python' });
+      const etapas = [];
+      executor.executar('y', { aoProgresso: (e) => etapas.push(e) });
+      workers[1].responder({ tipo: 'progresso', etapa: 'core' });
+      expect(etapas).toEqual(['python', 'core']);
+    });
+
+    it('sem execução em andamento, parar não faz nada', () => {
+      const { executor, workers } = montar();
+      executor.parar();
+      expect(workers).toHaveLength(0);
+      const primeira = executor.executar('x');
+      workers[0].responder({ tipo: 'resultado', id: workers[0].ultimoId(), resultado: OK });
+      return primeira.then(() => {
+        executor.parar();
+        expect(workers[0].terminate).not.toHaveBeenCalled();
+        expect(workers).toHaveLength(1);
+      });
+    });
+  });
+
   it('mensagens de um worker que já foi descartado são ignoradas', async () => {
     const { executor, workers } = montar();
     const primeira = executor.executar('x');

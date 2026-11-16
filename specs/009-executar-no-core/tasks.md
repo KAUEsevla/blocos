@@ -256,22 +256,22 @@ escrito à mão, porque o bloco `enquanto` é da 005 (research R-11, R-14).
 
 ### Testes da História 3
 
-- [ ] T037 [P] [US3] Em `tests/unidade/execucao-executor.test.js`, acrescentar `parar()`:
+- [X] T037 [P] [US3] Em `tests/unidade/execucao-executor.test.js`, acrescentar `parar()`:
   - durante uma execução: chama `terminate`, a promessa pendente resolve `{ status: 'interrompido', saida: '', erro: null }` e um worker novo é criado e recebe `preparar` logo em seguida (research R-03);
   - `pronto()` volta a `false` até o worker novo mandar `pronto`;
   - um `saida` ou `resultado` atrasado do worker encerrado (`id` antigo) é ignorado;
   - `parar()` sem execução em andamento não faz nada.
   Em `tests/unidade/execucao-controlador.test.js`: `parar()` durante `executando` e durante `preparando` chama `executor.parar()`; a Saída termina com "Execução interrompida pelo usuário" (`sistema`); o estado volta a `ocioso`; `parar()` em `ocioso` não chama o executor (FR-007) (RF-09)
-- [ ] T038 [P] [US3] Em `tests/aceitacao/executar.test.js`, acrescentar (Core real em `worker_threads`):
-  - programa escrito à mão com `i: inteiro`, `i <- 0` e `enquanto verdadeiro faca` / `i <- i + 1` / `escreva(i)` / `fim_enquanto`: depois do primeiro pedaço em `aoEscrever`, chamar `parar()`; o resultado é `interrompido` e uma execução seguinte do "Olá, mundo!" termina com `ok`;
-  - programa escrito à mão com 1.500 `escreva(<n>)`: as 1.500 linhas chegam inteiras, na ordem, em mais de um lote `saida` (caso de borda "mais de 1.000 linhas").
+- [X] T038 [P] [US3] Em `tests/aceitacao/executar.test.js`, acrescentar (Core real em `worker_threads`):
+  - programa escrito à mão com `i: inteiro`, `i <- 0` e `enquanto verdadeiro faca` / `i <- i + 1` / `escreva(i)` / `fim_enquanto`: depois do **segundo** pedaço em `aoEscrever` (prova de que a Saída chega em lotes, antes do fim), chamar `parar()`; o resultado é `interrompido` e uma execução seguinte do "Olá, mundo!" termina com `ok`;
+  - programa escrito à mão com 1.500 `escreva(<n>)`: as 1.500 linhas chegam inteiras e na ordem (caso de borda "mais de 1.000 linhas"). Os 1.500 `escreva` terminam em menos de 50 ms, então o "mais de um lote" é provado no laço infinito acima.
   (FR-007) (RF-09, RNF-07)
 
 ### Implementação da História 3
 
-- [ ] T039 [US3] Implementar `parar()` em `src/execucao/executor.js` até T037 passar (depende de T012) (RF-09)
-- [ ] T040 [US3] Implementar `parar()` em `src/execucao/controlador.js` até T037 passar e ligar em `src/main.js`: `ligarBarra` recebe `aoParar: () => controlador.parar()`; o `novoProjeto` chama `controlador.parar()` antes de trocar o projeto (contrato [tela-execucao.md](contracts/tela-execucao.md#ligação-srcmainjs)) (depende de T018, T022, T039) (RF-09)
-- [ ] T041 [US3] Rodar `npm run test:aceitacao` e ajustar até T038 passar. No navegador (`npm run dev`), conferir que Parar fica habilitado durante a preparação e que clicar nele volta Executar a habilitado; o laço infinito montado com blocos fica para o quickstart da 005 (depende de T039, T040) (RF-09)
+- [X] T039 [US3] Implementar `parar()` em `src/execucao/executor.js` até T037 passar (depende de T012) (RF-09)
+- [X] T040 [US3] Implementar `parar()` em `src/execucao/controlador.js` até T037 passar e ligar em `src/main.js`: `ligarBarra` recebe `aoParar: () => controlador.parar()`; o `novoProjeto` chama `controlador.parar()` antes de trocar o projeto (contrato [tela-execucao.md](contracts/tela-execucao.md#ligação-srcmainjs)) (depende de T018, T022, T039) (RF-09)
+- [X] T041 [US3] Rodar `npm run test:aceitacao` e ajustar até T038 passar. No navegador (`npm run dev`), conferir que Parar fica habilitado durante a preparação e que clicar nele volta Executar a habilitado; o laço infinito montado com blocos fica para o quickstart da 005 (depende de T039, T040) (RF-09)
 
 **Commit**: `009/T037-T041 (RF-09, RNF-07): Parar interrompe a execução`
 

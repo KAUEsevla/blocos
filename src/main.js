@@ -76,6 +76,8 @@ async function novoProjeto() {
     });
     if (!descartar) return;
   }
+  // Um projeto novo não herda uma execução em andamento (contracts/tela-execucao.md).
+  await controlador.parar();
   projeto = projetoVazio();
   definirNome(projeto.nome);
   recarregarBlocos(ws, projeto);
@@ -109,6 +111,7 @@ ligarBarra({
   },
   aoNovo: novoProjeto,
   aoExecutar: () => controlador.executar(),
+  aoParar: () => controlador.parar(),
 });
 
 document.getElementById('botao-copiar').addEventListener('click', () => {

@@ -92,6 +92,42 @@ describe('execução pela tela no Core real (worker_threads)', () => {
     expect(itens.some((i) => i.texto?.startsWith(`Linha ${resultado.erro.linha}: `))).toBe(true);
   });
 
+  // US3 (FR-007): o bloco enquanto é da 005, então o laço é escrito à mão (research R-11, R-14).
+  it('Parar interrompe um enquanto infinito, e a execução seguinte funciona', async () => {
+    const infinito =
+      'algoritmo "Infinito"\n\nvar\n    i: inteiro\n\ninicio\n    i <- 0\n' +
+      '    enquanto verdadeiro faca\n        i <- i + 1\n        escreva(i)\n    fim_enquanto\nfim_algoritmo\n';
+    const pedacos = [];
+    let aoSegundoLote;
+    const doisLotes = new Promise((resolver) => {
+      aoSegundoLote = resolver;
+    });
+    const execucao = executor.executar(infinito, {
+      aoEscrever: (texto) => {
+        pedacos.push(texto);
+        if (pedacos.length === 2) aoSegundoLote();
+      },
+    });
+    // Dois lotes provam que a Saída chega em fluxo, antes do fim (R-05).
+    await doisLotes;
+    executor.parar();
+    await expect(execucao).resolves.toEqual({ status: 'interrompido', saida: '', erro: null });
+    const linhas = linhasDe(pedacos);
+    expect(linhas.slice(0, 3)).toEqual(['1', '2', '3']);
+
+    const { resultado, pedacos: depois } = await executarColetando(executor, OLA_MUNDO);
+    expect(resultado.status).toBe('ok');
+    expect(depois.join('')).toBe('Olá, mundo!\n');
+  });
+
+  it('mais de 1.000 linhas chegam inteiras e na ordem', async () => {
+    const corpo = Array.from({ length: 1500 }, (_, i) => `    escreva(${i + 1})`).join('\n');
+    const codigo = `algoritmo "MuitasLinhas"\n\ninicio\n${corpo}\nfim_algoritmo\n`;
+    const { resultado, pedacos } = await executarColetando(executor, codigo);
+    expect(resultado.status).toBe('ok');
+    expect(linhasDe(pedacos)).toEqual(Array.from({ length: 1500 }, (_, i) => String(i + 1)));
+  });
+
   describe.each(casos)('SC-001: a Saída da tela de $arquivo é igual à esperada', ({ caso }) => {
     it(caso.descricao, async () => {
       const { codigo } = gerarPortugol(caso.projeto);

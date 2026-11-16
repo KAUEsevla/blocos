@@ -24,8 +24,17 @@ export function criarControladorExecucao({ obterPrograma, executor, saida, desta
     }
   }
 
-  async function executar() {
-    if (estadoAtual !== 'ocioso') return;
+  let emAndamento = null;
+
+  function executar() {
+    if (estadoAtual !== 'ocioso') return Promise.resolve();
+    emAndamento = rodar().finally(() => {
+      emAndamento = null;
+    });
+    return emAndamento;
+  }
+
+  async function rodar() {
     // O código fica fixo no clique: mudar os blocos depois não muda o que roda.
     const { codigo, avisos } = obterPrograma();
 
@@ -70,5 +79,14 @@ export function criarControladorExecucao({ obterPrograma, executor, saida, desta
     mudarEstado('ocioso');
   }
 
-  return { executar, estado: () => estadoAtual };
+  // Parar (US3, FR-007): a execução pendente termina como "interrompido" e o fluxo de
+  // executar() fecha a Saída e volta a ocioso. A promessa devolvida termina junto com ele,
+  // para quem precisa esperar (ex.: Novo, antes de mostrar a orientação).
+  function parar() {
+    if (estadoAtual === 'ocioso') return Promise.resolve();
+    executor.parar();
+    return emAndamento ?? Promise.resolve();
+  }
+
+  return { executar, parar, estado: () => estadoAtual };
 }

@@ -86,6 +86,54 @@ describe('bloqueio por blocos incompletos (pendência da 008)', () => {
   });
 });
 
+describe('parar (US3, FR-007)', () => {
+  // Executor que só termina quando parar() é chamado, como o real.
+  function executorQueNaoTermina({ pronto }) {
+    let resolverAtual;
+    const executor = executorFalso({
+      pronto,
+      roteiro: (opcoes) =>
+        new Promise((resolver) => {
+          if (pronto) opcoes.aoEscrever('1\n');
+          resolverAtual = resolver;
+        }),
+    });
+    executor.parar = vi.fn(() => resolverAtual({ status: 'interrompido', saida: '', erro: null }));
+    return executor;
+  }
+
+  it.each([
+    ['executando', true],
+    ['preparando', false],
+  ])('durante %s chama executor.parar, mostra a mensagem e volta a ocioso', async (estado, pronto) => {
+    const executor = executorQueNaoTermina({ pronto });
+    const { controlador, saida, estados } = montar({ executor });
+    const execucao = controlador.executar();
+    expect(controlador.estado()).toBe(estado);
+    controlador.parar();
+    await execucao;
+    expect(executor.parar).toHaveBeenCalledTimes(1);
+    expect(saida.chamadas.at(-1)).toEqual(['escrever', 'Execução interrompida pelo usuário', 'sistema']);
+    expect(estados.at(-1)).toBe('ocioso');
+    expect(controlador.estado()).toBe('ocioso');
+  });
+
+  it('em ocioso, parar não chama o executor', async () => {
+    const { controlador, executor } = montar();
+    await expect(controlador.parar()).resolves.toBeUndefined();
+    expect(executor.parar).not.toHaveBeenCalled();
+  });
+
+  it('a promessa de parar termina depois da mensagem de interrompido (Novo espera por ela)', async () => {
+    const executor = executorQueNaoTermina({ pronto: true });
+    const { controlador, saida } = montar({ executor });
+    controlador.executar();
+    await controlador.parar();
+    expect(saida.chamadas.at(-1)).toEqual(['escrever', 'Execução interrompida pelo usuário', 'sistema']);
+    expect(controlador.estado()).toBe('ocioso');
+  });
+});
+
 describe('criarControladorExecucao: rodar e ver (US1)', () => {
   it('primeira execução: preparando → executando → ocioso, e a Saída na ordem do FR-004', async () => {
     const executor = executorFalso({
