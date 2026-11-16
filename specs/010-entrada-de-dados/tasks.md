@@ -209,7 +209,7 @@ a mensagem; executar de novo e funcionar.
 
 **Objetivo**: cobertura, README e versão única do Core.
 
-- [ ] T027 Rodar `npm test` e `npm run cobertura`; confirmar linhas e branches ≥ 80% no núcleo, com `src/execucao/entrada.js`, `servico.js`, `executor.js`, `controlador.js` e `src/core/executor-core.js` no relatório; conferir que `tests/unidade/versao-unica.test.js` passa (a versão do Core continua só em `src/config.js`); versionar `cobertura/` e o `README.md` com a linha `**Testes:** N · **Cobertura:** X%` atualizada pelo script (depende das fases 2 e 3) (RNF-04, RNF-02)
+- [X] T027 Rodar `npm test` e `npm run cobertura`; confirmar linhas e branches ≥ 80% no núcleo, com `src/execucao/entrada.js`, `servico.js`, `executor.js`, `controlador.js` e `src/core/executor-core.js` no relatório; conferir que `tests/unidade/versao-unica.test.js` passa (a versão do Core continua só em `src/config.js`); versionar `cobertura/` e o `README.md` com a linha `**Testes:** N · **Cobertura:** X%` atualizada pelo script (depende das fases 2 e 3) (RNF-04, RNF-02)
 
 **Commit**: `010/T027 (RF-10, RNF-02, RNF-04): cobertura e README`
 
