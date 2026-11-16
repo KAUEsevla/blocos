@@ -179,7 +179,8 @@ Registradas no R-12. Não são tasks desta spec:
 - **009** (✅ resolvida pela spec 009, [tasks](../009-executar-no-core/tasks.md)): ver a
   Saída no navegador ao executar; completar a medição do SC-002 (tempo com cache limpo:
   T025 da 009).
-- **010**: caixa de entrada do `leia`; mensagem para real digitado com vírgula no `leia`.
+- **010** (✅ resolvida pela spec 010, [tasks](../010-entrada-de-dados/tasks.md)): caixa de entrada do `leia`
+  (Fase 2); mensagem para real digitado com vírgula no `leia` (T014–T016).
 
 ## Complexity Tracking
 

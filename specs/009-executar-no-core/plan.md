@@ -201,7 +201,8 @@ tempo real.
 
 Registradas no R-14. Não são tasks desta spec:
 
-- **010**: entrada interativa do `leia` dentro do worker (decidir entre
+- **010** (✅ resolvida pela 010 por reexecução determinística, [R-02](../010-entrada-de-dados/research.md), sem
+  `SharedArrayBuffer`; [tasks](../010-entrada-de-dados/tasks.md)): entrada interativa do `leia` dentro do worker (decidir entre
   `SharedArrayBuffer` com isolamento entre origens ou recolher a entrada antes). O
   protocolo já leva `entrada`.
 - **005**: repetir no quickstart, com blocos, o Parar num laço infinito e as mais de

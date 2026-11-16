@@ -75,6 +75,9 @@ dados. Assim a interpretação é testável em unidade, sem Pyodide.
    `linha` e `coluna` ficam `null` e a mensagem é o texto bruto.
 4. (Python) Senão, faz `exec(main.py, {"__name__": "__main__"})` com o stdout capturado
    e o stdin alimentado por `entrada` via `motor.setStdin` (uma linha por `input()`).
+   A partir da spec 010, a entrada vem de uma lista lida pelo `input` próprio da ponte,
+   sem `setStdin`: cada valor vai a um `input()` exatamente como está
+   ([adapter-core.md da 010](../../010-entrada-de-dados/contracts/adapter-core.md)).
 5. Se houver exceção, o Python devolve `{ tipo, mensagem }` (ex.: `ZeroDivisionError`).
    O JS monta `status: "erro_execucao"` com `traduzirErroExecucao`, que preenche
    `detalhe = "<Tipo>: <mensagem>"` e uma `mensagem` amigável:
@@ -95,8 +98,10 @@ as de `EOFError` e `ValueError`, e "Divisão por zero" vira "Não é possível d
 zero.".
 
 **Fora deste contrato** (spec 009/010): rodar em Web Worker, botão Parar, entrada
-interativa durante a execução. O adapter recebe a entrada pronta. A 010 troca
-`entrada[]` por uma função de stdin interativa sem mudar o resto.
+interativa durante a execução. O adapter recebe a entrada pronta. A 010 manteve
+`entrada[]` e acrescentou o modo `interativo` (status `aguardando_entrada`) e o
+`continuarExecucao`, que reexecuta o programa compilado com todas as entradas
+([adapter-core.md da 010](../../010-entrada-de-dados/contracts/adapter-core.md)).
 
 ## Garantias testadas
 

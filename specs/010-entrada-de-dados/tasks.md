@@ -220,8 +220,8 @@ a mensagem; executar de novo e funcionar.
 **Objetivo**: registrar nas specs de origem que as pendências foram resolvidas (research
 R-12).
 
-- [ ] T028 [P] Atualizar `specs/001-tela-tres-paineis/contracts/painel-saida.md`: na tabela de membros, `pedirEntrada({ rotulo, dica, confirmar })`, `cancelarEntrada()` e o tipo `'entrada'` em `escrever`, marcados "Spec 010", com link para [tela-entrada.md](contracts/tela-entrada.md); acrescentar que os textos do pedido vêm de `src/execucao/entrada.js` (RF-01, RF-10)
-- [ ] T029 [P] Marcar as pendências como resolvidas, com link para este `tasks.md`:
+- [X] T028 [P] Atualizar `specs/001-tela-tres-paineis/contracts/painel-saida.md`: na tabela de membros, `pedirEntrada({ rotulo, dica, confirmar })`, `cancelarEntrada()` e o tipo `'entrada'` em `escrever`, marcados "Spec 010", com link para [tela-entrada.md](contracts/tela-entrada.md); acrescentar que os textos do pedido vêm de `src/execucao/entrada.js` (RF-01, RF-10)
+- [X] T029 [P] Marcar as pendências como resolvidas, com link para este `tasks.md`:
   - `specs/009-executar-no-core/research.md`, R-14, linha da 010: "✅ resolvida pela 010 por reexecução determinística ([R-02](../010-entrada-de-dados/research.md)), sem `SharedArrayBuffer`";
   - `specs/009-executar-no-core/plan.md`, "Pendências para outras specs", linha da 010: o mesmo;
   - `specs/009-executar-no-core/contracts/executar.md`, seção "Protocolo do worker": uma linha apontando para as mensagens `pedido_entrada` e `entrada` e o campo `interativo` em [entrada.md](../../010-entrada-de-dados/contracts/entrada.md);
@@ -230,11 +230,22 @@ R-12).
   - `specs/008-portugol-valido/contracts/executor-core.md`, linha 77 (passo 4, "o stdin alimentado por `entrada` via `motor.setStdin`"): acrescentar que, a partir da 010, a entrada vem de uma lista lida pelo `input` próprio da ponte, sem `setStdin`; linha 99 ("A 010 troca `entrada[]` por uma função de stdin interativa sem mudar o resto"): trocar pela forma entregue (modo `interativo`, status `aguardando_entrada` e `continuarExecucao`, por reexecução). As duas com link para [adapter-core.md](../../010-entrada-de-dados/contracts/adapter-core.md);
   - `specs/010-entrada-de-dados/spec.md`: `**Status**: Rascunho` → `**Status**: Implementada`.
   (RF-03, RF-09, RF-10, RNF-01)
-- [ ] T030 [P] Em `specs/005-blocos-repeticao/spec.md`, nas Premissas, só como regra de usuário (princípio III): "Um `leia` dentro de um laço pede o valor a cada volta (spec 010); conferido com os blocos de repetição." (RF-05, RF-10)
+- [X] T030 [P] Em `specs/005-blocos-repeticao/spec.md`, nas Premissas, só como regra de usuário (princípio III): "Um `leia` dentro de um laço pede o valor a cada volta (spec 010); conferido com os blocos de repetição." (RF-05, RF-10)
 - [ ] T031 [P] A issue da lacuna do Core (research R-03): o texto já está redigido em `specs/010-entrada-de-dados/research.md`, R-03 (título "Expor qual variável o `leia` vai preencher"; passos: compilar `leia(nome)` no `meupia-core` 1.4.1; obtido: `nome = _S(input())`, sem nada que identifique a variável; sugestão: passar a informação no `prompt` do `input()` ou numa função `_leia` substituível; contorno no editor: `ponte-python.js`). A **abertura** da issue em `meuPia/core` é feita pela dupla, como na 008/R-09 e na 003/R-07; quando aberta, pôr o link em "Link da issue" no R-03 e na linha do princípio I do Constitution Check do `plan.md`. **A issue precisa estar aberta antes do PR** (RNF-01, RF-10)
-- [ ] T032 Rodar `npm test` uma vez antes do commit e, na descrição do PR, registrar: a decisão do R-02 (reexecução, sem COOP/COEP), as pendências P-1 a P-3 fechadas, o link da issue do T031, o tempo medido no T022 e o limite conhecido (conta pesada antes de vários `leia`). Não abrir o PR sem o link da issue no R-03 (depende de T028–T031) (RNF-05, RNF-01)
+- [X] T032 Rodar `npm test` uma vez antes do commit e, na descrição do PR, registrar: a decisão do R-02 (reexecução, sem COOP/COEP), as pendências P-1 a P-3 fechadas, o link da issue do T031, o tempo medido no T022 e o limite conhecido (conta pesada antes de vários `leia`). Não abrir o PR sem o link da issue no R-03 (depende de T028–T031) (RNF-05, RNF-01)
+  - `npm test` rodado antes do commit (863 testes passando). O PR não foi aberto (sem push, a pedido); o texto para a descrição ficou no resumo da implementação. **O PR só pode ser aberto depois do T031**, com o link da issue no R-03.
 
 **Commit**: `docs(010) (RF-10, RF-01, RF-03, RF-05, RF-09, RNF-01): pendências resolvidas nas specs 001, 003, 005, 008 e 009 e issue da lacuna do Core`
+
+## Conferências manuais pendentes
+
+O código está pronto e testado. Ficam com a dupla só as tarefas que dependem de uma
+pessoa. Quem fizer anota o resultado no PR e marca a task.
+
+| Pendência | O que fazer | Task |
+| --- | --- | --- |
+| Issue da lacuna do Core | Abrir em `meuPia/core` a issue "Expor qual variável o `leia` vai preencher", com o texto do [R-03](research.md), e pôr o link em "Link da issue" no R-03 e na linha do princípio I do Constitution Check do [plan.md](plan.md). **Antes do PR.** | T031 |
+| Roteiro do quickstart por uma pessoa | Os roteiros 1 a 11 do [quickstart.md](quickstart.md#b-no-navegador) foram percorridos no painel do navegador do Claude (T022, T026). Falta uma pessoa repetir digitando, num navegador comum (Chrome, Firefox ou Edge), e anotar navegador e impressão de uso no PR. | T022, T026 (registro) |
 
 ---
 

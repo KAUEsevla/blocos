@@ -122,6 +122,10 @@ criarExecutor({ criarWorker }) → {
 
 ## Protocolo do worker
 
+**Ampliado pela spec 010**: campo `interativo` em `executar`, mensagens `pedido_entrada`
+(worker → página) e `entrada` (página → worker). Ver
+[entrada.md](../../010-entrada-de-dados/contracts/entrada.md).
+
 Página → worker:
 
 | Mensagem | Efeito |

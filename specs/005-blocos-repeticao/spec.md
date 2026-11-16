@@ -90,3 +90,5 @@ saída.
   aceitam números, regra dos blocos de operadores da spec 006.
 - Parar um laço infinito e a Saída com mais de 1.000 linhas são conferidos com os blocos
   de repetição (spec 009).
+- Um `leia` dentro de um laço pede o valor a cada volta (spec 010); conferido com os
+  blocos de repetição.
