@@ -57,11 +57,11 @@ e o executor trocam `pedido_entrada` e `entrada`; os textos do pedido existem (c
 
 ### Base herdada
 
-- [ ] T001 Na branch `010-entrada-de-dados`, rodar `npm install` e `npm test` (unidade + aceitação no Core real) e confirmar que tudo passa. Se algo falhar, parar e registrar: a falha é da base, não desta spec. A verificação não altera arquivos; se exigir correção na base, ela entra no commit desta fase (RF-10)
+- [X] T001 Na branch `010-entrada-de-dados`, rodar `npm install` e `npm test` (unidade + aceitação no Core real) e confirmar que tudo passa. Se algo falhar, parar e registrar: a falha é da base, não desta spec. A verificação não altera arquivos; se exigir correção na base, ela entra no commit desta fase (RF-10)
 
 ### Adapter do Core (`src/core/`)
 
-- [ ] T002 Em `src/core/ponte-python.js` (contrato [adapter-core.md](contracts/adapter-core.md#ponte_python); research R-02, R-03):
+- [X] T002 Em `src/core/ponte-python.js` (contrato [adapter-core.md](contracts/adapter-core.md#ponte_python); research R-02, R-03):
   - acrescentar `import re` e a classe `_MeupiaPedidoEntrada(BaseException)` com o atributo `nome` (derivar de `BaseException` para um `except Exception` do programa nunca a capturar);
   - `_meupia_executar(ao_escrever=None, entrada=None, interativo=False)`: ler `output/main.py`, guardar `linhas = codigo.split("\n")` e uma fila `list(entrada or [])`;
   - definir `_meupia_input(prompt="")`: com a fila não vazia, devolver `fila.pop(0)` **exatamente como está** (sem acrescentar nem tirar quebra de linha; FR-004); vazia e `interativo`: `f = sys._getframe(1)`, casar `linhas[f.f_lineno - 1]` com `re.match(r"\s*([A-Za-z_]\w*)\s*=", …)` e levantar `_MeupiaPedidoEntrada(nome ou None)`; vazia sem `interativo`: levantar `EOFError()`;
@@ -70,13 +70,13 @@ e o executor trocam `pedido_entrada` e `entrada`; os textos do pedido existem (c
   - capturar `_MeupiaPedidoEntrada` **antes** do `except Exception` e devolver `pedido = {"variavel": e.nome}`; o retorno passa a ser `{"saida", "erro", "pedido"}` (`pedido` = `None` fora desse caso);
   - manter `_Escrita`, o `except SystemExit` e a restauração do `sys.stdout` no `finally`; manter só `meuPia.compiler.main` como interface do Core (princípio I).
   (P-1, P-3) (RF-10, RNF-01)
-- [ ] T003 Em `src/core/executor-core.js` (contrato [adapter-core.md](contracts/adapter-core.md)):
+- [X] T003 Em `src/core/executor-core.js` (contrato [adapter-core.md](contracts/adapter-core.md)):
   - `compilarEExecutar(motor, codigo, entrada = [], { aoEscrever, interativo = false } = {})`: compila como hoje e delega a execução a uma função interna `executarCompilado(motor, entrada, { aoEscrever, interativo })`;
   - `executarCompilado`: chama `_meupia_executar` com `aoEscrever ?? null`, a lista `entrada` e `interativo`; **remove** o `motor.setStdin`; `execucao.pedido` → `{ status: 'aguardando_entrada', saida: execucao.saida, erro: null, pedido: { variavel: execucao.pedido.variavel ?? null } }`; `execucao.erro` → `erro_execucao` como hoje; senão `ok`;
   - exportar `continuarExecucao(motor, entrada, { aoEscrever, interativo = false } = {})`: `prepararMotor` e `executarCompilado`, sem recompilar. Se `output/main.py` não existir no motor (nenhuma compilação anterior), devolver `{ status: 'erro_execucao', saida: '', erro }` com `erro.mensagem` = "O programa parou com um erro durante a execução." (checar com a função Python `_meupia_compilado()`, acrescentada em `src/core/ponte-python.js` no T002, que devolve `os.path.exists("output/main.py")`);
   - sem `interativo`, o resultado é idêntico ao da 009 (inclusive o `EOFError` da entrada esgotada).
   (depende de T002) (P-1) (RF-10, RNF-01)
-- [ ] T004 Em `tests/aceitacao/adapter-core.test.js`, acrescentar um `describe('modo interativo (spec 010)')` com o Core real:
+- [X] T004 Em `tests/aceitacao/adapter-core.test.js`, acrescentar um `describe('modo interativo (spec 010)')` com o Core real:
   - `leia(nome)`, `leia(idade)`, `leia(altura)`, `leia(ok)` com `interativo: true` e `entrada = []`, `["Ana"]`, `["Ana", "15"]`, `["Ana", "15", "1.5"]` → `aguardando_entrada` com `pedido.variavel` `nome`, `idade`, `altura`, `ok` em sequência, e `erro: null`;
   - `leia(nome)` dentro de `enquanto i < 2 faca … fim_enquanto` (Portugol em texto; os blocos de repetição são da 005): `[]` e `["Ana"]` → `variavel: 'nome'`; `["Ana", "Bia"]` → `ok`;
   - `continuarExecucao(motor, ["Ana", "Bia"], { interativo: true })` depois de um `aguardando_entrada` chega ao fim com a saída completa, mesmo depois de sobrescrever `main.por` com texto inválido (prova que não recompila);
@@ -87,18 +87,18 @@ e o executor trocam `pedido_entrada` e `entrada`; os textos do pedido existem (c
 
 ### Textos do pedido (núcleo)
 
-- [ ] T005 [P] Escrever `tests/unidade/execucao-entrada.test.js` para `criarPedidoEntrada(variavel, variaveis)` e `TEXTOS_ENTRADA` de `src/execucao/entrada.js` (contrato [entrada.md](contracts/entrada.md#textos-do-pedido-entradajs-novo); research R-06), com `variaveis = [{ nome: 'nome', tipo: 'cadeia' }, { nome: 'idade', tipo: 'inteiro' }, { nome: 'altura', tipo: 'real' }, { nome: 'ok', tipo: 'logico' }]`:
+- [X] T005 [P] Escrever `tests/unidade/execucao-entrada.test.js` para `criarPedidoEntrada(variavel, variaveis)` e `TEXTOS_ENTRADA` de `src/execucao/entrada.js` (contrato [entrada.md](contracts/entrada.md#textos-do-pedido-entradajs-novo); research R-06), com `variaveis = [{ nome: 'nome', tipo: 'cadeia' }, { nome: 'idade', tipo: 'inteiro' }, { nome: 'altura', tipo: 'real' }, { nome: 'ok', tipo: 'logico' }]`:
   - `'nome'` → `{ rotulo: 'Digite o valor de nome (cadeia)', dica: null, confirmar: 'Confirmar' }`;
   - `'idade'` → rótulo `Digite o valor de idade (inteiro)`, dica `Número sem casas decimais, por exemplo 15.`;
   - `'altura'` → rótulo `Digite o valor de altura (real)`, dica `Use ponto para separar as casas decimais, por exemplo 1.72.`;
   - `'ok'` → rótulo `Digite o valor de ok (lógico)` (com acento), dica `Digite verdadeiro ou falso. Só "verdadeiro" vira verdadeiro.`;
   - `null`, `'outra'` (fora da lista) e `variaveis` vazia ou ausente → `{ rotulo: 'Digite um valor', dica: null, confirmar: 'Confirmar' }`.
   (P-3) (RF-10, RNF-03)
-- [ ] T006 [P] Implementar `src/execucao/entrada.js` até T005 passar: puro, sem DOM nem Pyodide, com os textos congelados (`Object.freeze`) (RF-10, RNF-03)
+- [X] T006 [P] Implementar `src/execucao/entrada.js` até T005 passar: puro, sem DOM nem Pyodide, com os textos congelados (`Object.freeze`) (RF-10, RNF-03)
 
 ### Serviço do worker
 
-- [ ] T007 Em `tests/unidade/execucao-servico.test.js`, acrescentar um `describe('entrada interativa (spec 010)')` com `vi.mock` de `compilarEExecutar` **e** `continuarExecucao`, e relógio falso (contrato [entrada.md](contracts/entrada.md#serviço-do-worker-servicojs); research R-04, R-05):
+- [X] T007 Em `tests/unidade/execucao-servico.test.js`, acrescentar um `describe('entrada interativa (spec 010)')` com `vi.mock` de `compilarEExecutar` **e** `continuarExecucao`, e relógio falso (contrato [entrada.md](contracts/entrada.md#serviço-do-worker-servicojs); research R-04, R-05):
   - `executar` com `interativo: true` repassa `{ aoEscrever, interativo: true }` a `compilarEExecutar`; sem o campo, `interativo: false`;
   - `compilarEExecutar` escreve `antes\n` e devolve `aguardando_entrada` com `variavel: 'nome'` → postagens na ordem `saida` (`antes\n`) e `{ tipo: 'pedido_entrada', id, variavel: 'nome' }`, sem `resultado`;
   - `{ tipo: 'entrada', id, valor: 'Ana' }` → `continuarExecucao(motor, ['Ana'], { aoEscrever, interativo: true })`; a rodada escreve `antes\nOi, Ana\n` e devolve `ok` → só `Oi, Ana\n` é postado, depois o `resultado` com `saida: ''`;
@@ -108,19 +108,19 @@ e o executor trocam `pedido_entrada` e `entrada`; os textos do pedido existem (c
   - um novo `executar` descarta a pendente: uma `entrada` com o `id` antigo é ignorada;
   - `continuarExecucao` rejeitando vira `resultado` com `erro_execucao` e a mensagem genérica.
   (P-1) (RF-10)
-- [ ] T008 Implementar em `src/execucao/servico.js` até T007 passar (e os testes da 009 continuarem passando): a execução pendente `{ id, entrada, enviado }` (data-model), o filtro de prefixo na escrita (compara os primeiros `enviado.length` caracteres e descarta; o resto entra no lote de 50 ms e é acrescentado a `enviado`), o tratamento de `aguardando_entrada` (envia o lote, posta `pedido_entrada`, guarda a pendente), a mensagem `{ tipo: 'entrada', id, valor }` em `receber` e o descarte da pendente em resultado final e em novo `executar` (depende de T003) (P-1) (RF-10)
+- [X] T008 Implementar em `src/execucao/servico.js` até T007 passar (e os testes da 009 continuarem passando): a execução pendente `{ id, entrada, enviado }` (data-model), o filtro de prefixo na escrita (compara os primeiros `enviado.length` caracteres e descarta; o resto entra no lote de 50 ms e é acrescentado a `enviado`), o tratamento de `aguardando_entrada` (envia o lote, posta `pedido_entrada`, guarda a pendente), a mensagem `{ tipo: 'entrada', id, valor }` em `receber` e o descarte da pendente em resultado final e em novo `executar` (depende de T003) (P-1) (RF-10)
 
 ### Executor (lado da página)
 
-- [ ] T009 Em `tests/unidade/execucao-executor.test.js`, acrescentar um `describe('entrada interativa (spec 010)')` com o `WorkerFalso` (contrato [entrada.md](contracts/entrada.md#executor-executorjs)):
+- [X] T009 Em `tests/unidade/execucao-executor.test.js`, acrescentar um `describe('entrada interativa (spec 010)')` com o `WorkerFalso` (contrato [entrada.md](contracts/entrada.md#executor-executorjs)):
   - `executar` com `aoPedirEntrada` posta `executar` com `interativo: true`; sem ele, `interativo: false`;
   - `{ tipo: 'pedido_entrada', id, variavel: 'nome' }` do id atual chama `aoPedirEntrada({ variavel: 'nome' })`; quando a promessa resolve com `'Ana'`, o worker recebe `{ tipo: 'entrada', id, valor: 'Ana' }`;
   - `pedido_entrada` de outro `id` não chama `aoPedirEntrada`;
   - resposta resolvida depois de `parar()` não é postada (nem ao worker antigo nem ao novo);
   - valor vazio `''` é postado como `''`.
   (P-1, P-3) (RF-10)
-- [ ] T010 Implementar em `src/execucao/executor.js` até T009 passar: `aoPedirEntrada` guardado em `atual`, `interativo: Boolean(aoPedirEntrada)` na mensagem `executar`, o caso `pedido_entrada` em `tratar` e o envio de `entrada` só se `atual?.id` ainda for o mesmo e o worker for o mesmo (P-1) (RF-10)
-- [ ] T011 Em `tests/aceitacao/executar.test.js`, acrescentar o teste "entrada interativa no worker real": `leia(nome)` + `escreva("Oi, ", nome)` executado com `aoPedirEntrada: async ({ variavel }) => { pedidos.push(variavel); return 'Ana'; }` → `pedidos` = `['nome']`, `status: 'ok'` e linhas `['Oi, Ana']`. Prova a Fundação de ponta a ponta no `worker_threads` (depende de T008, T010) (P-1) (RF-10, RNF-07)
+- [X] T010 Implementar em `src/execucao/executor.js` até T009 passar: `aoPedirEntrada` guardado em `atual`, `interativo: Boolean(aoPedirEntrada)` na mensagem `executar`, o caso `pedido_entrada` em `tratar` e o envio de `entrada` só se `atual?.id` ainda for o mesmo e o worker for o mesmo (P-1) (RF-10)
+- [X] T011 Em `tests/aceitacao/executar.test.js`, acrescentar o teste "entrada interativa no worker real": `leia(nome)` + `escreva("Oi, ", nome)` executado com `aoPedirEntrada: async ({ variavel }) => { pedidos.push(variavel); return 'Ana'; }` → `pedidos` = `['nome']`, `status: 'ok'` e linhas `['Oi, Ana']`. Prova a Fundação de ponta a ponta no `worker_threads` (depende de T008, T010) (P-1) (RF-10, RNF-07)
 
 **Checkpoint**: o executor, com o worker do Node e o Core real, pausa no `leia`, recebe o
 valor e continua sem repetir a Saída.

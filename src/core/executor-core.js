@@ -56,6 +56,16 @@ async function prepararMotor(motor) {
   }
 }
 
+// Para funções Python que devolvem um valor simples (bool), que não é proxy.
+function chamarPythonSimples(motor, nome, ...args) {
+  const funcao = motor.globals.get(nome);
+  try {
+    return funcao(...args);
+  } finally {
+    funcao.destroy();
+  }
+}
+
 function chamarPython(motor, nome, ...args) {
   const funcao = motor.globals.get(nome);
   try {
@@ -70,30 +80,58 @@ function chamarPython(motor, nome, ...args) {
   }
 }
 
+// Executa o output/main.py já compilado no motor (spec 010, R-02 e R-03). Cada valor de
+// entrada vai a um input(), exatamente como está. Entrada esgotada: com interativo, o
+// resultado é aguardando_entrada com a variável pedida; sem, EOFError (como na 008/009).
+function executarCompilado(motor, entrada, { aoEscrever, interativo }) {
+  const execucao = chamarPython(motor, '_meupia_executar', aoEscrever ?? null, [...entrada], Boolean(interativo));
+  if (execucao.pedido) {
+    return {
+      status: 'aguardando_entrada',
+      saida: execucao.saida,
+      erro: null,
+      pedido: { variavel: execucao.pedido.variavel ?? null },
+    };
+  }
+  if (execucao.erro) {
+    return {
+      status: 'erro_execucao',
+      saida: execucao.saida,
+      erro: traduzirErroExecucao(execucao.erro.tipo, execucao.erro.mensagem, execucao.erro.rastro),
+    };
+  }
+  return { status: 'ok', saida: execucao.saida, erro: null };
+}
+
 // aoEscrever (spec 009, R-05): recebe na hora cada pedaço que o programa escreve.
 // O stdout do compilador nunca passa por ele; resultado.saida continua com tudo.
-export async function compilarEExecutar(motor, codigo, entrada = [], { aoEscrever } = {}) {
+// interativo (spec 010): ver executarCompilado.
+export async function compilarEExecutar(motor, codigo, entrada = [], { aoEscrever, interativo = false } = {}) {
   await prepararMotor(motor);
 
   const compilacao = chamarPython(motor, '_meupia_compilar', codigo);
   if (!compilacao.compilou) {
     return { status: 'erro_compilacao', saida: '', erro: interpretarErroCompilacao(compilacao.saidaCompilador) };
   }
+  return executarCompilado(motor, entrada, { aoEscrever, interativo });
+}
 
-  // Uma linha por input(); entrada esgotada = fim de arquivo (EOFError no programa).
-  const fila = [...entrada];
-  motor.setStdin({ stdin: () => (fila.length > 0 ? fila.shift() : undefined) });
-  try {
-    const execucao = chamarPython(motor, '_meupia_executar', aoEscrever ?? null);
-    if (execucao.erro) {
-      return {
-        status: 'erro_execucao',
-        saida: execucao.saida,
-        erro: traduzirErroExecucao(execucao.erro.tipo, execucao.erro.mensagem, execucao.erro.rastro),
-      };
-    }
-    return { status: 'ok', saida: execucao.saida, erro: null };
-  } finally {
-    motor.setStdin();
+// Reexecuta, desde o começo e sem recompilar, o último programa compilado no motor, com a
+// entrada dada (spec 010, R-02: reexecução determinística).
+export async function continuarExecucao(motor, entrada, { aoEscrever, interativo = false } = {}) {
+  await prepararMotor(motor);
+  if (!chamarPythonSimples(motor, '_meupia_compilado')) {
+    return {
+      status: 'erro_execucao',
+      saida: '',
+      erro: {
+        mensagem: MENSAGEM_GENERICA_EXECUCAO,
+        etapa: 'execução',
+        linha: null,
+        coluna: null,
+        detalhe: 'Nenhum programa compilado para continuar.',
+      },
+    };
   }
+  return executarCompilado(motor, entrada, { aoEscrever, interativo });
 }

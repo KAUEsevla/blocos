@@ -215,3 +215,67 @@ describe('criarExecutor (RF-09)', () => {
     expect(pedacos).toEqual([]);
   });
 });
+
+// Spec 010 (contracts/entrada.md, "Executor"; research R-04, R-09).
+describe('entrada interativa (spec 010)', () => {
+  const esperar = () => new Promise((resolver) => setTimeout(resolver, 0));
+
+  it('com aoPedirEntrada, executar vai com interativo: true; sem ele, false', () => {
+    const { executor, workers } = montar();
+    executor.executar('a', { aoPedirEntrada: async () => '' });
+    expect(workers[0].enviadas.at(-1)).toMatchObject({ tipo: 'executar', interativo: true });
+    workers[0].responder({ tipo: 'resultado', id: workers[0].ultimoId(), resultado: OK });
+    executor.executar('b');
+    expect(workers[0].enviadas.at(-1)).toMatchObject({ tipo: 'executar', interativo: false });
+  });
+
+  it('pedido_entrada chama aoPedirEntrada e a resposta vira a mensagem entrada', async () => {
+    const { executor, workers } = montar();
+    const aoPedirEntrada = vi.fn(async () => 'Ana');
+    const promessa = executor.executar('x', { aoPedirEntrada });
+    const id = workers[0].ultimoId();
+    workers[0].responder({ tipo: 'pedido_entrada', id, variavel: 'nome' });
+    expect(aoPedirEntrada).toHaveBeenCalledWith({ variavel: 'nome' });
+    await esperar();
+    expect(workers[0].enviadas.at(-1)).toEqual({ tipo: 'entrada', id, valor: 'Ana' });
+    workers[0].responder({ tipo: 'resultado', id, resultado: OK });
+    await expect(promessa).resolves.toEqual(OK);
+  });
+
+  it('valor vazio é enviado como texto vazio', async () => {
+    const { executor, workers } = montar();
+    executor.executar('x', { aoPedirEntrada: async () => '' });
+    const id = workers[0].ultimoId();
+    workers[0].responder({ tipo: 'pedido_entrada', id, variavel: 'nome' });
+    await esperar();
+    expect(workers[0].enviadas.at(-1)).toEqual({ tipo: 'entrada', id, valor: '' });
+  });
+
+  it('pedido_entrada de outro id é ignorado', () => {
+    const { executor, workers } = montar();
+    const aoPedirEntrada = vi.fn(async () => 'x');
+    executor.executar('x', { aoPedirEntrada });
+    workers[0].responder({ tipo: 'pedido_entrada', id: 999, variavel: 'nome' });
+    expect(aoPedirEntrada).not.toHaveBeenCalled();
+  });
+
+  it('pedido_entrada sem aoPedirEntrada não quebra', () => {
+    const { executor, workers } = montar();
+    executor.executar('x');
+    expect(() => workers[0].responder({ tipo: 'pedido_entrada', id: workers[0].ultimoId(), variavel: 'n' })).not.toThrow();
+  });
+
+  it('resposta que chega depois do Parar não é postada a nenhum worker', async () => {
+    const { executor, workers } = montar();
+    let responder;
+    const promessa = executor.executar('x', { aoPedirEntrada: () => new Promise((r) => (responder = r)) });
+    const id = workers[0].ultimoId();
+    workers[0].responder({ tipo: 'pedido_entrada', id, variavel: 'nome' });
+    executor.parar();
+    await expect(promessa).resolves.toEqual({ status: 'interrompido', saida: '', erro: null });
+    responder('tarde');
+    await esperar();
+    const entradas = workers.flatMap((w) => w.enviadas).filter((m) => m.tipo === 'entrada');
+    expect(entradas).toEqual([]);
+  });
+});

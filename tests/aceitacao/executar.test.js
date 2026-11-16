@@ -24,6 +24,9 @@ function linhasDe(pedacos) {
   return [...linhas, ...divisor.finalizar()];
 }
 
+const programa = (corpo, variaveis = '') =>
+  `algoritmo "Teste"\n\n${variaveis ? `var\n${variaveis}\n\n` : ''}inicio\n${corpo}\nfim_algoritmo\n`;
+
 async function executarColetando(executor, codigo, entrada = []) {
   const pedacos = [];
   const resultado = await executor.executar(codigo, { entrada, aoEscrever: (t) => pedacos.push(t) });
@@ -126,6 +129,23 @@ describe('execução pela tela no Core real (worker_threads)', () => {
     const { resultado, pedacos } = await executarColetando(executor, codigo);
     expect(resultado.status).toBe('ok');
     expect(linhasDe(pedacos)).toEqual(Array.from({ length: 1500 }, (_, i) => String(i + 1)));
+  });
+
+  // Spec 010 (contracts/entrada.md): leia interativo no worker real.
+  it('entrada interativa: leia(nome) com "Ana" mostra "Oi, Ana"', async () => {
+    const codigo = programa('    leia(nome)\n    escreva("Oi, ", nome)', '    nome: cadeia');
+    const pedidos = [];
+    const pedacos = [];
+    const resultado = await executor.executar(codigo, {
+      aoEscrever: (t) => pedacos.push(t),
+      aoPedirEntrada: async ({ variavel }) => {
+        pedidos.push(variavel);
+        return 'Ana';
+      },
+    });
+    expect(resultado.status).toBe('ok');
+    expect(pedidos).toEqual(['nome']);
+    expect(linhasDe(pedacos)).toEqual(['Oi, Ana']);
   });
 
   describe.each(casos)('SC-001: a Saída da tela de $arquivo é igual à esperada', ({ caso }) => {
