@@ -194,6 +194,25 @@ describe('execução pela tela no Core real (worker_threads)', () => {
     expect(linhasDe(pedacos)).toEqual(['antes', 'Oi, Ana', 'Oi, Bia']);
   });
 
+  it('Parar com o pedido aberto interrompe, e a execução seguinte funciona', async () => {
+    const codigo = programa('    leia(nome)\n    escreva(nome)', '    nome: cadeia');
+    let avisar;
+    const pedido = new Promise((r) => (avisar = r));
+    const execucao = executor.executar(codigo, {
+      aoPedirEntrada: () => {
+        avisar();
+        return new Promise(() => {}); // o estudante nunca confirma
+      },
+    });
+    await pedido;
+    executor.parar();
+    await expect(execucao).resolves.toEqual({ status: 'interrompido', saida: '', erro: null });
+
+    const { resultado, pedacos } = await executarColetando(executor, OLA_MUNDO);
+    expect(resultado.status).toBe('ok');
+    expect(pedacos.join('')).toBe('Olá, mundo!\n');
+  });
+
   // SC-001 da 010: os casos com leia, com as entradas fornecidas uma a uma no modo interativo.
   const casosComLeia = casos.filter(({ caso }) => caso.entrada.length > 0 && (caso.statusEsperado ?? 'ok') === 'ok');
 

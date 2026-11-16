@@ -50,6 +50,9 @@ export function criarControladorExecucao({ obterPrograma, executor, saida, desta
       return;
     }
     const divisor = criarDivisorLinhas();
+    // Fica false quando a execução termina (inclusive no Parar): um valor confirmado depois
+    // disso não vai mais à Saída (História 2, research R-09).
+    let ativa = true;
     const escreverLinhas = (linhas) => {
       if (linhas.length > 0) saida.escreverVarias(linhas, 'programa');
     };
@@ -76,7 +79,7 @@ export function criarControladorExecucao({ obterPrograma, executor, saida, desta
           // Nenhuma linha fica retida no divisor enquanto o campo está aberto.
           escreverLinhas(divisor.finalizar());
           const valor = await saida.pedirEntrada(criarPedidoEntrada(variavel, variaveis));
-          saida.escrever(valor, 'entrada');
+          if (ativa) saida.escrever(valor, 'entrada');
           return valor;
         },
       });
@@ -84,6 +87,7 @@ export function criarControladorExecucao({ obterPrograma, executor, saida, desta
       resultado = { status: 'erro_execucao', saida: '', erro: { mensagem: MENSAGEM_GENERICA } };
     }
 
+    ativa = false;
     escreverLinhas(divisor.finalizar());
     saida.cancelarEntrada?.();
     escreverItens(relatoDoResultado(resultado, codigo));

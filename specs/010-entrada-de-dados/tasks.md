@@ -194,10 +194,12 @@ pelo usuário" e fecha o campo (research R-09).
 **Teste independente**: executar `leia(nome)`, clicar em Parar com o campo aberto e ver
 a mensagem; executar de novo e funcionar.
 
-- [ ] T023 [P] [US2] Em `tests/unidade/execucao-controlador.test.js`, no `describe('entrada (spec 010)')`: com `pedirEntrada` pendente, `parar()` → `executor.parar()` chamado, `cancelarEntrada` chamado, último item escrito "Execução interrompida pelo usuário" e estado `ocioso`; a promessa de `parar()` resolve; um `executar()` depois funciona (RF-10)
-- [ ] T024 [P] [US2] Em `tests/aceitacao/executar.test.js`: "Parar com o pedido aberto" — `leia(nome)` com `aoPedirEntrada` que nunca resolve; ao ser chamado, `executor.parar()` → `{ status: 'interrompido', saida: '', erro: null }`; a execução seguinte do "Olá, mundo!" termina `ok` (RF-10, RNF-07)
-- [ ] T025 [US2] Implementar o Parar com o campo aberto até T023 e T024 passarem: em `src/execucao/controlador.js`, o caminho `interrompido` chama `saida.cancelarEntrada?.()` antes do relato "Execução interrompida pelo usuário" e volta ao estado `ocioso`; em `src/execucao/executor.js`, a resposta de um `aoPedirEntrada` resolvida depois de `parar()` não é postada (research R-09). Rodar `npm test` (depende de T023, T024) (RF-10)
-- [ ] T026 [US2] Percorrer os roteiros 8 e 9 do [quickstart.md](quickstart.md#b-no-navegador): Parar e Novo com o campo aberto (depende de T025) (RF-10)
+- [X] T023 [P] [US2] Em `tests/unidade/execucao-controlador.test.js`, no `describe('entrada (spec 010)')`: com `pedirEntrada` pendente, `parar()` → `executor.parar()` chamado, `cancelarEntrada` chamado, último item escrito "Execução interrompida pelo usuário" e estado `ocioso`; a promessa de `parar()` resolve; um `executar()` depois funciona (RF-10)
+- [X] T024 [P] [US2] Em `tests/aceitacao/executar.test.js`: "Parar com o pedido aberto" — `leia(nome)` com `aoPedirEntrada` que nunca resolve; ao ser chamado, `executor.parar()` → `{ status: 'interrompido', saida: '', erro: null }`; a execução seguinte do "Olá, mundo!" termina `ok` (RF-10, RNF-07)
+- [X] T025 [US2] Implementar o Parar com o campo aberto até T023 e T024 passarem: em `src/execucao/controlador.js`, o caminho `interrompido` chama `saida.cancelarEntrada?.()` antes do relato "Execução interrompida pelo usuário" e volta ao estado `ocioso`; em `src/execucao/executor.js`, a resposta de um `aoPedirEntrada` resolvida depois de `parar()` não é postada (research R-09). Rodar `npm test` (depende de T023, T024) (RF-10)
+  - O T023 mostrou que um valor confirmado depois do Parar ainda seria escrito na Saída: o controlador ganhou a guarda `ativa` (falsa no fim de toda execução). O executor já não postava a resposta atrasada (T010).
+- [X] T026 [US2] Percorrer os roteiros 8 e 9 do [quickstart.md](quickstart.md#b-no-navegador): Parar e Novo com o campo aberto (depende de T025) (RF-10)
+  - Feito no painel do navegador do Claude, 2026-11-16: Parar com o campo aberto fecha o campo e mostra "Execução interrompida pelo usuário", com Executar habilitado de novo; Novo com o campo aberto, depois de confirmar o descarte, para a execução e mostra a orientação inicial. Sem erros no console.
 
 **Commit**: `010/T023-T026 (RF-10, RNF-07): Parar com o campo de entrada aberto`
 

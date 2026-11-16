@@ -433,6 +433,41 @@ describe('entrada (spec 010)', () => {
     expect(estados).toEqual(['executando', 'ocioso']);
   });
 
+  // História 2 (research R-09): desistir com o campo aberto.
+  it('Parar com o campo aberto fecha o campo, escreve interrompido e volta a ocioso', async () => {
+    let resolverExecucao;
+    const { controlador, saida, executor, estados } = montarComEntrada({
+      roteiro: (opcoes) =>
+        new Promise((resolver) => {
+          resolverExecucao = resolver;
+          opcoes.aoPedirEntrada({ variavel: 'nome' });
+        }),
+    });
+    executor.parar.mockImplementation(() => resolverExecucao({ status: 'interrompido', saida: '', erro: null }));
+    const execucao = controlador.executar();
+    await esperar();
+    expect(saida.pedidos).toHaveLength(1);
+
+    await controlador.parar();
+    await execucao;
+    expect(executor.parar).toHaveBeenCalledTimes(1);
+    expect(saida.chamadas.slice(-2)).toEqual([
+      ['cancelarEntrada'],
+      ['escrever', 'Execução interrompida pelo usuário', 'sistema'],
+    ]);
+    expect(controlador.estado()).toBe('ocioso');
+    expect(estados.at(-1)).toBe('ocioso');
+    // O valor que chegasse depois não é escrito.
+    saida.pedidos[0].resolver('tarde');
+    await esperar();
+    expect(saida.chamadas).not.toContainEqual(['escrever', 'tarde', 'entrada']);
+
+    // Uma nova execução funciona.
+    executor.executar.mockImplementationOnce(async () => ({ status: 'ok', saida: '', erro: null }));
+    await controlador.executar();
+    expect(saida.chamadas.at(-1)).toEqual(['escrever', 'Fim do programa', 'sistema']);
+  });
+
   it('cancelarEntrada é chamado no fim mesmo num erro de execução', async () => {
     const { controlador, saida } = montarComEntrada({
       roteiro: async () => ({ status: 'erro_execucao', saida: '', erro: { mensagem: 'm' } }),
