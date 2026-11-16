@@ -60,7 +60,7 @@ ordem `inteiro`, `real`, `cadeia`, `logico` (`gerarSecaoVar`); escrever o
 
 **Objetivo**: confirmar que a base herdada está verde antes de mexer.
 
-- [ ] T001 Na branch `006-blocos-operadores`, rodar `npm install` e `npm test` (unidade + aceitação no Core real) e confirmar que tudo passa. Se algo falhar, parar e registrar: a falha é da base, não desta spec (RF-06)
+- [X] T001 Na branch `006-blocos-operadores`, rodar `npm install` e `npm test` (unidade + aceitação no Core real) e confirmar que tudo passa. Se algo falhar, parar e registrar: a falha é da base, não desta spec (RF-06)
 
 ---
 
