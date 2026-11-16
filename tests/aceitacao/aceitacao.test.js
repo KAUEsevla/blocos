@@ -7,6 +7,7 @@ import { validarCaso } from './suporte/validar-caso.js';
 import { gerarPortugol } from '../../src/portugol/gerador.js';
 import { compilarEExecutar } from '../../src/core/executor-core.js';
 import { registroPadrao } from '../../src/blocos/registro.js';
+import { encaixesIncompativeis } from '../../src/blocos/tipos.js';
 
 const PASTA = join(import.meta.dirname, 'casos');
 const casos = readdirSync(PASTA)
@@ -67,6 +68,17 @@ describe('meta-aceitação', () => {
       }
     }
     expect(faltando, 'pares (tipo, variante) sem caso de aceitação').toEqual([]);
+  });
+
+  // Todo caso precisa ser montável no editor com os tipos dos encaixes (research R-08, R-09 da 006).
+  it('todo caso respeita os tipos dos encaixes (SC-002 da 006)', () => {
+    const quebrados = casos.flatMap(({ arquivo, caso }) => {
+      const tipos = Object.fromEntries(caso.projeto.variaveis.map((v) => [v.id, v.tipo]));
+      return encaixesIncompativeis(caso.projeto.blocos.blocks, registroPadrao, tipos).map(
+        ({ pai, encaixe, filho }) => `${arquivo}: ${pai}.${encaixe} ← ${filho}`,
+      );
+    });
+    expect(quebrados, 'encaixes de tipo incompatível nos casos').toEqual([]);
   });
 
   it('casos com blocos que têm área de comandos trazem portugolEsperado', () => {

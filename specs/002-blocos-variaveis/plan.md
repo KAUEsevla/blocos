@@ -175,10 +175,13 @@ haver bloco nenhum. Os blocos e a caixa ficam em `src/blocos/`, ao lado do
 
 Registradas em R-08. Não são tasks desta spec:
 
-- **006**: caso de aceitação `idade <- 15` (História 2, cenário 1) com o bloco de
-  número; decidir o `check` de saída do bloco `variavel` conforme o tipo (o SC-002 da
-  006 proíbe lógico em lugar de número); passo B do quickstart da 007 (mudar um
-  número no campo).
+- **006** (✅ resolvidas pela spec 006): caso de aceitação `idade <- 15` (História 2,
+  cenário 1) com o bloco de número
+  ([recebe-idade-quinze.json](../../tests/aceitacao/casos/recebe-idade-quinze.json));
+  o tipo do bloco `variavel` e do encaixe do `recebe` segue o tipo da variável
+  ([tipos-encaixe.md](../006-blocos-operadores/contracts/tipos-encaixe.md)); passo B do
+  quickstart da 007 conferido no passo F do
+  [quickstart da 006](../006-blocos-operadores/quickstart.md).
 - **003** (✅ resolvidas pela spec 003): caso de aceitação `escreva(idade + 1)` → `16`
   com `idade <- 15` ([escreva-conta-idade.json](../../tests/aceitacao/casos/escreva-conta-idade.json));
   valores iniciais `0`, `0.0`, texto vazio e `falso` no Core

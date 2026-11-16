@@ -1,5 +1,6 @@
 // Valores fixos de número e de texto (RF-06, antecipados da spec 006 pela spec 003, research
-// R-03, R-07, R-08; contracts/blocos-valores-contas.md). Não importam o Blockly: o validador do
+// R-03, R-07, R-08; contracts/blocos-valores-contas.md) e o lógico da 006 (research R-07 da 006;
+// contracts/blocos-operadores.md). Não importam o Blockly: o validador do
 // campo de número é ligado pela interface (src/ui/validador-numero.js, extensão "validar_numero").
 import { PRECEDENCIA } from '../portugol/precedencia.js';
 import { MARCADOR_AUSENTE } from '../portugol/avisos.js';
@@ -38,7 +39,7 @@ export const BLOCO_NUMERO = {
     type: 'numero',
     message0: '%1',
     args0: [{ type: 'field_input', name: 'NUM', text: '0' }],
-    output: null,
+    output: ['Numero'],
     extensions: ['validar_numero'],
     colour: COR_VALORES,
     tooltip: 'Um número. Use vírgula ou ponto para as casas decimais, como 3,5',
@@ -69,11 +70,44 @@ export const BLOCO_TEXTO = {
     type: 'texto',
     message0: '“%1”',
     args0: [{ type: 'field_input', name: 'TEXTO', text: '' }],
-    output: null,
+    output: ['Texto'],
     colour: COR_VALORES,
     tooltip: 'Um texto, mostrado exatamente como foi digitado',
   },
   gerar(bloco, ctx) {
     return { codigo: gerarTexto(ctx.campo(bloco, 'TEXTO')), precedencia: PRECEDENCIA.PRIMARIO };
+  },
+};
+
+const VALORES_LOGICOS = Object.freeze(['verdadeiro', 'falso']);
+
+// Valor fixo lógico (spec 006, research R-07). Só minúsculas: o Core 1.4.1 trata `VERDADEIRO`
+// como nome de variável (lacuna do research R-13 da 006); o menu impede outra grafia.
+export const BLOCO_LOGICO = {
+  tipo: 'logico',
+  rotulo: 'lógico',
+  categoria: 'valor',
+  variantes: VALORES_LOGICOS.map((valor) => ({ nome: valor, presente: (b) => b.fields?.VALOR === valor })),
+  definicao: {
+    type: 'logico',
+    message0: '%1',
+    args0: [
+      {
+        type: 'field_dropdown',
+        name: 'VALOR',
+        options: VALORES_LOGICOS.map((valor) => [valor, valor]),
+      },
+    ],
+    output: ['Logico'],
+    colour: COR_VALORES,
+    tooltip: 'Um valor lógico: verdadeiro ou falso',
+  },
+  gerar(bloco, ctx) {
+    const valor = ctx.campo(bloco, 'VALOR');
+    if (!VALORES_LOGICOS.includes(valor)) {
+      ctx.aviso(bloco, 'VALOR', 'Escolha verdadeiro ou falso no bloco lógico');
+      return { codigo: MARCADOR_AUSENTE, precedencia: PRECEDENCIA.PRIMARIO };
+    }
+    return { codigo: valor, precedencia: PRECEDENCIA.PRIMARIO };
   },
 };

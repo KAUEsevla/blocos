@@ -1,0 +1,306 @@
+{
+  "descricao": "Spec 006, História 1 (teste independente e cenários 1 e 2): média (nota1 + nota2) / 2, divisão real 7 / 2 e o bloco negativo",
+  "requisitos": [
+    "RF-06",
+    "RNF-07"
+  ],
+  "projeto": {
+    "formato": "meupia-blocos",
+    "versao": 1,
+    "nome": "Media",
+    "variaveis": [
+      {
+        "id": "v-nota1",
+        "nome": "nota1",
+        "tipo": "inteiro"
+      },
+      {
+        "id": "v-nota2",
+        "nome": "nota2",
+        "tipo": "inteiro"
+      }
+    ],
+    "blocos": {
+      "blocks": {
+        "languageVersion": 0,
+        "blocks": [
+          {
+            "type": "programa",
+            "id": "programa",
+            "x": 24,
+            "y": 24,
+            "deletable": false,
+            "inputs": {
+              "COMANDOS": {
+                "block": {
+                  "type": "variavel_recebe",
+                  "id": "r2",
+                  "fields": {
+                    "VAR": {
+                      "id": "v-nota1"
+                    }
+                  },
+                  "inputs": {
+                    "VALOR": {
+                      "block": {
+                        "type": "numero",
+                        "id": "n1",
+                        "fields": {
+                          "NUM": "7"
+                        }
+                      }
+                    }
+                  },
+                  "next": {
+                    "block": {
+                      "type": "variavel_recebe",
+                      "id": "r4",
+                      "fields": {
+                        "VAR": {
+                          "id": "v-nota2"
+                        }
+                      },
+                      "inputs": {
+                        "VALOR": {
+                          "block": {
+                            "type": "numero",
+                            "id": "n3",
+                            "fields": {
+                              "NUM": "8"
+                            }
+                          }
+                        }
+                      },
+                      "next": {
+                        "block": {
+                          "type": "escreva",
+                          "id": "e10",
+                          "inputs": {
+                            "VALOR1": {
+                              "block": {
+                                "type": "aritmetico",
+                                "id": "o9",
+                                "fields": {
+                                  "OP": "/"
+                                },
+                                "inputs": {
+                                  "A": {
+                                    "block": {
+                                      "type": "aritmetico",
+                                      "id": "o7",
+                                      "fields": {
+                                        "OP": "+"
+                                      },
+                                      "inputs": {
+                                        "A": {
+                                          "block": {
+                                            "type": "variavel",
+                                            "id": "v5",
+                                            "fields": {
+                                              "VAR": {
+                                                "id": "v-nota1"
+                                              }
+                                            }
+                                          }
+                                        },
+                                        "B": {
+                                          "block": {
+                                            "type": "variavel",
+                                            "id": "v6",
+                                            "fields": {
+                                              "VAR": {
+                                                "id": "v-nota2"
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  },
+                                  "B": {
+                                    "block": {
+                                      "type": "numero",
+                                      "id": "n8",
+                                      "fields": {
+                                        "NUM": "2"
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "next": {
+                            "block": {
+                              "type": "escreva",
+                              "id": "e14",
+                              "inputs": {
+                                "VALOR1": {
+                                  "block": {
+                                    "type": "aritmetico",
+                                    "id": "o13",
+                                    "fields": {
+                                      "OP": "/"
+                                    },
+                                    "inputs": {
+                                      "A": {
+                                        "block": {
+                                          "type": "numero",
+                                          "id": "n11",
+                                          "fields": {
+                                            "NUM": "7"
+                                          }
+                                        }
+                                      },
+                                      "B": {
+                                        "block": {
+                                          "type": "numero",
+                                          "id": "n12",
+                                          "fields": {
+                                            "NUM": "2"
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              },
+                              "next": {
+                                "block": {
+                                  "type": "escreva",
+                                  "id": "e17",
+                                  "inputs": {
+                                    "VALOR1": {
+                                      "block": {
+                                        "type": "negativo",
+                                        "id": "m16",
+                                        "inputs": {
+                                          "X": {
+                                            "block": {
+                                              "type": "variavel",
+                                              "id": "v15",
+                                              "fields": {
+                                                "VAR": {
+                                                  "id": "v-nota1"
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  },
+                                  "next": {
+                                    "block": {
+                                      "type": "escreva",
+                                      "id": "e22",
+                                      "inputs": {
+                                        "VALOR1": {
+                                          "block": {
+                                            "type": "negativo",
+                                            "id": "m21",
+                                            "inputs": {
+                                              "X": {
+                                                "block": {
+                                                  "type": "aritmetico",
+                                                  "id": "o20",
+                                                  "fields": {
+                                                    "OP": "+"
+                                                  },
+                                                  "inputs": {
+                                                    "A": {
+                                                      "block": {
+                                                        "type": "variavel",
+                                                        "id": "v18",
+                                                        "fields": {
+                                                          "VAR": {
+                                                            "id": "v-nota1"
+                                                          }
+                                                        }
+                                                      }
+                                                    },
+                                                    "B": {
+                                                      "block": {
+                                                        "type": "variavel",
+                                                        "id": "v19",
+                                                        "fields": {
+                                                          "VAR": {
+                                                            "id": "v-nota2"
+                                                          }
+                                                        }
+                                                      }
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      },
+                                      "next": {
+                                        "block": {
+                                          "type": "escreva",
+                                          "id": "e27",
+                                          "inputs": {
+                                            "VALOR1": {
+                                              "block": {
+                                                "type": "aritmetico",
+                                                "id": "o26",
+                                                "fields": {
+                                                  "OP": "-"
+                                                },
+                                                "inputs": {
+                                                  "A": {
+                                                    "block": {
+                                                      "type": "numero",
+                                                      "id": "n23",
+                                                      "fields": {
+                                                        "NUM": "2"
+                                                      }
+                                                    }
+                                                  },
+                                                  "B": {
+                                                    "block": {
+                                                      "type": "negativo",
+                                                      "id": "m25",
+                                                      "inputs": {
+                                                        "X": {
+                                                          "block": {
+                                                            "type": "numero",
+                                                            "id": "n24",
+                                                            "fields": {
+                                                              "NUM": "3"
+                                                            }
+                                                          }
+                                                        }
+                                                      }
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "entrada": [],
+  "portugolEsperado": "algoritmo \"Media\"\n\nvar\n    nota1: inteiro\n    nota2: inteiro\n\ninicio\n    nota1 <- 7\n    nota2 <- 8\n    escreva((nota1 + nota2) / 2)\n    escreva(7 / 2)\n    escreva(-nota1)\n    escreva(-(nota1 + nota2))\n    escreva(2 - -3)\nfim_algoritmo\n",
+  "saidaEsperada": "7.5\n3.5\n-7\n-15\n5\n"
+}

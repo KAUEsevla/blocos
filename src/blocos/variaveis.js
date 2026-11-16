@@ -11,6 +11,8 @@ export const BLOCO_VARIAVEL_RECEBE = {
   tipo: 'variavel_recebe',
   rotulo: 'recebe',
   categoria: 'comando',
+  // O encaixe VALOR aceita o tipo da variável escolhida (spec 006; pendência P-2 da 002).
+  tipoPelaVariavel: 'VALOR',
   definicao: {
     type: 'variavel_recebe',
     message0: '%1 recebe %2',
@@ -34,6 +36,8 @@ export const BLOCO_VARIAVEL = {
   tipo: 'variavel',
   rotulo: 'variável',
   categoria: 'valor',
+  // A saída tem o tipo da variável escolhida (spec 006; pendência P-2 da 002).
+  tipoPelaVariavel: 'saida',
   definicao: {
     type: 'variavel',
     message0: '%1',

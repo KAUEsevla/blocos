@@ -86,3 +86,5 @@ saída.
 
 - `continue` e `interrompa` estão fora do escopo mínimo.
 - O bloco "repita ... ate" não existe no Portugol do Core e não será oferecido.
+- A condição do enquanto só aceita valores lógicos, e os limites e o passo do para só
+  aceitam números, regra dos blocos de operadores da spec 006.

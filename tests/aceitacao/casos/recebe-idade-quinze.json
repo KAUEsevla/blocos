@@ -1,0 +1,80 @@
+{
+  "descricao": "Pendência da spec 002 (História 2, cenário 1; plan da 002, \"Pendências para as specs 003 e 006\"): idade recebe 15 gera idade <- 15 e roda no Core real",
+  "requisitos": [
+    "RF-02",
+    "RF-06",
+    "RNF-07"
+  ],
+  "projeto": {
+    "formato": "meupia-blocos",
+    "versao": 1,
+    "nome": "Idade",
+    "variaveis": [
+      {
+        "id": "v-idade",
+        "nome": "idade",
+        "tipo": "inteiro"
+      }
+    ],
+    "blocos": {
+      "blocks": {
+        "languageVersion": 0,
+        "blocks": [
+          {
+            "type": "programa",
+            "id": "programa",
+            "x": 24,
+            "y": 24,
+            "deletable": false,
+            "inputs": {
+              "COMANDOS": {
+                "block": {
+                  "type": "variavel_recebe",
+                  "id": "r1",
+                  "fields": {
+                    "VAR": {
+                      "id": "v-idade"
+                    }
+                  },
+                  "inputs": {
+                    "VALOR": {
+                      "block": {
+                        "type": "numero",
+                        "id": "n1",
+                        "fields": {
+                          "NUM": "15"
+                        }
+                      }
+                    }
+                  },
+                  "next": {
+                    "block": {
+                      "type": "escreva",
+                      "id": "e1",
+                      "inputs": {
+                        "VALOR1": {
+                          "block": {
+                            "type": "variavel",
+                            "id": "v1",
+                            "fields": {
+                              "VAR": {
+                                "id": "v-idade"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "entrada": [],
+  "portugolEsperado": "algoritmo \"Idade\"\n\nvar\n    idade: inteiro\n\ninicio\n    idade <- 15\n    escreva(idade)\nfim_algoritmo\n",
+  "saidaEsperada": "15\n"
+}

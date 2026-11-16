@@ -174,7 +174,8 @@ módulo comum porque agora é usada por dois módulos de blocos.
 
 Registradas no R-12. Não são tasks desta spec:
 
-- **006**: negativo, relacionais, lógicos, valor fixo lógico, `check` de tipos.
+- **006** (✅ resolvida pela spec 006, [tasks](../006-blocos-operadores/tasks.md)): negativo,
+  relacionais, lógicos, valor fixo lógico, `check` de tipos.
 - **009**: ver a Saída no navegador ao executar; completar a medição do SC-002.
 - **010**: caixa de entrada do `leia`; mensagem para real digitado com vírgula no `leia`.
 

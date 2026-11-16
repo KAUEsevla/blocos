@@ -102,3 +102,5 @@ e verificar a mensagem e que nada mudou.
 - Projetos carregados também podem vir dos exemplos da suíte de aceitação ou de
   colegas; todos seguem o formato da feature 011.
 - Converter Portugol escrito em blocos (RF-B01) está fora desta entrega.
+- Um arquivo com um encaixe inválido (por exemplo, um valor lógico onde só cabe número,
+  regra da spec 006) mostra uma mensagem amigável.

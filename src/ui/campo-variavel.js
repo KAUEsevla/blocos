@@ -13,6 +13,9 @@ import * as Blockly from 'blockly';
 import { MARCADOR_AUSENTE } from '../portugol/avisos.js';
 import { TEXTOS } from './textos.js';
 import { renomearVariavel, mudarTipoVariavel, apagarVariavel } from './acoes-variavel.js';
+import { registroPadrao } from '../blocos/registro.js';
+import { checkEfetivo, compativeis } from '../blocos/tipos.js';
+import { checkDaConexao } from './verificador-encaixe.js';
 
 export const TIPO_CAMPO_VARIAVEL = 'campo_variavel';
 
@@ -60,12 +63,13 @@ export class CampoVariavel extends Blockly.FieldVariable {
     super.fromXml(elemento);
   }
 
-  // Os três itens próprios chamam as ações no workspace principal (o bloco pode estar na
-  // caixa de blocos, cujo workspace é outro).
+  // Uma variável escolhida passa por trocarVariavelDoBloco (spec 006, research R-10). Os três
+  // itens próprios chamam as ações no workspace principal (o bloco pode estar na caixa de
+  // blocos, cujo workspace é outro).
   onItemSelected_(menu, item) {
     const acao = ACOES[item.getValue()];
     if (!acao) {
-      super.onItemSelected_(menu, item);
+      trocarVariavelDoBloco(this.getSourceBlock(), item.getValue());
       return;
     }
     const bloco = this.getSourceBlock();
@@ -107,4 +111,39 @@ export function registrarCampoVariavel() {
   if (registrado) return;
   Blockly.fieldRegistry.register(TIPO_CAMPO_VARIAVEL, CampoVariavel);
   registrado = true;
+}
+
+// Distância com que um bloco desencaixado é afastado, para ficar visível como solto.
+const AFASTAR = 24;
+
+const soltar = (bloco) => {
+  bloco.unplug();
+  bloco.moveBy(AFASTAR, AFASTAR);
+};
+
+// Troca a variável do campo VAR soltando antes o que ficaria em encaixe incompatível (spec 006,
+// research R-10; contracts/editor-operadores.md): o próprio bloco, se a saída nova não cabe no
+// encaixe do pai, e o valor encaixado no ponto tipoPelaVariavel (o VALOR do recebe). Tudo num
+// grupo de eventos, e nessa ordem: soltar → aplicar. Assim um Ctrl+Z volta a variável e só
+// depois reencaixa, quando o encaixe já é compatível de novo.
+export function trocarVariavelDoBloco(bloco, idNova) {
+  const campo = bloco?.getField('VAR');
+  if (!campo) return;
+  const tipoNovo = bloco.workspace.getVariableMap().getVariableById(idNova)?.getType();
+  const entrada = registroPadrao.obter(bloco.type);
+  Blockly.Events.setGroup(true);
+  try {
+    const conexaoPai = bloco.outputConnection?.targetConnection;
+    if (conexaoPai && !compativeis(checkDaConexao(conexaoPai), checkEfetivo(entrada, 'saida', tipoNovo))) {
+      soltar(bloco);
+    }
+    const ponto = entrada?.tipoPelaVariavel;
+    const filho = ponto && ponto !== 'saida' ? bloco.getInput(ponto)?.connection?.targetBlock() : null;
+    if (filho && !compativeis(checkEfetivo(entrada, ponto, tipoNovo), checkDaConexao(filho.outputConnection))) {
+      soltar(filho);
+    }
+    campo.setValue(idNova);
+  } finally {
+    Blockly.Events.setGroup(false);
+  }
 }

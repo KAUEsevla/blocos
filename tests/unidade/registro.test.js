@@ -89,8 +89,52 @@ describe('registro de blocos (RF-08)', () => {
   });
 
   it('o registro padrão tem o programa e os blocos de variável da 002, nessa ordem', () => {
-    expect(registroPadrao.tiposRegistrados()).toEqual(['programa', 'variavel_recebe', 'variavel', 'escreva', 'texto', 'numero', 'aritmetico', 'leia']);
+    expect(registroPadrao.tiposRegistrados()).toEqual(['programa', 'variavel_recebe', 'variavel', 'escreva', 'texto', 'numero', 'logico', 'aritmetico', 'negativo', 'relacional', 'e_ou', 'nao', 'leia']);
     expect(registroPadrao.obter('variavel_recebe').categoria).toBe('comando');
     expect(registroPadrao.obter('variavel').categoria).toBe('valor');
+  });
+});
+
+describe('tipoPelaVariavel (spec 006, research R-09)', () => {
+  const comVariavel = (extra = {}, args0 = [{ type: 'campo_variavel', name: 'VAR' }]) => ({
+    ...base(),
+    tipo: 'com_var',
+    categoria: 'valor',
+    definicao: { type: 'com_var', args0 },
+    ...extra,
+  });
+
+  it('é opcional', () => {
+    const r = criarRegistro();
+    r.registrarBloco(base());
+    expect(r.obter('teste').tipoPelaVariavel).toBeUndefined();
+  });
+
+  it("aceita 'saida' num bloco com campo VAR", () => {
+    const r = criarRegistro();
+    r.registrarBloco(comVariavel({ tipoPelaVariavel: 'saida' }));
+    expect(r.obter('com_var').tipoPelaVariavel).toBe('saida');
+  });
+
+  it('aceita o nome de um input_value num bloco com campo VAR', () => {
+    const r = criarRegistro();
+    r.registrarBloco(
+      comVariavel({ tipoPelaVariavel: 'VALOR' }, [
+        { type: 'campo_variavel', name: 'VAR' },
+        { type: 'input_value', name: 'VALOR' },
+      ]),
+    );
+    expect(r.obter('com_var').tipoPelaVariavel).toBe('VALOR');
+  });
+
+  it.each([
+    ['OUTRO', [{ type: 'campo_variavel', name: 'VAR' }]],
+    [42, [{ type: 'campo_variavel', name: 'VAR' }]],
+    ['saida', [{ type: 'input_value', name: 'VALOR' }]],
+    ['VALOR', [{ type: 'input_value', name: 'VALOR' }]],
+  ])('recusa %j com args0 %j', (valor, args0) => {
+    expect(() => criarRegistro().registrarBloco(comVariavel({ tipoPelaVariavel: valor }, args0))).toThrow(
+      'tipoPelaVariavel inválido no bloco "com_var"',
+    );
   });
 });

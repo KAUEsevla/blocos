@@ -1,0 +1,130 @@
+{
+  "descricao": "Spec 006, História 4 (cenários 1 e 2): valores fixos verdadeiro e falso, texto Olá entre aspas e número 3,5 digitado com vírgula gerando 3.5",
+  "requisitos": [
+    "RF-06",
+    "RNF-07"
+  ],
+  "projeto": {
+    "formato": "meupia-blocos",
+    "versao": 1,
+    "nome": "Valores",
+    "variaveis": [
+      {
+        "id": "v-ok",
+        "nome": "ok",
+        "tipo": "logico"
+      }
+    ],
+    "blocos": {
+      "blocks": {
+        "languageVersion": 0,
+        "blocks": [
+          {
+            "type": "programa",
+            "id": "programa",
+            "x": 24,
+            "y": 24,
+            "deletable": false,
+            "inputs": {
+              "COMANDOS": {
+                "block": {
+                  "type": "variavel_recebe",
+                  "id": "r2",
+                  "fields": {
+                    "VAR": {
+                      "id": "v-ok"
+                    }
+                  },
+                  "inputs": {
+                    "VALOR": {
+                      "block": {
+                        "type": "logico",
+                        "id": "l1",
+                        "fields": {
+                          "VALOR": "verdadeiro"
+                        }
+                      }
+                    }
+                  },
+                  "next": {
+                    "block": {
+                      "type": "escreva",
+                      "id": "e4",
+                      "inputs": {
+                        "VALOR1": {
+                          "block": {
+                            "type": "variavel",
+                            "id": "v3",
+                            "fields": {
+                              "VAR": {
+                                "id": "v-ok"
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "next": {
+                        "block": {
+                          "type": "escreva",
+                          "id": "e6",
+                          "inputs": {
+                            "VALOR1": {
+                              "block": {
+                                "type": "logico",
+                                "id": "l5",
+                                "fields": {
+                                  "VALOR": "falso"
+                                }
+                              }
+                            }
+                          },
+                          "next": {
+                            "block": {
+                              "type": "escreva",
+                              "id": "e8",
+                              "inputs": {
+                                "VALOR1": {
+                                  "block": {
+                                    "type": "texto",
+                                    "id": "t7",
+                                    "fields": {
+                                      "TEXTO": "Olá"
+                                    }
+                                  }
+                                }
+                              },
+                              "next": {
+                                "block": {
+                                  "type": "escreva",
+                                  "id": "e10",
+                                  "inputs": {
+                                    "VALOR1": {
+                                      "block": {
+                                        "type": "numero",
+                                        "id": "n9",
+                                        "fields": {
+                                          "NUM": "3,5"
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "entrada": [],
+  "portugolEsperado": "algoritmo \"Valores\"\n\nvar\n    ok: logico\n\ninicio\n    ok <- verdadeiro\n    escreva(ok)\n    escreva(falso)\n    escreva(\"Olá\")\n    escreva(3.5)\nfim_algoritmo\n",
+  "saidaEsperada": "verdadeiro\nfalso\nOlá\n3.5\n"
+}
