@@ -1,0 +1,72 @@
+{
+  "descricao": "leia de real com vírgula (1,72): o valor vai ao Core como digitado e o Core recusa; Premissas da spec 010 e R-02 da spec 003 (P-2)",
+  "requisitos": [
+    "RF-03",
+    "RF-10",
+    "RNF-07"
+  ],
+  "projeto": {
+    "formato": "meupia-blocos",
+    "versao": 1,
+    "nome": "Virgula",
+    "variaveis": [
+      {
+        "id": "v-altura",
+        "nome": "altura",
+        "tipo": "real"
+      }
+    ],
+    "blocos": {
+      "blocks": {
+        "languageVersion": 0,
+        "blocks": [
+          {
+            "type": "programa",
+            "id": "programa",
+            "x": 24,
+            "y": 24,
+            "deletable": false,
+            "inputs": {
+              "COMANDOS": {
+                "block": {
+                  "type": "leia",
+                  "id": "l1",
+                  "fields": {
+                    "VAR": {
+                      "id": "v-altura"
+                    }
+                  },
+                  "next": {
+                    "block": {
+                      "type": "escreva",
+                      "id": "e1",
+                      "inputs": {
+                        "VALOR1": {
+                          "block": {
+                            "type": "variavel",
+                            "id": "v1",
+                            "fields": {
+                              "VAR": {
+                                "id": "v-altura"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "entrada": [
+    "1,72"
+  ],
+  "portugolEsperado": "algoritmo \"Virgula\"\n\nvar\n    altura: real\n\ninicio\n    leia(altura)\n    escreva(altura)\nfim_algoritmo\n",
+  "statusEsperado": "erro_execucao",
+  "saidaEsperada": ""
+}

@@ -166,3 +166,23 @@ describe('adapter do meupia-core (Core real)', () => {
     });
   });
 });
+
+// Spec 010 (research R-07): real digitado com vírgula (P-2).
+describe('leia de real com vírgula (spec 010)', () => {
+  let motor;
+  const ALTURA = programa('    leia(altura)\n    escreva(altura)', '    altura: real');
+
+  beforeAll(async () => {
+    motor = await criarMotorNode();
+  });
+
+  it('1,72 é recusado pelo Core, com a mensagem que lembra o ponto', async () => {
+    const r = await compilarEExecutar(motor, ALTURA, ['1,72']);
+    expect(r.status).toBe('erro_execucao');
+    expect(r.erro.mensagem).toBe('O valor digitado não é um número. Use ponto para separar as casas decimais, por exemplo 1.72.');
+  });
+
+  it('1.72 funciona', async () => {
+    await expect(compilarEExecutar(motor, ALTURA, ['1.72'])).resolves.toEqual({ status: 'ok', saida: '1.72\n', erro: null });
+  });
+});

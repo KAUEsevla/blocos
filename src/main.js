@@ -5,6 +5,8 @@
 // variável disparam eventos não-UI, que já chegam ao tempoReal.notificar (research R-04).
 // Spec 009: Executar e Parar pelo controlador de src/execucao/, com o Core num Web Worker
 // (contracts/tela-execucao.md, seção "Ligação").
+// Spec 010: o programa a executar leva as variáveis (nome e tipo) para o pedido do leia
+// (contracts/tela-entrada.md, seção "Ligação").
 import './estilos.css';
 import { projetoVazio } from './projeto/formato.js';
 import { assinaturaProjeto, haAlteracoes } from './projeto/alteracoes.js';
@@ -40,6 +42,7 @@ let projeto = projetoVazio();
 const ws = criarWorkspace(document.getElementById('area-blocos'), projeto);
 let ultimoCodigo = '';
 let ultimosAvisos = [];
+let ultimasVariaveis = [];
 
 function projetoAtual() {
   return { ...projeto, variaveis: variaveisDoWorkspace(ws), blocos: serializarBlocos(ws) };
@@ -54,6 +57,7 @@ function atualizarPortugol() {
   const resultado = gerarPortugol(projetoGerado);
   ultimoCodigo = resultado.codigo;
   ultimosAvisos = resultado.avisos;
+  ultimasVariaveis = projetoGerado.variaveis.map(({ nome, tipo }) => ({ nome, tipo }));
   mostrarCodigo(preCodigo, resultado.codigo);
   aplicarAvisos(ws, resultado.avisos, 'incompleto');
   // A marca de pilha solta não entra em resultado.avisos: não bloqueia Executar (R-04).
@@ -95,7 +99,7 @@ const controlador = criarControladorExecucao({
   // Força a geração pendente: o código executado é o que o painel mostra (FR-001).
   obterPrograma: () => {
     tempoReal.atualizarAgora();
-    return { codigo: ultimoCodigo, avisos: ultimosAvisos };
+    return { codigo: ultimoCodigo, avisos: ultimosAvisos, variaveis: ultimasVariaveis };
   },
   executor,
   saida,

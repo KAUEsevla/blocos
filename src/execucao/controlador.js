@@ -2,8 +2,11 @@
 // Decide o que acontece no clique e o que a Saída mostra, na ordem do FR-004. Recebe tudo
 // por parâmetro (programa, executor, Saída, destaque do bloco), então não toca o DOM nem
 // o Pyodide e é testável em Node.
+// Spec 010 (contracts/entrada.md; research R-06, R-08): o leia pede o valor à Saída, com o
+// nome e o tipo da variável do registro da 002; o valor confirmado vira linha 'entrada'.
 import { criarDivisorLinhas } from './linhas.js';
 import { MENSAGENS_EXECUCAO, relatoDoResultado } from './mensagens.js';
+import { criarPedidoEntrada } from './entrada.js';
 import { verificarExecucao } from '../portugol/execucao.js';
 
 const MENSAGEM_GENERICA = 'O programa parou com um erro durante a execução.';
@@ -36,7 +39,7 @@ export function criarControladorExecucao({ obterPrograma, executor, saida, desta
 
   async function rodar() {
     // O código fica fixo no clique: mudar os blocos depois não muda o que roda.
-    const { codigo, avisos } = obterPrograma();
+    const { codigo, avisos, variaveis = [] } = obterPrograma();
 
     saida.limpar();
     // Pendência da 008 (RF-08, R-09): com blocos incompletos, nada vai ao Core.
@@ -69,12 +72,20 @@ export function criarControladorExecucao({ obterPrograma, executor, saida, desta
           saida.escrever(etapa === 'core' ? MENSAGENS_EXECUCAO.etapaCore : MENSAGENS_EXECUCAO.etapaPython, 'sistema'),
         aoPronto: comecarExecucao,
         aoEscrever: (texto) => escreverLinhas(divisor.acrescentar(texto)),
+        aoPedirEntrada: async ({ variavel }) => {
+          // Nenhuma linha fica retida no divisor enquanto o campo está aberto.
+          escreverLinhas(divisor.finalizar());
+          const valor = await saida.pedirEntrada(criarPedidoEntrada(variavel, variaveis));
+          saida.escrever(valor, 'entrada');
+          return valor;
+        },
       });
     } catch {
       resultado = { status: 'erro_execucao', saida: '', erro: { mensagem: MENSAGEM_GENERICA } };
     }
 
     escreverLinhas(divisor.finalizar());
+    saida.cancelarEntrada?.();
     escreverItens(relatoDoResultado(resultado, codigo));
     mudarEstado('ocioso');
   }

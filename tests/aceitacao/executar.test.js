@@ -148,6 +148,74 @@ describe('execução pela tela no Core real (worker_threads)', () => {
     expect(linhasDe(pedacos)).toEqual(['Oi, Ana']);
   });
 
+  it('três leia seguidos pedem nome, idade e altura, um de cada vez e na ordem', async () => {
+    const codigo = programa(
+      '    leia(nome)\n    escreva(nome)\n    leia(idade)\n    escreva(idade)\n    leia(altura)\n    escreva(altura)',
+      '    nome: cadeia\n    idade: inteiro\n    altura: real',
+    );
+    const valores = { nome: 'Ana', idade: '15', altura: '1.72' };
+    const pedidos = [];
+    let abertos = 0;
+    const pedacos = [];
+    const resultado = await executor.executar(codigo, {
+      aoEscrever: (t) => pedacos.push(t),
+      aoPedirEntrada: async ({ variavel }) => {
+        abertos += 1;
+        expect(abertos).toBe(1); // um pedido de cada vez
+        pedidos.push(variavel);
+        await new Promise((r) => setTimeout(r, 5));
+        abertos -= 1;
+        return valores[variavel];
+      },
+    });
+    expect(resultado.status).toBe('ok');
+    expect(pedidos).toEqual(['nome', 'idade', 'altura']);
+    expect(linhasDe(pedacos)).toEqual(['Ana', '15', '1.72']);
+  });
+
+  it('um leia num enquanto pede a cada volta, sem repetir linhas', async () => {
+    // Portugol em texto: os blocos de repetição são da spec 005.
+    const codigo = programa(
+      '    escreva("antes")\n    enquanto i < 2 faca\n        leia(nome)\n        escreva("Oi, ", nome)\n        i <- i + 1\n    fim_enquanto',
+      '    nome: cadeia\n    i: inteiro',
+    );
+    const fila = ['Ana', 'Bia'];
+    const pedidos = [];
+    const pedacos = [];
+    const resultado = await executor.executar(codigo, {
+      aoEscrever: (t) => pedacos.push(t),
+      aoPedirEntrada: async ({ variavel }) => {
+        pedidos.push(variavel);
+        return fila.shift();
+      },
+    });
+    expect(resultado.status).toBe('ok');
+    expect(pedidos).toEqual(['nome', 'nome']);
+    expect(linhasDe(pedacos)).toEqual(['antes', 'Oi, Ana', 'Oi, Bia']);
+  });
+
+  // SC-001 da 010: os casos com leia, com as entradas fornecidas uma a uma no modo interativo.
+  const casosComLeia = casos.filter(({ caso }) => caso.entrada.length > 0 && (caso.statusEsperado ?? 'ok') === 'ok');
+
+  it('há casos de aceitação com leia para o SC-001 interativo', () => {
+    expect(casosComLeia.length).toBeGreaterThanOrEqual(2);
+  });
+
+  describe.each(casosComLeia)('SC-001 (010): $arquivo com entrada interativa', ({ caso }) => {
+    it(caso.descricao, async () => {
+      const { codigo } = gerarPortugol(caso.projeto);
+      const fila = [...caso.entrada];
+      const pedacos = [];
+      const resultado = await executor.executar(codigo, {
+        aoEscrever: (t) => pedacos.push(t),
+        aoPedirEntrada: async () => fila.shift(),
+      });
+      expect(resultado.status).toBe('ok');
+      expect(fila).toEqual([]);
+      expect(linhasDe(pedacos)).toEqual(linhasDe([caso.saidaEsperada]));
+    });
+  });
+
   describe.each(casos)('SC-001: a Saída da tela de $arquivo é igual à esperada', ({ caso }) => {
     it(caso.descricao, async () => {
       const { codigo } = gerarPortugol(caso.projeto);

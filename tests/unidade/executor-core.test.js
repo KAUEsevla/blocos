@@ -94,3 +94,21 @@ describe('traduzirErroExecucao (RF-09)', () => {
     expect(traduzirErroExecucao('toString', 'x').mensagem).toBe('O programa parou com um erro durante a execução.');
   });
 });
+
+// Spec 010 (contracts/adapter-core.md; research R-07): real digitado com vírgula (P-2).
+describe('traduzirErroExecucao: vírgula no leia de real (spec 010)', () => {
+  const COMPLEMENTO = 'O valor digitado não é um número. Use ponto para separar as casas decimais, por exemplo 1.72.';
+
+  it.each([
+    ["could not convert string to float: '1,72'", COMPLEMENTO],
+    ["could not convert string to float: ',5'", COMPLEMENTO],
+    ["could not convert string to float: 'abc'", 'O valor digitado não é um número.'],
+    ["could not convert string to float: ''", 'O valor digitado não é um número.'],
+    ["invalid literal for int() with base 10: '1,5'", 'O valor digitado não é um número.'],
+  ])('%s → %s', (mensagemPython, esperada) => {
+    const erro = traduzirErroExecucao('ValueError', mensagemPython);
+    expect(erro.mensagem).toBe(esperada);
+    expect(erro.mensagem).not.toContain('could not');
+    expect(erro.detalhe).toContain(mensagemPython);
+  });
+});
