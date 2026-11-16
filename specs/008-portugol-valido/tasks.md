@@ -269,6 +269,8 @@ exemplo `008/T033 (RF-08): gerador da seção var`.
 
 ## Pendências para a spec 009
 
+> ✅ Resolvidas na 009 (Fase 3, T026–T030): [tasks da 009](../009-executar-no-core/tasks.md).
+
 A parte de tela dos cenários 2 e 3 da História 2 (FR-006) depende do painel Saída
 (spec 001) e do botão Executar (spec 009). Ela não é uma task desta spec e deve entrar
 no `tasks.md` da 009, citando RF-08 e RF-09:

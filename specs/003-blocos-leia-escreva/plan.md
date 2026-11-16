@@ -176,7 +176,9 @@ Registradas no R-12. Não são tasks desta spec:
 
 - **006** (✅ resolvida pela spec 006, [tasks](../006-blocos-operadores/tasks.md)): negativo,
   relacionais, lógicos, valor fixo lógico, `check` de tipos.
-- **009**: ver a Saída no navegador ao executar; completar a medição do SC-002.
+- **009** (✅ resolvida pela spec 009, [tasks](../009-executar-no-core/tasks.md)): ver a
+  Saída no navegador ao executar; completar a medição do SC-002 (tempo com cache limpo:
+  T025 da 009).
 - **010**: caixa de entrada do `leia`; mensagem para real digitado com vírgula no `leia`.
 
 ## Complexity Tracking

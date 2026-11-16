@@ -50,8 +50,15 @@ pura e determinística é testável sem navegador e sustenta os testes de aceita
 - Cada task DEVE citar o requisito que atende.
 - Cada `tasks.md` recomeça a numeração em `T001`; por isso a task é identificada
   pelo número da spec junto com o número da task.
-- Commit que implementa uma task DEVE usar o formato `NNN/Txxx (RF-xx): descrição`,
-  em que `NNN` é o número da spec (ex.: `008/T012 (RF-08): gerador da seção var`).
+- A implementação é commitada por fase do `tasks.md`: cada fase concluída vira um
+  único commit, que reúne todas as tasks daquela fase.
+- O commit de fase DEVE usar o formato `NNN/Txxx-Tyyy (RF-xx): descrição`, em que
+  `NNN` é o número da spec e `Txxx-Tyyy` lista as tasks incluídas. Tasks não
+  consecutivas são separadas por vírgula (ex.: `009/T004-T006,T009 (RF-09): execução
+  pelo Core`); uma fase com uma só task usa `NNN/Txxx`. O commit DEVE citar todos os
+  requisitos que as suas tasks atendem.
+- Os testes DEVEM rodar uma vez antes de cada commit de fase, e o commit só é feito
+  com eles passando.
 - Commit que muda specs, plans, research, contratos, checklists ou outros
   documentos, sem implementar task, DEVE usar o formato
   `docs(NNN) (RF-xx): descrição` (ex.: `docs(002) (RF-02): uma variável por linha
@@ -60,11 +67,16 @@ pura e determinística é testável sem navegador e sustenta os testes de aceita
 - Registro histórico: os commits `T001`, `T002` e `T003` foram de documentação
   (constitution, briefing, specs e o plan da 008), feitos antes desta regra; seus
   números não correspondem a tasks de nenhum `tasks.md`.
+- Registro histórico: as specs 001 a 006 foram implementadas com um commit por task,
+  no formato `NNN/Txxx (RF-xx): descrição` vigente até a versão 1.2.0. Esses commits
+  continuam válidos e rastreáveis.
 - A spec descreve o quê e o porquê, sem detalhe técnico; o plan descreve o como
   (arquitetura, stack, dados, integrações).
 
 **Motivo:** o projeto segue Spec-Driven Development e é avaliado pela cadeia
-commit → task (ou spec, nos commits `docs`) → requisito (RNF-05, CONTRIBUTING).
+commit → tasks (ou spec, nos commits `docs`) → requisito (RNF-05, CONTRIBUTING). O
+commit por fase mantém essa cadeia, porque a mensagem lista as tasks e os requisitos,
+e reduz o histórico a entregas que passam nos testes como um todo.
 
 ### IV. Testes e cobertura (NÃO NEGOCIÁVEL)
 
@@ -155,4 +167,4 @@ emenda a esta constituição.
 - Toda revisão de pull request DEVE verificar a conformidade com esta constituição,
   em especial os princípios NÃO NEGOCIÁVEIS (I e IV).
 
-**Versão**: 1.2.0 | **Ratificada**: 2026-11-08 | **Última emenda**: 2026-11-14
+**Versão**: 2.0.0 | **Ratificada**: 2026-11-08 | **Última emenda**: 2026-11-15

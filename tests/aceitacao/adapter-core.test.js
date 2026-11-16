@@ -39,7 +39,7 @@ describe('adapter do meupia-core (Core real)', () => {
   it('traduz divisão por zero', async () => {
     const r = await compilarEExecutar(motor, programa('    escreva(1 / 0)'));
     expect(r.status).toBe('erro_execucao');
-    expect(r.erro.mensagem).toBe('Divisão por zero');
+    expect(r.erro.mensagem).toBe('Não é possível dividir por zero.');
   });
 
   it('lê a entrada do leia e acusa entrada esgotada', async () => {
@@ -52,7 +52,7 @@ describe('adapter do meupia-core (Core real)', () => {
     });
     const r = await compilarEExecutar(motor, programa(corpo, decl), []);
     expect(r.status).toBe('erro_execucao');
-    expect(r.erro.mensagem).toBe('O programa pediu mais dados do que os informados');
+    expect(r.erro.mensagem).toBe('O programa pediu mais dados do que os informados.');
   });
 
   it('dois programas seguidos não compartilham variáveis nem saída', async () => {
@@ -60,5 +60,40 @@ describe('adapter do meupia-core (Core real)', () => {
     expect(primeiro.saida).toBe('5\n');
     const segundo = await compilarEExecutar(motor, programa('    escreva(x)', '    x: inteiro'));
     expect(segundo).toEqual({ status: 'ok', saida: '0\n', erro: null });
+  });
+
+  // Spec 009 (contracts/adapter-core.md): escrita em fluxo e rastro técnico.
+  describe('aoEscrever e rastro (spec 009)', () => {
+    it('os pedaços somados são iguais a resultado.saida', async () => {
+      const pedacos = [];
+      const r = await compilarEExecutar(motor, programa('    escreva("a")\n    escreva("b")'), [], {
+        aoEscrever: (texto) => pedacos.push(texto),
+      });
+      expect(r.status).toBe('ok');
+      expect(r.saida).toBe('a\nb\n');
+      expect(pedacos.join('')).toBe(r.saida);
+    });
+
+    it('o stdout do compilador não chega a aoEscrever', async () => {
+      const pedacos = [];
+      const aoEscrever = (texto) => pedacos.push(texto);
+      await compilarEExecutar(motor, VAZIO, [], { aoEscrever });
+      expect(pedacos).toEqual([]);
+      const invalido = await compilarEExecutar(
+        motor,
+        programa('    se verdadeiro\n        escreva("x")\n    fim_se'),
+        [],
+        { aoEscrever },
+      );
+      expect(invalido.status).toBe('erro_compilacao');
+      expect(pedacos).toEqual([]);
+    });
+
+    it('erro de execução traz o rastro Python no detalhe', async () => {
+      const r = await compilarEExecutar(motor, programa('    escreva(1 / 0)'));
+      expect(r.status).toBe('erro_execucao');
+      expect(r.erro.detalhe).toContain('Traceback');
+      expect(r.erro.detalhe).toContain('ZeroDivisionError');
+    });
   });
 });

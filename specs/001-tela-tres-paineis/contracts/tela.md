@@ -17,7 +17,8 @@ Ordem da esquerda para a direita:
 | --- | --- | --- | --- |
 | `<label for="nome-programa">` | — | `Nome do programa` | — |
 | `<input type="text">` | `nome-programa` | `value="MeuPrograma"`, `maxlength="40"`, `spellcheck="false"`, `autocomplete="off"` | habilitado; cada `input` atualiza `projeto.nome` e regenera o Portugol |
-| `<button>` | `botao-executar` | `Executar` | `disabled`, `title="Disponível em breve"` (009) |
+| `<button>` | `botao-executar` | `Executar` | habilitado desde a 009 ([tela-execucao.md](../../009-executar-no-core/contracts/tela-execucao.md)) |
+| `<button>` | `botao-parar` | `Parar` | criado pela 009, logo depois do Executar; `disabled` no estado ocioso ([tela-execucao.md](../../009-executar-no-core/contracts/tela-execucao.md)) |
 | `<button>` | `botao-salvar` | `Salvar` | `disabled`, `title="Disponível em breve"` (011) |
 | `<button>` | `botao-carregar` | `Carregar` | `disabled`, `title="Disponível em breve"` (012) |
 | `<button>` | `botao-novo` | `Novo` | habilitado (fluxo no [data-model](../data-model.md)) |

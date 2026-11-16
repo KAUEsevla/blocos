@@ -125,6 +125,14 @@ button:disabled { color: var(--cor-texto-suave); cursor: not-allowed; opacity: 0
 .saida-linhas { white-space: pre-wrap; overflow-wrap: anywhere; }
 .saida-linha--sistema { color: var(--cor-texto-suave); font-style: italic; }
 .saida-linha--erro { color: var(--cor-erro); }
+/* Spec 009: o escreva("") é uma linha vazia visível; detalhes técnicos discretos; avisos clicáveis. */
+.saida-linha:empty { min-height: 1.5em; }
+.saida-detalhe { margin: 4px 0; font-size: 0.8125rem; color: var(--cor-texto-suave); }
+.saida-detalhe summary { cursor: pointer; }
+.saida-detalhe pre { margin: 4px 0 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+.saida-avisos .lista-avisos { margin: 4px 0 0; padding-left: 0; list-style: none; }
+.saida-avisos .lista-avisos li { margin: 2px 0; }
+.saida-avisos .lista-avisos button { border: none; background: none; padding: 2px 0; color: var(--cor-erro); text-align: left; text-decoration: underline; cursor: pointer; font: inherit; }
 
 /* Abaixo da largura mínima: painéis empilhados, página rolando, barra fixa no topo (FR-006). */
 

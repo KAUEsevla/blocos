@@ -39,4 +39,25 @@ describe('criarMotorNavegador (RF-09, RNF-06)', () => {
     vi.mocked(instalarCore).mockRejectedValue(falha);
     await expect(criarMotorNavegador()).rejects.toBe(falha);
   });
+
+  // Spec 009, research R-06: indicação de progresso da preparação (SC-003).
+  it('informa as duas etapas, na ordem, antes de cada uma', async () => {
+    const etapas = [];
+    vi.mocked(loadPyodide).mockImplementation(async () => {
+      expect(etapas).toEqual(['python']);
+      return {};
+    });
+    vi.mocked(instalarCore).mockImplementation(async () => {
+      expect(etapas).toEqual(['python', 'core']);
+    });
+    await criarMotorNavegador({ aoProgresso: (etapa) => etapas.push(etapa) });
+    expect(etapas).toEqual(['python', 'core']);
+  });
+
+  it('falha no Python não anuncia a etapa do Core', async () => {
+    const etapas = [];
+    vi.mocked(loadPyodide).mockRejectedValue(new Error('sem rede'));
+    await criarMotorNavegador({ aoProgresso: (etapa) => etapas.push(etapa) }).catch(() => {});
+    expect(etapas).toEqual(['python']);
+  });
 });
