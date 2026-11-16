@@ -102,3 +102,5 @@ Portugol indentado e a saída para cada faixa.
 - Não há bloco "senão se" separado nesta entrega; faixas são feitas com se aninhado,
   como no Guia da Linguagem.
 - O bloco "escolha/caso" está fora do escopo.
+- A condição do se só aceita valores lógicos (comparações, "e", "ou", "não",
+  verdadeiro/falso ou variável lógica), regra dos blocos de operadores da spec 006.
