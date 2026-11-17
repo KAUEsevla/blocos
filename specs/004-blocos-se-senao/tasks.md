@@ -199,17 +199,32 @@ saída de cada faixa.
 
 **Objetivo**: registrar na 006 e na 008 que as pendências foram resolvidas (research R-10).
 
-- [ ] T022 [P] Atualizar a 006, com link para este `tasks.md` e para `tests/aceitacao/casos/se-maior-idade.json`:
+- [X] T022 [P] Atualizar a 006, com link para este `tasks.md` e para `tests/aceitacao/casos/se-maior-idade.json`:
   - `specs/006-blocos-operadores/spec.md`, Premissas ("o `se idade >= 18` é conferido na 004"): acrescentar "(✅ conferido na 004)";
   - `specs/006-blocos-operadores/research.md`, R-15, linha da 004: "✅ resolvida pela 004";
   - `specs/006-blocos-operadores/plan.md`, "Pendências para outras specs", linha da 004: o mesmo;
   - `specs/006-blocos-operadores/contracts/tipos-encaixe.md`: na "Matriz do SC-002", a coluna "`se` condição" (valores do research R-05 desta spec); em "Regra para as specs 004 e 005", linha do `se`: "aplicada na 004 ([bloco-se.md](../../004-blocos-se-senao/contracts/bloco-se.md))".
   - `specs/005-blocos-repeticao/spec.md`, nas Premissas, só como regra de usuário: "Um `se` encaixa dentro de `enquanto` e `para` (spec 004); conferido com os blocos de repetição." (FR-004).
   (RF-06, RF-04, RF-05)
-- [ ] T023 [P] Em `specs/008-portugol-valido/contracts/registro-blocos.md`, depois do exemplo do `se` em "Entrada do registro", uma linha: "O bloco real está em `src/blocos/decisao.js` (spec 004, [bloco-se.md](../../004-blocos-se-senao/contracts/bloco-se.md))". Em `specs/004-blocos-se-senao/spec.md`, `**Status**: Rascunho` → `**Status**: Implementada` (RF-08, RF-04)
-- [ ] T024 Rodar `npm test` uma vez antes do commit e, na descrição do PR, registrar: as pendências P-1 e P-2 da 006 fechadas, o comportamento do Core com `se 1 entao` (research R-02) e os navegadores usados nos roteiros (depende de T022, T023) (RNF-05)
+- [X] T023 [P] Em `specs/008-portugol-valido/contracts/registro-blocos.md`, depois do exemplo do `se` em "Entrada do registro", uma linha: "O bloco real está em `src/blocos/decisao.js` (spec 004, [bloco-se.md](../../004-blocos-se-senao/contracts/bloco-se.md))". Em `specs/004-blocos-se-senao/spec.md`, `**Status**: Rascunho` → `**Status**: Implementada` (RF-08, RF-04)
+- [X] T024 Rodar `npm test` uma vez antes do commit e, na descrição do PR, registrar: as pendências P-1 e P-2 da 006 fechadas, o comportamento do Core com `se 1 entao` (research R-02) e os navegadores usados nos roteiros (depende de T022, T023) (RNF-05)
+  - `npm test` rodado antes do commit (943 testes passando). O PR não foi aberto (sem push, a pedido); o texto para a descrição ficou no resumo da implementação. Nenhuma lacuna nova do Core: aceitar `se 1 entao` é a conversão do Python, e a regra do "só lógico" é do editor (research R-02).
 
 **Commit**: `docs(004) (RF-04, RF-06, RF-08): pendências da 006 resolvidas e registro do se`
+
+## Conferências manuais pendentes
+
+O código está pronto e testado. Os roteiros do quickstart foram percorridos no painel do
+navegador do Claude com o painel oculto: o Blockly não entregava os eventos (o
+`requestAnimationFrame` não roda), então o que depende de arrastar com o mouse e do Ctrl+Z
+na tela foi conferido pelo verificador de encaixe e pelos testes headless. Fica com a dupla
+repetir, num navegador comum (Chrome, Firefox ou Edge), e anotar o resultado no PR:
+
+| Conferência | O que fazer | Task |
+| --- | --- | --- |
+| Arrastar para a condição | Arrastar `18`, um texto e a variável `idade` para a condição do `se` e ver que não encaixam; arrastar uma comparação, `verdadeiro`, `e`/`ou`, `não` e uma variável lógica e ver que encaixam (roteiro 3). | T014 (registro) |
+| Ícone do senão e Ctrl+Z | Clicar no "+" e no "−" do bloco; tirar um senão com comandos, confirmar e apertar Ctrl+Z (ou o botão Desfazer): a área e os blocos voltam (roteiros 5 e 6). | T017 (registro) |
+| Portugol em tempo real | Montar as três faixas de nota arrastando os blocos e conferir o Portugol no painel enquanto monta (roteiro 8). | T020 (registro) |
 
 ---
 

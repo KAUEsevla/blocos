@@ -92,3 +92,5 @@ saída.
   de repetição (spec 009).
 - Um `leia` dentro de um laço pede o valor a cada volta (spec 010); conferido com os
   blocos de repetição.
+- Um `se` encaixa dentro de `enquanto` e `para` (spec 004); conferido com os blocos de
+  repetição.
