@@ -317,3 +317,49 @@ describe('tirar o senão com comandos (História 2)', () => {
     registrar({ confirmarTirarSenao });
   });
 });
+
+// História 3 (FR-004, FR-005): um se dentro de outro, no então e no senão.
+describe('aninhar (FR-004)', async () => {
+  const { gerarPortugol } = await import('../../src/portugol/gerador.js');
+  const { projetoVazio } = await import('../../src/projeto/formato.js');
+  let ws;
+
+  beforeAll(registrarTudo);
+
+  beforeEach(() => {
+    ws = novoWorkspace();
+    Blockly.serialization.workspaces.load(projetoVazio().blocos, ws);
+  });
+
+  const podeEncaixarComando = (filho, conexao) => ws.connectionChecker.canConnect(filho.previousConnection, conexao, false);
+
+  it('um se encaixa no programa, no então e no senão de outro se', () => {
+    const externo = ws.newBlock('se');
+    externo.ligarSenao();
+    const interno = ws.newBlock('se');
+    expect(podeEncaixarComando(externo, ws.getBlockById('programa').getInput('COMANDOS').connection)).toBe(true);
+    expect(podeEncaixarComando(interno, externo.getInput('ENTAO').connection)).toBe(true);
+    expect(podeEncaixarComando(interno, externo.getInput('SENAO').connection)).toBe(true);
+  });
+
+  it('se no senão de outro: cada um com o seu fim_se, o interno um nível à direita', () => {
+    const programa = ws.getBlockById('programa');
+    const externo = ws.newBlock('se');
+    externo.ligarSenao();
+    programa.getInput('COMANDOS').connection.connect(externo.previousConnection);
+    const interno = ws.newBlock('se');
+    externo.getInput('SENAO').connection.connect(interno.previousConnection);
+    for (const b of [externo, interno]) {
+      const v = ws.newBlock('logico');
+      v.setFieldValue('verdadeiro', 'VALOR');
+      b.getInput('CONDICAO').connection.connect(v.outputConnection);
+    }
+    const blocos = Blockly.serialization.workspaces.save(ws);
+    delete blocos.variables;
+    const { codigo, avisos } = gerarPortugol({ ...projetoVazio(), blocos });
+    expect(avisos).toEqual([]);
+    expect(codigo).toContain(
+      '    se verdadeiro entao\n    senao\n        se verdadeiro entao\n        fim_se\n    fim_se\n',
+    );
+  });
+});

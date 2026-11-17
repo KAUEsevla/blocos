@@ -171,13 +171,14 @@ inclusive com mais de 5 níveis e áreas vazias.
 **Teste independente**: três faixas de nota com `se` aninhados; Portugol indentado e a
 saída de cada faixa.
 
-- [ ] T018 [P] [US3] Em `tests/unidade/decisao-blockly.test.js`, `describe('aninhar (FR-004)')`: um `se` encaixa em `programa.COMANDOS`, no `ENTAO` e no `SENAO` de outro `se` (`ws.connectionChecker.canConnect` com as conexões de comando); `gerarPortugol` do workspace serializado com um `se` no `SENAO` de outro dá o texto do cenário 1 da História 3 (FR-004, FR-005) (RF-04)
-- [ ] T019 [P] [US3] Criar em `tests/aceitacao/casos/`, com `portugolEsperado`:
+- [X] T018 [P] [US3] Em `tests/unidade/decisao-blockly.test.js`, `describe('aninhar (FR-004)')`: um `se` encaixa em `programa.COMANDOS`, no `ENTAO` e no `SENAO` de outro `se` (`ws.connectionChecker.canConnect` com as conexões de comando); `gerarPortugol` do workspace serializado com um `se` no `SENAO` de outro dá o texto do cenário 1 da História 3 (FR-004, FR-005) (RF-04)
+- [X] T019 [P] [US3] Criar em `tests/aceitacao/casos/`, com `portugolEsperado`:
   - `se-faixas-nota.json` (`nome: "FaixasNota"`): `nota` (real); três vezes `leia(nota)` seguido de `se nota >= 7 entao escreva("A") senao se nota >= 5 entao escreva("B") senao escreva("C") fim_se fim_se` (o `se` interno no `SENAO` do externo, os dois com `extraState: { senao: true }`); `entrada: ["8", "6", "3"]`; `saidaEsperada: "A\nB\nC\n"`; `descricao` citando a História 3 (cada faixa numa leitura);
   - `se-casos-de-borda.json` (`nome: "CasosDeBorda"`): `idade` (inteiro) e `ok` (lógico); `se (variavel ok)` com `ENTAO` e `SENAO` vazios (`senao: true`); depois `se (e_ou e: nao (relacional > idade 10), logico verdadeiro)` com, no `ENTAO`, 6 níveis de `se (logico verdadeiro)` aninhados e `escreva(texto "fundo")` no mais interno; `entrada: []`; `saidaEsperada: "fundo\n"`; `descricao` citando os casos de borda (áreas vazias, mais de 5 níveis) e o FR-003 (variável lógica, `nao`, `e` na condição);
   - os dois com `requisitos: ["RF-04", "RNF-07"]`.
   Rodar `npm run test:aceitacao` (SC-001; FR-004, FR-005) (RF-04, RNF-07)
-- [ ] T020 [US3] Rodar `npm test`; percorrer os roteiros 8 a 10 do [quickstart.md](quickstart.md#b-no-navegador) (três faixas com 8, 6 e 3; 6 níveis; áreas vazias sem aviso) (depende de T018, T019) (FR-004, FR-005) (RF-04)
+- [X] T020 [US3] Rodar `npm test`; percorrer os roteiros 8 a 10 do [quickstart.md](quickstart.md#b-no-navegador) (três faixas com 8, 6 e 3; 6 níveis; áreas vazias sem aviso) (depende de T018, T019) (FR-004, FR-005) (RF-04)
+  - Feito no painel do navegador do Claude, 2026-11-16, com os projetos dos casos carregados: as três faixas com 8, 6 e 3 deram `A`, `B` e `C`; o `se` com então e senão vazios executou sem aviso; os 6 níveis aninhados (dentro de mais um `se`) geraram o `escreva("fundo")` com 32 espaços e executaram no Core.
 
 **Commit**: `004/T018-T020 (RF-04, RNF-07): se aninhado e casos de borda no Core`
 
