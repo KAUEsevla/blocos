@@ -218,13 +218,17 @@ O código está pronto e testado. Os roteiros do quickstart foram percorridos no
 navegador do Claude com o painel oculto: o Blockly não entregava os eventos (o
 `requestAnimationFrame` não roda), então o que depende de arrastar com o mouse e do Ctrl+Z
 na tela foi conferido pelo verificador de encaixe e pelos testes headless. Fica com a dupla
-repetir, num navegador comum (Chrome, Firefox ou Edge), e anotar o resultado no PR:
+repetir, num navegador comum (Chrome, Firefox ou Edge), e anotar o resultado no PR.
 
-| Conferência | O que fazer | Task |
-| --- | --- | --- |
-| Arrastar para a condição | Arrastar `18`, um texto e a variável `idade` para a condição do `se` e ver que não encaixam; arrastar uma comparação, `verdadeiro`, `e`/`ou`, `não` e uma variável lógica e ver que encaixam (roteiro 3). | T014 (registro) |
-| Ícone do senão e Ctrl+Z | Clicar no "+" e no "−" do bloco; tirar um senão com comandos, confirmar e apertar Ctrl+Z (ou o botão Desfazer): a área e os blocos voltam (roteiros 5 e 6). | T017 (registro) |
-| Portugol em tempo real | Montar as três faixas de nota arrastando os blocos e conferir o Portugol no painel enquanto monta (roteiro 8). | T020 (registro) |
+**Registro (2026-11-16)**: o arrastar, o ícone do senão com o Ctrl+Z e o Portugol durante a
+montagem ficam para conferência num navegador comum. Quem conferir troca a situação para
+"Conferido", com o navegador e a data.
+
+| Conferência | O que fazer | Task | Situação |
+| --- | --- | --- | --- |
+| Arrastar para a condição | Arrastar `18`, um texto e a variável `idade` para a condição do `se` e ver que não encaixam; arrastar uma comparação, `verdadeiro`, `e`/`ou`, `não` e uma variável lógica e ver que encaixam (roteiro 3). | T014 (registro) | Pendente: navegador comum |
+| Ícone do senão e Ctrl+Z | Clicar no "+" e no "−" do bloco; tirar um senão com comandos, confirmar e apertar Ctrl+Z (ou o botão Desfazer): a área e os blocos voltam (roteiros 5 e 6). | T017 (registro) | Pendente: navegador comum |
+| Portugol em tempo real | Montar as três faixas de nota arrastando os blocos e conferir o Portugol no painel enquanto monta (roteiro 8). | T020 (registro) | Pendente: navegador comum |
 
 ---
 
