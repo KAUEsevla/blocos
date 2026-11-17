@@ -132,7 +132,7 @@ preencher. O editor precisa dessa informação para o pedido (FR-002) e hoje a d
 forma do `output/main.py`, que não é contrato. Pelo princípio I, o contorno é o adapter
 do lado do editor descrito acima (isolado em `ponte-python.js`, testado na aceitação
 dos quatro tipos e com o pedido genérico como queda), e a lacuna vira issue em
-`meuPia/core`.
+`meuPia/core`: [meuPia/core#18](https://github.com/meuPia/core/issues/18).
 
 **Texto da issue** (T031; a dupla abre em `meuPia/core` e põe o link aqui, **antes do
 PR** desta spec):
@@ -169,7 +169,7 @@ PR** desta spec):
 > nome na linha do `output/main.py` que chamou o `input()` (`src/core/ponte-python.js`).
 > Se a linha não tiver o formato esperado, o campo pede "Digite um valor".
 
-**Link da issue**: _a preencher pela dupla (T031)._
+**Link da issue**: [meuPia/core#18](https://github.com/meuPia/core/issues/18).
 
 **Alternativas consideradas**: deduzir o tipo pela linha do Python (`int(`, `float(`)
 (rejeitada: duplicaria o registro de variáveis e dependeria ainda mais do formato

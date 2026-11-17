@@ -231,20 +231,20 @@ R-12).
   - `specs/010-entrada-de-dados/spec.md`: `**Status**: Rascunho` → `**Status**: Implementada`.
   (RF-03, RF-09, RF-10, RNF-01)
 - [X] T030 [P] Em `specs/005-blocos-repeticao/spec.md`, nas Premissas, só como regra de usuário (princípio III): "Um `leia` dentro de um laço pede o valor a cada volta (spec 010); conferido com os blocos de repetição." (RF-05, RF-10)
-- [ ] T031 [P] A issue da lacuna do Core (research R-03): o texto já está redigido em `specs/010-entrada-de-dados/research.md`, R-03 (título "Expor qual variável o `leia` vai preencher"; passos: compilar `leia(nome)` no `meupia-core` 1.4.1; obtido: `nome = _S(input())`, sem nada que identifique a variável; sugestão: passar a informação no `prompt` do `input()` ou numa função `_leia` substituível; contorno no editor: `ponte-python.js`). A **abertura** da issue em `meuPia/core` é feita pela dupla, como na 008/R-09 e na 003/R-07; quando aberta, pôr o link em "Link da issue" no R-03 e na linha do princípio I do Constitution Check do `plan.md`. **A issue precisa estar aberta antes do PR** (RNF-01, RF-10)
+- [X] T031 [P] A issue da lacuna do Core (research R-03): o texto já está redigido em `specs/010-entrada-de-dados/research.md`, R-03 (título "Expor qual variável o `leia` vai preencher"; passos: compilar `leia(nome)` no `meupia-core` 1.4.1; obtido: `nome = _S(input())`, sem nada que identifique a variável; sugestão: passar a informação no `prompt` do `input()` ou numa função `_leia` substituível; contorno no editor: `ponte-python.js`). A **abertura** da issue em `meuPia/core` é feita pela dupla, como na 008/R-09 e na 003/R-07; quando aberta, pôr o link em "Link da issue" no R-03 e na linha do princípio I do Constitution Check do `plan.md`. **A issue precisa estar aberta antes do PR** (RNF-01, RF-10)
+  - Issue aberta pela dupla: [meuPia/core#18](https://github.com/meuPia/core/issues/18). Link posto no R-03 e no Constitution Check do `plan.md`.
 - [X] T032 Rodar `npm test` uma vez antes do commit e, na descrição do PR, registrar: a decisão do R-02 (reexecução, sem COOP/COEP), as pendências P-1 a P-3 fechadas, o link da issue do T031, o tempo medido no T022 e o limite conhecido (conta pesada antes de vários `leia`). Não abrir o PR sem o link da issue no R-03 (depende de T028–T031) (RNF-05, RNF-01)
-  - `npm test` rodado antes do commit (863 testes passando). O PR não foi aberto (sem push, a pedido); o texto para a descrição ficou no resumo da implementação. **O PR só pode ser aberto depois do T031**, com o link da issue no R-03.
+  - `npm test` rodado antes do commit (863 testes passando). O PR não foi aberto (sem push, a pedido); o texto para a descrição ficou no resumo da implementação. O T031 foi concluído ([meuPia/core#18](https://github.com/meuPia/core/issues/18)), então o PR já pode ser aberto.
 
 **Commit**: `docs(010) (RF-10, RF-01, RF-03, RF-05, RF-09, RNF-01): pendências resolvidas nas specs 001, 003, 005, 008 e 009 e issue da lacuna do Core`
 
 ## Conferências manuais pendentes
 
-O código está pronto e testado. Ficam com a dupla só as tarefas que dependem de uma
+O código está pronto e testado. Fica com a dupla só a conferência que depende de uma
 pessoa. Quem fizer anota o resultado no PR e marca a task.
 
 | Pendência | O que fazer | Task |
 | --- | --- | --- |
-| Issue da lacuna do Core | Abrir em `meuPia/core` a issue "Expor qual variável o `leia` vai preencher", com o texto do [R-03](research.md), e pôr o link em "Link da issue" no R-03 e na linha do princípio I do Constitution Check do [plan.md](plan.md). **Antes do PR.** | T031 |
 | Roteiro do quickstart por uma pessoa | Os roteiros 1 a 11 do [quickstart.md](quickstart.md#b-no-navegador) foram percorridos no painel do navegador do Claude (T022, T026). Falta uma pessoa repetir digitando, num navegador comum (Chrome, Firefox ou Edge), e anotar navegador e impressão de uso no PR. | T022, T026 (registro) |
 
 ---
