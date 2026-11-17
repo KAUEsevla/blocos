@@ -3,12 +3,14 @@
 // a passa ao Blockly.inject e registra o callback da categoria dinâmica.
 // As specs 003–006 acrescentam as categorias delas em CAIXA_BLOCOS.contents (a 003 trouxe
 // Entrada e saída, Valores e Contas; contracts/blocos-entrada-saida.md da 003). A 006 acrescenta
-// o lógico, o negativo, Comparações e Lógica (research R-12 da 006).
+// o lógico, o negativo, Comparações e Lógica (research R-12 da 006). A 004 acrescenta Decisão,
+// logo depois de Entrada e saída (research R-06 da 004).
 import { TIPOS_VARIAVEL } from '../projeto/formato.js';
 import { COR_VALORES } from './valores.js';
 import { COR_CONTAS } from './contas.js';
 import { COR_COMPARACOES } from './comparacoes.js';
 import { COR_LOGICA } from './logica.js';
+import { COR_DECISAO } from './decisao.js';
 
 export const CATEGORIA_VARIAVEIS = 'VARIAVEIS';
 export const BOTAO_CRIAR_VARIAVEL = 'CRIAR_VARIAVEL';
@@ -32,6 +34,16 @@ export const CAIXA_BLOCOS = Object.freeze({
       custom: CATEGORIA_ENTRADA_SAIDA,
       colour: COR_ENTRADA_SAIDA,
     }),
+    // Spec 004: o se e o se/senão (o senão também liga e desliga no próprio bloco).
+    {
+      kind: 'category',
+      name: 'Decisão',
+      colour: COR_DECISAO,
+      contents: [
+        { kind: 'block', type: 'se' },
+        { kind: 'block', type: 'se', extraState: { senao: true } },
+      ],
+    },
     // Categorias estáticas não são congeladas: o Blockly acrescenta propriedades aos itens de
     // bloco ao montar a caixa (por exemplo "enabled").
     {

@@ -1,0 +1,127 @@
+{
+  "descricao": "se/senão com 15: só o ramo do senão executa, com um único fim_se (História 2, cenário 1, da spec 004; variante \"com senão\")",
+  "requisitos": [
+    "RF-04",
+    "RNF-07"
+  ],
+  "projeto": {
+    "formato": "meupia-blocos",
+    "versao": 1,
+    "nome": "MaiorOuMenor",
+    "variaveis": [
+      {
+        "id": "v-idade",
+        "nome": "idade",
+        "tipo": "inteiro"
+      }
+    ],
+    "blocos": {
+      "blocks": {
+        "languageVersion": 0,
+        "blocks": [
+          {
+            "type": "programa",
+            "id": "programa",
+            "x": 24,
+            "y": 24,
+            "deletable": false,
+            "inputs": {
+              "COMANDOS": {
+                "block": {
+                  "type": "leia",
+                  "id": "l1",
+                  "fields": {
+                    "VAR": {
+                      "id": "v-idade"
+                    }
+                  },
+                  "next": {
+                    "block": {
+                      "type": "se",
+                      "id": "s1",
+                      "inputs": {
+                        "CONDICAO": {
+                          "block": {
+                            "type": "relacional",
+                            "id": "r1",
+                            "fields": {
+                              "OP": ">="
+                            },
+                            "inputs": {
+                              "A": {
+                                "block": {
+                                  "type": "variavel",
+                                  "id": "vi",
+                                  "fields": {
+                                    "VAR": {
+                                      "id": "v-idade"
+                                    }
+                                  }
+                                }
+                              },
+                              "B": {
+                                "block": {
+                                  "type": "numero",
+                                  "id": "n18",
+                                  "fields": {
+                                    "NUM": "18"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        },
+                        "ENTAO": {
+                          "block": {
+                            "type": "escreva",
+                            "id": "e1",
+                            "inputs": {
+                              "VALOR1": {
+                                "block": {
+                                  "type": "texto",
+                                  "id": "t1",
+                                  "fields": {
+                                    "TEXTO": "Maior"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        },
+                        "SENAO": {
+                          "block": {
+                            "type": "escreva",
+                            "id": "e2",
+                            "inputs": {
+                              "VALOR1": {
+                                "block": {
+                                  "type": "texto",
+                                  "id": "t2",
+                                  "fields": {
+                                    "TEXTO": "Menor"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "extraState": {
+                        "senao": true
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "entrada": [
+    "15"
+  ],
+  "portugolEsperado": "algoritmo \"MaiorOuMenor\"\n\nvar\n    idade: inteiro\n\ninicio\n    leia(idade)\n    se idade >= 18 entao\n        escreva(\"Maior\")\n    senao\n        escreva(\"Menor\")\n    fim_se\nfim_algoritmo\n",
+  "saidaEsperada": "Menor\n"
+}

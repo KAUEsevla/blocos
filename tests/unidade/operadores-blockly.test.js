@@ -12,6 +12,7 @@ import { aplicarTipoVariavel } from '../../src/ui/acoes-variavel.js';
 import { trocarVariavelDoBloco } from '../../src/ui/campo-variavel.js';
 import { registrarCampoVariavel } from '../../src/ui/campo-variavel.js';
 import { registrarMutadorEscreva } from '../../src/ui/mutador-escreva.js';
+import { registrarMutadorSe } from '../../src/ui/mutador-se.js';
 import { registrarValidadorNumero } from '../../src/ui/validador-numero.js';
 import {
   registrarVerificadorEncaixe,
@@ -28,6 +29,7 @@ function novoWorkspace() {
 function registrarTudo() {
   registrarCampoVariavel();
   registrarMutadorEscreva();
+  registrarMutadorSe();
   registrarValidadorNumero();
   registrarVerificadorEncaixe();
   Blockly.defineBlocksWithJsonArray(registroPadrao.tiposRegistrados().map((t) => registroPadrao.obter(t).definicao));

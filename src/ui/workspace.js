@@ -15,6 +15,7 @@ import {
 } from '../blocos/caixa-blocos.js';
 import { registrarCampoVariavel } from './campo-variavel.js';
 import { registrarMutadorEscreva } from './mutador-escreva.js';
+import { registrarMutadorSe } from './mutador-se.js';
 import { registrarValidadorNumero } from './validador-numero.js';
 import { registrarVerificadorEncaixe, NOME_VERIFICADOR } from './verificador-encaixe.js';
 import { criarVariavel } from './acoes-variavel.js';
@@ -50,6 +51,8 @@ function definirBlocos() {
   // definições que os citam (spec 002; spec 003, contracts/editor-entrada-saida.md).
   registrarCampoVariavel();
   registrarMutadorEscreva();
+  // Spec 004: o ícone do senão no bloco se (contracts/editor-se.md).
+  registrarMutadorSe();
   registrarValidadorNumero();
   // Tipos dos encaixes pelo tipo da variável (spec 006, research R-09).
   registrarVerificadorEncaixe();

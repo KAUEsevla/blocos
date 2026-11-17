@@ -8,6 +8,7 @@ import { BLOCO_NUMERO, BLOCO_TEXTO, BLOCO_LOGICO } from './valores.js';
 import { BLOCO_ARITMETICO, BLOCO_NEGATIVO } from './contas.js';
 import { BLOCO_RELACIONAL } from './comparacoes.js';
 import { BLOCO_E_OU, BLOCO_NAO } from './logica.js';
+import { BLOCO_SE } from './decisao.js';
 
 const CATEGORIAS = ['comando', 'valor', 'raiz'];
 const OBRIGATORIOS = ['tipo', 'rotulo', 'categoria', 'definicao', 'gerar'];
@@ -91,7 +92,7 @@ export function criarRegistro() {
 
 // Registro com todos os blocos do editor: o programa (008), os blocos de variável (002) e os
 // de entrada e saída com os valores e a conta antecipados da 006 (003); a 006 traz o lógico, o
-// negativo, a comparação, e/ou e não; 004–005 acrescentam os seus.
+// negativo, a comparação, e/ou e não; a 004 traz o se; a 005 acrescenta os seus.
 export const registroPadrao = criarRegistro();
 registroPadrao.registrarBloco(BLOCO_PROGRAMA);
 registroPadrao.registrarBloco(BLOCO_VARIAVEL_RECEBE);
@@ -106,3 +107,4 @@ registroPadrao.registrarBloco(BLOCO_RELACIONAL);
 registroPadrao.registrarBloco(BLOCO_E_OU);
 registroPadrao.registrarBloco(BLOCO_NAO);
 registroPadrao.registrarBloco(BLOCO_LEIA);
+registroPadrao.registrarBloco(BLOCO_SE);

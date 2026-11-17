@@ -3,7 +3,6 @@
 import { describe, it, expect, beforeAll, beforeEach, vi } from 'vitest';
 import * as Blockly from 'blockly';
 import { registroPadrao } from '../../src/blocos/registro.js';
-import { BLOCO_SE } from '../../src/blocos/decisao.js';
 import { registrarCampoVariavel } from '../../src/ui/campo-variavel.js';
 import { registrarMutadorEscreva } from '../../src/ui/mutador-escreva.js';
 import { registrarMutadorSe } from '../../src/ui/mutador-se.js';
@@ -19,9 +18,7 @@ function registrarTudo() {
   registrarMutadorSe({ confirmarTirarSenao });
   registrarValidadorNumero();
   registrarVerificadorEncaixe();
-  const definicoes = registroPadrao.tiposRegistrados().map((t) => registroPadrao.obter(t).definicao);
-  if (!registroPadrao.obter('se')) definicoes.push(BLOCO_SE.definicao);
-  Blockly.defineBlocksWithJsonArray(definicoes);
+  Blockly.defineBlocksWithJsonArray(registroPadrao.tiposRegistrados().map((t) => registroPadrao.obter(t).definicao));
 }
 
 function novoWorkspace() {
@@ -120,5 +117,97 @@ describe('mutador do senão (FR-002; research R-04)', () => {
     b.isInFlyout = true;
     b.tirarSenao();
     expect(b.getInput('SENAO')).not.toBeNull();
+  });
+});
+
+// P-1 da 006 (research R-05): a condição do se só aceita valores lógicos.
+describe('condição só lógica (P-1)', async () => {
+  const { aplicarTipoVariavel } = await import('../../src/ui/acoes-variavel.js');
+  const { gerarPortugol } = await import('../../src/portugol/gerador.js');
+  const { projetoVazio } = await import('../../src/projeto/formato.js');
+  const { variaveisDoMapa } = await import('../../src/projeto/variaveis.js');
+  let ws;
+
+  beforeAll(registrarTudo);
+
+  beforeEach(() => {
+    ws = novoWorkspace();
+    const mapa = ws.getVariableMap();
+    mapa.createVariable('idade', 'inteiro', 'v-idade');
+    mapa.createVariable('nome', 'cadeia', 'v-nome');
+    mapa.createVariable('ok', 'logico', 'v-ok');
+  });
+
+  function criar(tipo, { campos = {}, variavel } = {}) {
+    const b = ws.newBlock(tipo);
+    if (variavel) b.getField('VAR').setValue(variavel);
+    for (const [nome, valor] of Object.entries(campos)) b.getField(nome).setValue(valor);
+    return b;
+  }
+  const podeEncaixar = (filho, pai) =>
+    ws.connectionChecker.canConnect(filho.outputConnection, pai.getInput('CONDICAO').connection, false);
+
+  it.each([
+    ['numero', {}],
+    ['texto', {}],
+    ['aritmetico', {}],
+    ['negativo', {}],
+    ['variavel', { variavel: 'v-idade' }],
+    ['variavel', { variavel: 'v-nome' }],
+  ])('%s %j não encaixa na condição', (tipo, opcoes) => {
+    expect(podeEncaixar(criar(tipo, opcoes), criar('se'))).toBe(false);
+  });
+
+  it.each([
+    ['relacional', {}],
+    ['e_ou', {}],
+    ['nao', {}],
+    ['logico', {}],
+    ['variavel', { variavel: 'v-ok' }],
+  ])('%s %j encaixa na condição', (tipo, opcoes) => {
+    expect(podeEncaixar(criar(tipo, opcoes), criar('se'))).toBe(true);
+  });
+
+  it('mudar ok para inteiro solta ok da condição; um Ctrl+Z volta', async () => {
+    Blockly.serialization.workspaces.load(
+      {
+        blocks: {
+          languageVersion: 0,
+          blocks: [
+            {
+              type: 'programa',
+              id: 'programa',
+              inputs: {
+                COMANDOS: {
+                  block: { type: 'se', id: 's1', inputs: { CONDICAO: { block: { type: 'variavel', id: 'vok', fields: { VAR: { id: 'v-ok' } } } } } },
+                },
+              },
+            },
+          ],
+        },
+        variables: [
+          { name: 'idade', type: 'inteiro', id: 'v-idade' },
+          { name: 'ok', type: 'logico', id: 'v-ok' },
+        ],
+      },
+      ws,
+    );
+    await new Promise((r) => setTimeout(r, 0));
+    ws.clearUndo();
+    aplicarTipoVariavel(ws, 'v-ok', 'inteiro');
+    expect(ws.getBlockById('vok').getParent()).toBeNull();
+    const blocos = Blockly.serialization.workspaces.save(ws);
+    delete blocos.variables;
+    const { codigo, avisos } = gerarPortugol({
+      ...projetoVazio(),
+      variaveis: variaveisDoMapa(ws.getVariableMap().getAllVariables()),
+      blocos,
+    });
+    expect(codigo).toContain('    se ??? entao\n');
+    expect(avisos.map((a) => a.mensagem)).toContain('Falta a condição do bloco se');
+
+    await desfazer(ws);
+    expect(ws.getVariableMap().getVariableById('v-ok').getType()).toBe('logico');
+    expect(ws.getBlockById('s1').getInputTargetBlock('CONDICAO')?.id).toBe('vok');
   });
 });

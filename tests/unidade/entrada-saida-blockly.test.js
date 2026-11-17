@@ -5,6 +5,7 @@ import * as Blockly from 'blockly';
 import { registroPadrao } from '../../src/blocos/registro.js';
 import { registrarCampoVariavel } from '../../src/ui/campo-variavel.js';
 import { registrarMutadorEscreva } from '../../src/ui/mutador-escreva.js';
+import { registrarMutadorSe } from '../../src/ui/mutador-se.js';
 import { registrarValidadorNumero } from '../../src/ui/validador-numero.js';
 import { gerarPortugol } from '../../src/portugol/gerador.js';
 import { projetoVazio } from '../../src/projeto/formato.js';
@@ -33,6 +34,7 @@ describe('escreva no Blockly (research R-04)', () => {
   beforeAll(() => {
     registrarCampoVariavel();
     registrarMutadorEscreva();
+    registrarMutadorSe();
     registrarValidadorNumero();
     Blockly.defineBlocksWithJsonArray(registroPadrao.tiposRegistrados().map((t) => registroPadrao.obter(t).definicao));
   });
@@ -162,6 +164,7 @@ describe('leia no Blockly (research R-05)', async () => {
   beforeAll(() => {
     registrarCampoVariavel();
     registrarMutadorEscreva();
+    registrarMutadorSe();
     registrarValidadorNumero();
     Blockly.defineBlocksWithJsonArray(registroPadrao.tiposRegistrados().map((t) => registroPadrao.obter(t).definicao));
   });
@@ -208,6 +211,7 @@ describe('passo E do quickstart: variável no segundo valor do escreva', async (
   beforeAll(() => {
     registrarCampoVariavel();
     registrarMutadorEscreva();
+    registrarMutadorSe();
     registrarValidadorNumero();
     Blockly.defineBlocksWithJsonArray(registroPadrao.tiposRegistrados().map((t) => registroPadrao.obter(t).definicao));
   });

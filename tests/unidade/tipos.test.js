@@ -8,7 +8,6 @@ import {
   encaixesIncompativeis,
 } from '../../src/blocos/tipos.js';
 import { registroPadrao } from '../../src/blocos/registro.js';
-import { BLOCO_SE } from '../../src/blocos/decisao.js';
 
 // Entradas de registro mínimas, montadas aqui: os blocos novos ainda não existem.
 const entrada = (tipo, definicao, extra = {}) => ({ tipo, definicao: { type: tipo, ...definicao }, ...extra });
@@ -192,7 +191,7 @@ describe('matriz do SC-002', () => {
     'recebe sem variável': encaixe('variavel_recebe', 'VALOR', undefined),
     'escreva VALOR1': encaixe('escreva', 'VALOR1'),
     // Spec 004 (research R-05; P-1): a condição do se só aceita lógico.
-    'se CONDICAO': checkEfetivo(BLOCO_SE, 'CONDICAO'),
+    'se CONDICAO': encaixe('se', 'CONDICAO'),
   };
 
   // Uma linha por filho; colunas na ordem de ENCAIXES. 1 = encaixa, 0 = não encaixa.
