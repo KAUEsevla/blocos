@@ -34,11 +34,16 @@ const TRADUCOES_EXECUCAO = Object.freeze({
   MemoryError: 'O programa usou memória demais.',
 });
 const VALOR_NAO_NUMERICO = /invalid literal for int\(\)|could not convert string to float/;
+// Spec 010 (R-07): real digitado com vírgula. O valor vai como digitado (FR-004); a
+// mensagem lembra o ponto. A recusa é a regra do Portugol do Core, não uma lacuna.
+const REAL_COM_VIRGULA = /could not convert string to float: '[^']*,[^']*'/;
+const MENSAGEM_VALOR_NAO_NUMERICO = 'O valor digitado não é um número.';
+const MENSAGEM_REAL_COM_VIRGULA = `${MENSAGEM_VALOR_NAO_NUMERICO} Use ponto para separar as casas decimais, por exemplo 1.72.`;
 
 export function traduzirErroExecucao(tipo, mensagem, rastro) {
   let amigavel = Object.hasOwn(TRADUCOES_EXECUCAO, tipo) ? TRADUCOES_EXECUCAO[tipo] : MENSAGEM_GENERICA_EXECUCAO;
   if (tipo === 'ValueError' && VALOR_NAO_NUMERICO.test(mensagem)) {
-    amigavel = 'O valor digitado não é um número.';
+    amigavel = REAL_COM_VIRGULA.test(mensagem) ? MENSAGEM_REAL_COM_VIRGULA : MENSAGEM_VALOR_NAO_NUMERICO;
   }
   return {
     mensagem: amigavel,
@@ -56,6 +61,16 @@ async function prepararMotor(motor) {
   }
 }
 
+// Para funções Python que devolvem um valor simples (bool), que não é proxy.
+function chamarPythonSimples(motor, nome, ...args) {
+  const funcao = motor.globals.get(nome);
+  try {
+    return funcao(...args);
+  } finally {
+    funcao.destroy();
+  }
+}
+
 function chamarPython(motor, nome, ...args) {
   const funcao = motor.globals.get(nome);
   try {
@@ -70,30 +85,58 @@ function chamarPython(motor, nome, ...args) {
   }
 }
 
+// Executa o output/main.py já compilado no motor (spec 010, R-02 e R-03). Cada valor de
+// entrada vai a um input(), exatamente como está. Entrada esgotada: com interativo, o
+// resultado é aguardando_entrada com a variável pedida; sem, EOFError (como na 008/009).
+function executarCompilado(motor, entrada, { aoEscrever, interativo }) {
+  const execucao = chamarPython(motor, '_meupia_executar', aoEscrever ?? null, [...entrada], Boolean(interativo));
+  if (execucao.pedido) {
+    return {
+      status: 'aguardando_entrada',
+      saida: execucao.saida,
+      erro: null,
+      pedido: { variavel: execucao.pedido.variavel ?? null },
+    };
+  }
+  if (execucao.erro) {
+    return {
+      status: 'erro_execucao',
+      saida: execucao.saida,
+      erro: traduzirErroExecucao(execucao.erro.tipo, execucao.erro.mensagem, execucao.erro.rastro),
+    };
+  }
+  return { status: 'ok', saida: execucao.saida, erro: null };
+}
+
 // aoEscrever (spec 009, R-05): recebe na hora cada pedaço que o programa escreve.
 // O stdout do compilador nunca passa por ele; resultado.saida continua com tudo.
-export async function compilarEExecutar(motor, codigo, entrada = [], { aoEscrever } = {}) {
+// interativo (spec 010): ver executarCompilado.
+export async function compilarEExecutar(motor, codigo, entrada = [], { aoEscrever, interativo = false } = {}) {
   await prepararMotor(motor);
 
   const compilacao = chamarPython(motor, '_meupia_compilar', codigo);
   if (!compilacao.compilou) {
     return { status: 'erro_compilacao', saida: '', erro: interpretarErroCompilacao(compilacao.saidaCompilador) };
   }
+  return executarCompilado(motor, entrada, { aoEscrever, interativo });
+}
 
-  // Uma linha por input(); entrada esgotada = fim de arquivo (EOFError no programa).
-  const fila = [...entrada];
-  motor.setStdin({ stdin: () => (fila.length > 0 ? fila.shift() : undefined) });
-  try {
-    const execucao = chamarPython(motor, '_meupia_executar', aoEscrever ?? null);
-    if (execucao.erro) {
-      return {
-        status: 'erro_execucao',
-        saida: execucao.saida,
-        erro: traduzirErroExecucao(execucao.erro.tipo, execucao.erro.mensagem, execucao.erro.rastro),
-      };
-    }
-    return { status: 'ok', saida: execucao.saida, erro: null };
-  } finally {
-    motor.setStdin();
+// Reexecuta, desde o começo e sem recompilar, o último programa compilado no motor, com a
+// entrada dada (spec 010, R-02: reexecução determinística).
+export async function continuarExecucao(motor, entrada, { aoEscrever, interativo = false } = {}) {
+  await prepararMotor(motor);
+  if (!chamarPythonSimples(motor, '_meupia_compilado')) {
+    return {
+      status: 'erro_execucao',
+      saida: '',
+      erro: {
+        mensagem: MENSAGEM_GENERICA_EXECUCAO,
+        etapa: 'execução',
+        linha: null,
+        coluna: null,
+        detalhe: 'Nenhum programa compilado para continuar.',
+      },
+    };
   }
+  return executarCompilado(motor, entrada, { aoEscrever, interativo });
 }

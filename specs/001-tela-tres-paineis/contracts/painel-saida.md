@@ -26,6 +26,9 @@ duas regiões, nesta ordem:
 | `escreverVarias(linhas, tipo = 'programa')` | Spec 009: acrescenta um lote de linhas de uma vez, com uma única rolagem. |
 | `escreverDetalhe(texto)` | Spec 009: acrescenta "Detalhes técnicos" (`<details>` fechado) com o rastro técnico. |
 | `mostrarAvisos(avisos, aoClicar)` | Spec 009: lista os avisos de blocos incompletos em `areaAvisos` (`renderizarAvisos` da 008). |
+| `pedirEntrada({ rotulo, dica, confirmar })` | Spec 010: mostra no fim da Saída o campo do `leia` (rótulo, campo, dica e botão; Enter ou o botão confirmam) e devolve `Promise<string>` com o valor sem `trim`. Ver [tela-entrada.md](../../010-entrada-de-dados/contracts/tela-entrada.md). |
+| `cancelarEntrada()` | Spec 010: remove o campo aberto, sem resolver a promessa. |
+| `escrever(texto, 'entrada')` | Spec 010: tipo de linha novo para o valor digitado no `leia` (`saida-linha--entrada`, com destaque próprio). |
 
 ## Regras
 
@@ -33,4 +36,5 @@ duas regiões, nesta ordem:
   a partir de 1024 px.
 - Todos os textos do editor escritos aqui são pt-BR e vêm de `src/ui/textos.js`. Exceção
   (spec 009): os textos da execução vêm de `src/execucao/mensagens.js`, que é núcleo e
-  testado, como o `motivo` de `src/portugol/execucao.js` da 008.
+  testado, como o `motivo` de `src/portugol/execucao.js` da 008. Também na exceção (spec
+  010): o rótulo, a dica e o botão do campo do `leia` vêm de `src/execucao/entrada.js`.

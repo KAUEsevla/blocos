@@ -284,3 +284,197 @@ describe('criarControladorExecucao: rodar e ver (US1)', () => {
     expect(estados.at(-1)).toBe('ocioso');
   });
 });
+
+// Spec 010 (contracts/entrada.md, "Controlador"; research R-06, R-08).
+describe('entrada (spec 010)', () => {
+  const VARIAVEIS = [
+    { nome: 'nome', tipo: 'cadeia' },
+    { nome: 'idade', tipo: 'inteiro' },
+    { nome: 'altura', tipo: 'real' },
+  ];
+
+  // Saída falsa com o campo de entrada: cada pedido fica pendente até o teste responder.
+  function saidaComEntrada() {
+    const saida = saidaFalsa();
+    saida.pedidos = [];
+    saida.pedirEntrada = (pedido) => {
+      saida.chamadas.push(['pedirEntrada', pedido]);
+      return new Promise((resolver) => saida.pedidos.push({ pedido, resolver }));
+    };
+    saida.cancelarEntrada = () => saida.chamadas.push(['cancelarEntrada']);
+    return saida;
+  }
+
+  function montarComEntrada({ roteiro, programa = { codigo: 'COD', avisos: [], variaveis: VARIAVEIS } } = {}) {
+    const saida = saidaComEntrada();
+    const estados = [];
+    const executor = executorFalso({ pronto: true, roteiro });
+    const controlador = criarControladorExecucao({
+      obterPrograma: () => programa,
+      executor,
+      saida,
+      destacar: vi.fn(),
+      aoMudarEstado: (estado) => estados.push(estado),
+    });
+    return { controlador, saida, estados, executor };
+  }
+
+  const esperar = () => new Promise((resolver) => setTimeout(resolver, 0));
+
+  it('pede com rótulo e dica da variável e escreve o valor como entrada antes das linhas seguintes', async () => {
+    const { controlador, saida } = montarComEntrada({
+      roteiro: async (opcoes) => {
+        const valor = await opcoes.aoPedirEntrada({ variavel: 'nome' });
+        opcoes.aoEscrever(`Oi, ${valor}\n`);
+        return { status: 'ok', saida: '', erro: null };
+      },
+    });
+    const execucao = controlador.executar();
+    await esperar();
+    expect(saida.pedidos.map((p) => p.pedido)).toEqual([
+      { rotulo: 'Digite o valor de nome (cadeia)', dica: null, confirmar: 'Confirmar' },
+    ]);
+    saida.pedidos[0].resolver('Ana');
+    await execucao;
+    expect(saida.chamadas.slice(-5)).toEqual([
+      ['pedirEntrada', { rotulo: 'Digite o valor de nome (cadeia)', dica: null, confirmar: 'Confirmar' }],
+      ['escrever', 'Ana', 'entrada'],
+      ['escreverVarias', ['Oi, Ana'], 'programa'],
+      ['cancelarEntrada'],
+      ['escrever', 'Fim do programa', 'sistema'],
+    ]);
+  });
+
+  it('o valor confirmado volta ao executor', async () => {
+    let recebido;
+    const { controlador, saida } = montarComEntrada({
+      roteiro: async (opcoes) => {
+        recebido = await opcoes.aoPedirEntrada({ variavel: 'idade' });
+        return { status: 'ok', saida: '', erro: null };
+      },
+    });
+    const execucao = controlador.executar();
+    await esperar();
+    expect(saida.pedidos[0].pedido.dica).toBe('Número sem casas decimais, por exemplo 15.');
+    saida.pedidos[0].resolver('');
+    await execucao;
+    expect(recebido).toBe('');
+    expect(saida.chamadas).toContainEqual(['escrever', '', 'entrada']);
+  });
+
+  it('sem variaveis no programa, o pedido é genérico', async () => {
+    const { controlador, saida } = montarComEntrada({
+      programa: { codigo: 'COD', avisos: [] },
+      roteiro: async (opcoes) => {
+        await opcoes.aoPedirEntrada({ variavel: 'nome' });
+        return { status: 'ok', saida: '', erro: null };
+      },
+    });
+    const execucao = controlador.executar();
+    await esperar();
+    expect(saida.pedidos[0].pedido).toEqual({ rotulo: 'Digite um valor', dica: null, confirmar: 'Confirmar' });
+    saida.pedidos[0].resolver('x');
+    await execucao;
+  });
+
+  it('uma linha incompleta é escrita antes do pedido', async () => {
+    const { controlador, saida } = montarComEntrada({
+      roteiro: async (opcoes) => {
+        opcoes.aoEscrever('Nome: ');
+        await opcoes.aoPedirEntrada({ variavel: 'nome' });
+        return { status: 'ok', saida: '', erro: null };
+      },
+    });
+    const execucao = controlador.executar();
+    await esperar();
+    const indice = (nome) => saida.chamadas.findIndex((c) => c[0] === nome);
+    expect(saida.chamadas).toContainEqual(['escreverVarias', ['Nome: '], 'programa']);
+    expect(indice('escreverVarias')).toBeLessThan(indice('pedirEntrada'));
+    saida.pedidos[0].resolver('Ana');
+    await execucao;
+  });
+
+  it('três pedidos seguidos aparecem um de cada vez, na ordem', async () => {
+    const { controlador, saida } = montarComEntrada({
+      roteiro: async (opcoes) => {
+        for (const variavel of ['nome', 'idade', 'altura']) await opcoes.aoPedirEntrada({ variavel });
+        return { status: 'ok', saida: '', erro: null };
+      },
+    });
+    const execucao = controlador.executar();
+    for (const [n, valor] of ['Ana', '15', '1.72'].entries()) {
+      await esperar();
+      expect(saida.pedidos).toHaveLength(n + 1);
+      saida.pedidos[n].resolver(valor);
+    }
+    await execucao;
+    expect(saida.pedidos.map((p) => p.pedido.rotulo)).toEqual([
+      'Digite o valor de nome (cadeia)',
+      'Digite o valor de idade (inteiro)',
+      'Digite o valor de altura (real)',
+    ]);
+    expect(saida.chamadas.filter((c) => c[2] === 'entrada').map((c) => c[1])).toEqual(['Ana', '15', '1.72']);
+  });
+
+  it('com o campo aberto o estado é executando e um novo Executar é ignorado', async () => {
+    const { controlador, saida, executor, estados } = montarComEntrada({
+      roteiro: async (opcoes) => {
+        await opcoes.aoPedirEntrada({ variavel: 'nome' });
+        return { status: 'ok', saida: '', erro: null };
+      },
+    });
+    const execucao = controlador.executar();
+    await esperar();
+    expect(controlador.estado()).toBe('executando');
+    await controlador.executar();
+    expect(executor.executar).toHaveBeenCalledTimes(1);
+    saida.pedidos[0].resolver('Ana');
+    await execucao;
+    expect(estados).toEqual(['executando', 'ocioso']);
+  });
+
+  // História 2 (research R-09): desistir com o campo aberto.
+  it('Parar com o campo aberto fecha o campo, escreve interrompido e volta a ocioso', async () => {
+    let resolverExecucao;
+    const { controlador, saida, executor, estados } = montarComEntrada({
+      roteiro: (opcoes) =>
+        new Promise((resolver) => {
+          resolverExecucao = resolver;
+          opcoes.aoPedirEntrada({ variavel: 'nome' });
+        }),
+    });
+    executor.parar.mockImplementation(() => resolverExecucao({ status: 'interrompido', saida: '', erro: null }));
+    const execucao = controlador.executar();
+    await esperar();
+    expect(saida.pedidos).toHaveLength(1);
+
+    await controlador.parar();
+    await execucao;
+    expect(executor.parar).toHaveBeenCalledTimes(1);
+    expect(saida.chamadas.slice(-2)).toEqual([
+      ['cancelarEntrada'],
+      ['escrever', 'Execução interrompida pelo usuário', 'sistema'],
+    ]);
+    expect(controlador.estado()).toBe('ocioso');
+    expect(estados.at(-1)).toBe('ocioso');
+    // O valor que chegasse depois não é escrito.
+    saida.pedidos[0].resolver('tarde');
+    await esperar();
+    expect(saida.chamadas).not.toContainEqual(['escrever', 'tarde', 'entrada']);
+
+    // Uma nova execução funciona.
+    executor.executar.mockImplementationOnce(async () => ({ status: 'ok', saida: '', erro: null }));
+    await controlador.executar();
+    expect(saida.chamadas.at(-1)).toEqual(['escrever', 'Fim do programa', 'sistema']);
+  });
+
+  it('cancelarEntrada é chamado no fim mesmo num erro de execução', async () => {
+    const { controlador, saida } = montarComEntrada({
+      roteiro: async () => ({ status: 'erro_execucao', saida: '', erro: { mensagem: 'm' } }),
+    });
+    await controlador.executar();
+    const indice = saida.chamadas.findIndex((c) => c[0] === 'cancelarEntrada');
+    expect(indice).toBeGreaterThan(-1);
+    expect(saida.chamadas[indice + 1]).toEqual(['escrever', 'Erro de execução', 'erro']);
+  });
+});

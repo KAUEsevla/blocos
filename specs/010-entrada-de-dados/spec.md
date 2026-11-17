@@ -4,7 +4,7 @@
 
 **Criada em**: 2026-11-08
 
-**Status**: Rascunho
+**Status**: Implementada
 
 **Rastreia**: RF-10
 
@@ -51,6 +51,8 @@ próprio painel Saída. Ao confirmar, a execução continua.
 - Número com vírgula (`1,72`) num leia de real: entregue como digitado; a dica do
   campo lembra que o separador decimal é o ponto.
 - leia de lógico: a dica do campo informa que só "verdadeiro" vira verdadeiro.
+- Se o editor não conseguir identificar a variável, o campo pede "Digite um valor", sem
+  dica.
 
 ## Requisitos *(obrigatório)*
 
