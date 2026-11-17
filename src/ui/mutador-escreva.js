@@ -11,7 +11,6 @@ import { TEXTOS } from './textos.js';
 
 const NOME_MUTADOR = 'mutador_escreva';
 const ENCAIXE_ICONES = 'ICONES';
-const TAMANHO_ICONE = 16;
 
 const svg = (desenho) =>
   `data:image/svg+xml,${encodeURIComponent(
@@ -19,8 +18,10 @@ const svg = (desenho) =>
       `<circle cx="8" cy="8" r="7" fill="#ffffff" fill-opacity="0.9"/>` +
       `<path d="${desenho}" stroke="#333333" stroke-width="2" stroke-linecap="round"/></svg>`,
   )}`;
-const ICONE_MAIS = svg('M4 8h8M8 4v8');
-const ICONE_MENOS = svg('M4 8h8');
+// Exportados para o mutador do se (spec 004), que usa os mesmos ícones.
+export const ICONE_MAIS = svg('M4 8h8M8 4v8');
+export const ICONE_MENOS = svg('M4 8h8');
+export const TAMANHO_ICONE = 16;
 
 const estado = (bloco) => JSON.stringify(bloco.saveExtraState());
 

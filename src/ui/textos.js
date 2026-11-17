@@ -24,4 +24,7 @@ export const TEXTOS = Object.freeze({
   // Ícones "+"/"−" do bloco escreva (spec 003, contracts/editor-entrada-saida.md).
   acrescentarValor: 'Acrescentar um valor',
   tirarValor: 'Tirar o último valor',
+  // Ícone do bloco se (spec 004, contracts/editor-se.md).
+  acrescentarSenao: 'Acrescentar senão',
+  tirarSenao: 'Tirar o senão',
 });
