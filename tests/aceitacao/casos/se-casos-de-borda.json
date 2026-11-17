@@ -1,0 +1,251 @@
+{
+  "descricao": "casos de borda da spec 004: se com então e senão vazios (permitido), condição com variável lógica, não e e (FR-003), e 6 níveis de se aninhados (mais de 5, indentação correta)",
+  "requisitos": [
+    "RF-04",
+    "RNF-07"
+  ],
+  "projeto": {
+    "formato": "meupia-blocos",
+    "versao": 1,
+    "nome": "CasosDeBorda",
+    "variaveis": [
+      {
+        "id": "v-idade",
+        "nome": "idade",
+        "tipo": "inteiro"
+      },
+      {
+        "id": "v-ok",
+        "nome": "ok",
+        "tipo": "logico"
+      }
+    ],
+    "blocos": {
+      "blocks": {
+        "languageVersion": 0,
+        "blocks": [
+          {
+            "type": "programa",
+            "id": "programa",
+            "x": 24,
+            "y": 24,
+            "deletable": false,
+            "inputs": {
+              "COMANDOS": {
+                "block": {
+                  "type": "se",
+                  "id": "s67",
+                  "inputs": {
+                    "CONDICAO": {
+                      "block": {
+                        "type": "variavel",
+                        "id": "v66",
+                        "fields": {
+                          "VAR": {
+                            "id": "v-ok"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "extraState": {
+                    "senao": true
+                  },
+                  "next": {
+                    "block": {
+                      "type": "se",
+                      "id": "s68",
+                      "inputs": {
+                        "CONDICAO": {
+                          "block": {
+                            "type": "e_ou",
+                            "id": "eo60",
+                            "fields": {
+                              "OP": "e"
+                            },
+                            "inputs": {
+                              "A": {
+                                "block": {
+                                  "type": "nao",
+                                  "id": "nao61",
+                                  "inputs": {
+                                    "X": {
+                                      "block": {
+                                        "type": "relacional",
+                                        "id": "r64",
+                                        "fields": {
+                                          "OP": ">"
+                                        },
+                                        "inputs": {
+                                          "A": {
+                                            "block": {
+                                              "type": "variavel",
+                                              "id": "v62",
+                                              "fields": {
+                                                "VAR": {
+                                                  "id": "v-idade"
+                                                }
+                                              }
+                                            }
+                                          },
+                                          "B": {
+                                            "block": {
+                                              "type": "numero",
+                                              "id": "n63",
+                                              "fields": {
+                                                "NUM": "10"
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              },
+                              "B": {
+                                "block": {
+                                  "type": "logico",
+                                  "id": "l65",
+                                  "fields": {
+                                    "VALOR": "verdadeiro"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        },
+                        "ENTAO": {
+                          "block": {
+                            "type": "se",
+                            "id": "s59",
+                            "inputs": {
+                              "CONDICAO": {
+                                "block": {
+                                  "type": "logico",
+                                  "id": "l58",
+                                  "fields": {
+                                    "VALOR": "verdadeiro"
+                                  }
+                                }
+                              },
+                              "ENTAO": {
+                                "block": {
+                                  "type": "se",
+                                  "id": "s57",
+                                  "inputs": {
+                                    "CONDICAO": {
+                                      "block": {
+                                        "type": "logico",
+                                        "id": "l56",
+                                        "fields": {
+                                          "VALOR": "verdadeiro"
+                                        }
+                                      }
+                                    },
+                                    "ENTAO": {
+                                      "block": {
+                                        "type": "se",
+                                        "id": "s55",
+                                        "inputs": {
+                                          "CONDICAO": {
+                                            "block": {
+                                              "type": "logico",
+                                              "id": "l54",
+                                              "fields": {
+                                                "VALOR": "verdadeiro"
+                                              }
+                                            }
+                                          },
+                                          "ENTAO": {
+                                            "block": {
+                                              "type": "se",
+                                              "id": "s53",
+                                              "inputs": {
+                                                "CONDICAO": {
+                                                  "block": {
+                                                    "type": "logico",
+                                                    "id": "l52",
+                                                    "fields": {
+                                                      "VALOR": "verdadeiro"
+                                                    }
+                                                  }
+                                                },
+                                                "ENTAO": {
+                                                  "block": {
+                                                    "type": "se",
+                                                    "id": "s51",
+                                                    "inputs": {
+                                                      "CONDICAO": {
+                                                        "block": {
+                                                          "type": "logico",
+                                                          "id": "l50",
+                                                          "fields": {
+                                                            "VALOR": "verdadeiro"
+                                                          }
+                                                        }
+                                                      },
+                                                      "ENTAO": {
+                                                        "block": {
+                                                          "type": "se",
+                                                          "id": "s49",
+                                                          "inputs": {
+                                                            "CONDICAO": {
+                                                              "block": {
+                                                                "type": "logico",
+                                                                "id": "l48",
+                                                                "fields": {
+                                                                  "VALOR": "verdadeiro"
+                                                                }
+                                                              }
+                                                            },
+                                                            "ENTAO": {
+                                                              "block": {
+                                                                "type": "escreva",
+                                                                "id": "e47",
+                                                                "inputs": {
+                                                                  "VALOR1": {
+                                                                    "block": {
+                                                                      "type": "texto",
+                                                                      "id": "t46",
+                                                                      "fields": {
+                                                                        "TEXTO": "fundo"
+                                                                      }
+                                                                    }
+                                                                  }
+                                                                }
+                                                              }
+                                                            }
+                                                          }
+                                                        }
+                                                      }
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "entrada": [],
+  "portugolEsperado": "algoritmo \"CasosDeBorda\"\n\nvar\n    idade: inteiro\n    ok: logico\n\ninicio\n    se ok entao\n    senao\n    fim_se\n    se nao (idade > 10) e verdadeiro entao\n        se verdadeiro entao\n            se verdadeiro entao\n                se verdadeiro entao\n                    se verdadeiro entao\n                        se verdadeiro entao\n                            se verdadeiro entao\n                                escreva(\"fundo\")\n                            fim_se\n                        fim_se\n                    fim_se\n                fim_se\n            fim_se\n        fim_se\n    fim_se\nfim_algoritmo\n",
+  "saidaEsperada": "fundo\n"
+}

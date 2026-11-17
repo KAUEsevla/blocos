@@ -24,4 +24,10 @@ export const TEXTOS = Object.freeze({
   // Ícones "+"/"−" do bloco escreva (spec 003, contracts/editor-entrada-saida.md).
   acrescentarValor: 'Acrescentar um valor',
   tirarValor: 'Tirar o último valor',
+  // Ícone do bloco se (spec 004, contracts/editor-se.md).
+  acrescentarSenao: 'Acrescentar senão',
+  tirarSenao: 'Tirar o senão',
+  // Confirmação ao tirar um senão com comandos (spec 004, História 2, cenário 2).
+  tirarSenaoTitulo: 'Tirar o senão?',
+  tirarSenaoConfirmar: 'Tirar o senão',
 });

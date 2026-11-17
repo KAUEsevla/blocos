@@ -185,7 +185,8 @@ interface.
 
 Registradas no R-15. Não são tasks desta spec:
 
-- **004 e 005**: usar `check: 'Logico'` na condição do `se`/`enquanto` e
+- **004 e 005** (004 ✅ resolvida: condição do `se` com `check: 'Logico'` e `se idade >= 18` no
+  Core, [tasks da 004](../004-blocos-se-senao/tasks.md)): usar `check: 'Logico'` na condição do `se`/`enquanto` e
   `check: 'Numero'` nos limites e no passo do `para` (contrato
   [tipos-encaixe.md](contracts/tipos-encaixe.md)).
 - **012**: mensagem amigável quando o arquivo traz um encaixe incompatível

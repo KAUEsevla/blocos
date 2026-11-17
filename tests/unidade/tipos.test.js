@@ -190,24 +190,26 @@ describe('matriz do SC-002', () => {
     'recebe logico': encaixe('variavel_recebe', 'VALOR', 'logico'),
     'recebe sem variável': encaixe('variavel_recebe', 'VALOR', undefined),
     'escreva VALOR1': encaixe('escreva', 'VALOR1'),
+    // Spec 004 (research R-05; P-1): a condição do se só aceita lógico.
+    'se CONDICAO': encaixe('se', 'CONDICAO'),
   };
 
   // Uma linha por filho; colunas na ordem de ENCAIXES. 1 = encaixa, 0 = não encaixa.
-  //              ari ari neg rel rel eou eou nao  int real cad log sem  esc
+  //              ari ari neg rel rel eou eou nao  int real cad log sem  esc se
   const TABELA = {
-    numero:                  [1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 0, 0, 1, 1],
-    texto:                   [1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 1, 1],
-    logico:                  [0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1],
-    aritmetico:              [1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 1, 1],
-    negativo:                [1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 0, 0, 1, 1],
-    relacional:              [0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1],
-    e_ou:                    [0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1],
-    nao:                     [0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1],
-    'variavel inteiro':      [1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 0, 0, 1, 1],
-    'variavel real':         [1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 0, 0, 1, 1],
-    'variavel cadeia':       [1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 1, 1],
-    'variavel logico':       [0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1],
-    'variavel sem variável': [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    numero:                  [1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 0, 0, 1, 1, 0],
+    texto:                   [1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 1, 1, 0],
+    logico:                  [0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1],
+    aritmetico:              [1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0],
+    negativo:                [1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 0, 0, 1, 1, 0],
+    relacional:              [0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1],
+    e_ou:                    [0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1],
+    nao:                     [0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1],
+    'variavel inteiro':      [1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 0, 0, 1, 1, 0],
+    'variavel real':         [1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 0, 0, 1, 1, 0],
+    'variavel cadeia':       [1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 1, 1, 0],
+    'variavel logico':       [0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1],
+    'variavel sem variável': [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
   };
 
   const nomesEncaixes = Object.keys(ENCAIXES);

@@ -70,18 +70,18 @@ Usado por:
 
 ✅ = encaixa, ❌ = não encaixa. Linhas: saída do filho. Colunas: encaixe do pai.
 
-| Filho \ Encaixe | `aritmetico` A/B | `negativo` X | `relacional` A/B | `e_ou` A/B | `nao` X | `recebe` inteiro/real | `recebe` cadeia | `recebe` logico | `recebe` sem variável | `escreva` |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `numero` | ✅ | ✅ | ✅ | ❌ | ❌ | ✅ | ❌ | ❌ | ✅ | ✅ |
-| `texto` | ✅ | ❌ | ✅ | ❌ | ❌ | ❌ | ✅ | ❌ | ✅ | ✅ |
-| `logico` | ❌ | ❌ | ✅ | ✅ | ✅ | ❌ | ❌ | ✅ | ✅ | ✅ |
-| `aritmetico` | ✅ | ✅ | ✅ | ❌ | ❌ | ✅ | ✅ | ❌ | ✅ | ✅ |
-| `negativo` | ✅ | ✅ | ✅ | ❌ | ❌ | ✅ | ❌ | ❌ | ✅ | ✅ |
-| `relacional`, `e_ou`, `nao` | ❌ | ❌ | ✅ | ✅ | ✅ | ❌ | ❌ | ✅ | ✅ | ✅ |
-| `variavel` inteiro/real | ✅ | ✅ | ✅ | ❌ | ❌ | ✅ | ❌ | ❌ | ✅ | ✅ |
-| `variavel` cadeia | ✅ | ❌ | ✅ | ❌ | ❌ | ❌ | ✅ | ❌ | ✅ | ✅ |
-| `variavel` logico | ❌ | ❌ | ✅ | ✅ | ✅ | ❌ | ❌ | ✅ | ✅ | ✅ |
-| `variavel` sem variável | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Filho \ Encaixe | `aritmetico` A/B | `negativo` X | `relacional` A/B | `e_ou` A/B | `nao` X | `recebe` inteiro/real | `recebe` cadeia | `recebe` logico | `recebe` sem variável | `escreva` | `se` condição (004) |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `numero` | ✅ | ✅ | ✅ | ❌ | ❌ | ✅ | ❌ | ❌ | ✅ | ✅ | ❌ |
+| `texto` | ✅ | ❌ | ✅ | ❌ | ❌ | ❌ | ✅ | ❌ | ✅ | ✅ | ❌ |
+| `logico` | ❌ | ❌ | ✅ | ✅ | ✅ | ❌ | ❌ | ✅ | ✅ | ✅ | ✅ |
+| `aritmetico` | ✅ | ✅ | ✅ | ❌ | ❌ | ✅ | ✅ | ❌ | ✅ | ✅ | ❌ |
+| `negativo` | ✅ | ✅ | ✅ | ❌ | ❌ | ✅ | ❌ | ❌ | ✅ | ✅ | ❌ |
+| `relacional`, `e_ou`, `nao` | ❌ | ❌ | ✅ | ✅ | ✅ | ❌ | ❌ | ✅ | ✅ | ✅ | ✅ |
+| `variavel` inteiro/real | ✅ | ✅ | ✅ | ❌ | ❌ | ✅ | ❌ | ❌ | ✅ | ✅ | ❌ |
+| `variavel` cadeia | ✅ | ❌ | ✅ | ❌ | ❌ | ❌ | ✅ | ❌ | ✅ | ✅ | ❌ |
+| `variavel` logico | ❌ | ❌ | ✅ | ✅ | ✅ | ❌ | ❌ | ✅ | ✅ | ✅ | ✅ |
+| `variavel` sem variável | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 
 SC-002 em uma linha: nenhuma célula ❌ fica ✅ entre {lógico} e {número} — conferido célula a
 célula pelo teste.
@@ -90,7 +90,7 @@ célula pelo teste.
 
 | Bloco (spec) | Encaixe | `check` |
 | --- | --- | --- |
-| `se` (004) | condição | `['Logico']` |
+| `se` (004) | condição | `['Logico']` — aplicada na 004 ([bloco-se.md](../../004-blocos-se-senao/contracts/bloco-se.md)) |
 | `enquanto` (005) | condição | `['Logico']` |
 | `para` (005) | de, até, passo | `['Numero']` |
 

@@ -1,0 +1,480 @@
+{
+  "descricao": "três faixas de nota com um se dentro do senão de outro, uma faixa por leitura (História 3 da spec 004): cada se fecha com o seu fim_se e o interno fica um nível à direita",
+  "requisitos": [
+    "RF-04",
+    "RNF-07"
+  ],
+  "projeto": {
+    "formato": "meupia-blocos",
+    "versao": 1,
+    "nome": "FaixasNota",
+    "variaveis": [
+      {
+        "id": "v-nota",
+        "nome": "nota",
+        "tipo": "real"
+      }
+    ],
+    "blocos": {
+      "blocks": {
+        "languageVersion": 0,
+        "blocks": [
+          {
+            "type": "programa",
+            "id": "programa",
+            "x": 24,
+            "y": 24,
+            "deletable": false,
+            "inputs": {
+              "COMANDOS": {
+                "block": {
+                  "type": "leia",
+                  "id": "le1",
+                  "fields": {
+                    "VAR": {
+                      "id": "v-nota"
+                    }
+                  },
+                  "next": {
+                    "block": {
+                      "type": "se",
+                      "id": "s15",
+                      "inputs": {
+                        "CONDICAO": {
+                          "block": {
+                            "type": "relacional",
+                            "id": "r4",
+                            "fields": {
+                              "OP": ">="
+                            },
+                            "inputs": {
+                              "A": {
+                                "block": {
+                                  "type": "variavel",
+                                  "id": "v2",
+                                  "fields": {
+                                    "VAR": {
+                                      "id": "v-nota"
+                                    }
+                                  }
+                                }
+                              },
+                              "B": {
+                                "block": {
+                                  "type": "numero",
+                                  "id": "n3",
+                                  "fields": {
+                                    "NUM": "7"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        },
+                        "ENTAO": {
+                          "block": {
+                            "type": "escreva",
+                            "id": "e6",
+                            "inputs": {
+                              "VALOR1": {
+                                "block": {
+                                  "type": "texto",
+                                  "id": "t5",
+                                  "fields": {
+                                    "TEXTO": "A"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        },
+                        "SENAO": {
+                          "block": {
+                            "type": "se",
+                            "id": "s14",
+                            "inputs": {
+                              "CONDICAO": {
+                                "block": {
+                                  "type": "relacional",
+                                  "id": "r9",
+                                  "fields": {
+                                    "OP": ">="
+                                  },
+                                  "inputs": {
+                                    "A": {
+                                      "block": {
+                                        "type": "variavel",
+                                        "id": "v7",
+                                        "fields": {
+                                          "VAR": {
+                                            "id": "v-nota"
+                                          }
+                                        }
+                                      }
+                                    },
+                                    "B": {
+                                      "block": {
+                                        "type": "numero",
+                                        "id": "n8",
+                                        "fields": {
+                                          "NUM": "5"
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              },
+                              "ENTAO": {
+                                "block": {
+                                  "type": "escreva",
+                                  "id": "e11",
+                                  "inputs": {
+                                    "VALOR1": {
+                                      "block": {
+                                        "type": "texto",
+                                        "id": "t10",
+                                        "fields": {
+                                          "TEXTO": "B"
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              },
+                              "SENAO": {
+                                "block": {
+                                  "type": "escreva",
+                                  "id": "e13",
+                                  "inputs": {
+                                    "VALOR1": {
+                                      "block": {
+                                        "type": "texto",
+                                        "id": "t12",
+                                        "fields": {
+                                          "TEXTO": "C"
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            },
+                            "extraState": {
+                              "senao": true
+                            }
+                          }
+                        }
+                      },
+                      "extraState": {
+                        "senao": true
+                      },
+                      "next": {
+                        "block": {
+                          "type": "leia",
+                          "id": "le16",
+                          "fields": {
+                            "VAR": {
+                              "id": "v-nota"
+                            }
+                          },
+                          "next": {
+                            "block": {
+                              "type": "se",
+                              "id": "s30",
+                              "inputs": {
+                                "CONDICAO": {
+                                  "block": {
+                                    "type": "relacional",
+                                    "id": "r19",
+                                    "fields": {
+                                      "OP": ">="
+                                    },
+                                    "inputs": {
+                                      "A": {
+                                        "block": {
+                                          "type": "variavel",
+                                          "id": "v17",
+                                          "fields": {
+                                            "VAR": {
+                                              "id": "v-nota"
+                                            }
+                                          }
+                                        }
+                                      },
+                                      "B": {
+                                        "block": {
+                                          "type": "numero",
+                                          "id": "n18",
+                                          "fields": {
+                                            "NUM": "7"
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                },
+                                "ENTAO": {
+                                  "block": {
+                                    "type": "escreva",
+                                    "id": "e21",
+                                    "inputs": {
+                                      "VALOR1": {
+                                        "block": {
+                                          "type": "texto",
+                                          "id": "t20",
+                                          "fields": {
+                                            "TEXTO": "A"
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                },
+                                "SENAO": {
+                                  "block": {
+                                    "type": "se",
+                                    "id": "s29",
+                                    "inputs": {
+                                      "CONDICAO": {
+                                        "block": {
+                                          "type": "relacional",
+                                          "id": "r24",
+                                          "fields": {
+                                            "OP": ">="
+                                          },
+                                          "inputs": {
+                                            "A": {
+                                              "block": {
+                                                "type": "variavel",
+                                                "id": "v22",
+                                                "fields": {
+                                                  "VAR": {
+                                                    "id": "v-nota"
+                                                  }
+                                                }
+                                              }
+                                            },
+                                            "B": {
+                                              "block": {
+                                                "type": "numero",
+                                                "id": "n23",
+                                                "fields": {
+                                                  "NUM": "5"
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      },
+                                      "ENTAO": {
+                                        "block": {
+                                          "type": "escreva",
+                                          "id": "e26",
+                                          "inputs": {
+                                            "VALOR1": {
+                                              "block": {
+                                                "type": "texto",
+                                                "id": "t25",
+                                                "fields": {
+                                                  "TEXTO": "B"
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      },
+                                      "SENAO": {
+                                        "block": {
+                                          "type": "escreva",
+                                          "id": "e28",
+                                          "inputs": {
+                                            "VALOR1": {
+                                              "block": {
+                                                "type": "texto",
+                                                "id": "t27",
+                                                "fields": {
+                                                  "TEXTO": "C"
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    },
+                                    "extraState": {
+                                      "senao": true
+                                    }
+                                  }
+                                }
+                              },
+                              "extraState": {
+                                "senao": true
+                              },
+                              "next": {
+                                "block": {
+                                  "type": "leia",
+                                  "id": "le31",
+                                  "fields": {
+                                    "VAR": {
+                                      "id": "v-nota"
+                                    }
+                                  },
+                                  "next": {
+                                    "block": {
+                                      "type": "se",
+                                      "id": "s45",
+                                      "inputs": {
+                                        "CONDICAO": {
+                                          "block": {
+                                            "type": "relacional",
+                                            "id": "r34",
+                                            "fields": {
+                                              "OP": ">="
+                                            },
+                                            "inputs": {
+                                              "A": {
+                                                "block": {
+                                                  "type": "variavel",
+                                                  "id": "v32",
+                                                  "fields": {
+                                                    "VAR": {
+                                                      "id": "v-nota"
+                                                    }
+                                                  }
+                                                }
+                                              },
+                                              "B": {
+                                                "block": {
+                                                  "type": "numero",
+                                                  "id": "n33",
+                                                  "fields": {
+                                                    "NUM": "7"
+                                                  }
+                                                }
+                                              }
+                                            }
+                                          }
+                                        },
+                                        "ENTAO": {
+                                          "block": {
+                                            "type": "escreva",
+                                            "id": "e36",
+                                            "inputs": {
+                                              "VALOR1": {
+                                                "block": {
+                                                  "type": "texto",
+                                                  "id": "t35",
+                                                  "fields": {
+                                                    "TEXTO": "A"
+                                                  }
+                                                }
+                                              }
+                                            }
+                                          }
+                                        },
+                                        "SENAO": {
+                                          "block": {
+                                            "type": "se",
+                                            "id": "s44",
+                                            "inputs": {
+                                              "CONDICAO": {
+                                                "block": {
+                                                  "type": "relacional",
+                                                  "id": "r39",
+                                                  "fields": {
+                                                    "OP": ">="
+                                                  },
+                                                  "inputs": {
+                                                    "A": {
+                                                      "block": {
+                                                        "type": "variavel",
+                                                        "id": "v37",
+                                                        "fields": {
+                                                          "VAR": {
+                                                            "id": "v-nota"
+                                                          }
+                                                        }
+                                                      }
+                                                    },
+                                                    "B": {
+                                                      "block": {
+                                                        "type": "numero",
+                                                        "id": "n38",
+                                                        "fields": {
+                                                          "NUM": "5"
+                                                        }
+                                                      }
+                                                    }
+                                                  }
+                                                }
+                                              },
+                                              "ENTAO": {
+                                                "block": {
+                                                  "type": "escreva",
+                                                  "id": "e41",
+                                                  "inputs": {
+                                                    "VALOR1": {
+                                                      "block": {
+                                                        "type": "texto",
+                                                        "id": "t40",
+                                                        "fields": {
+                                                          "TEXTO": "B"
+                                                        }
+                                                      }
+                                                    }
+                                                  }
+                                                }
+                                              },
+                                              "SENAO": {
+                                                "block": {
+                                                  "type": "escreva",
+                                                  "id": "e43",
+                                                  "inputs": {
+                                                    "VALOR1": {
+                                                      "block": {
+                                                        "type": "texto",
+                                                        "id": "t42",
+                                                        "fields": {
+                                                          "TEXTO": "C"
+                                                        }
+                                                      }
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                            },
+                                            "extraState": {
+                                              "senao": true
+                                            }
+                                          }
+                                        }
+                                      },
+                                      "extraState": {
+                                        "senao": true
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "entrada": [
+    "8",
+    "6",
+    "3"
+  ],
+  "portugolEsperado": "algoritmo \"FaixasNota\"\n\nvar\n    nota: real\n\ninicio\n    leia(nota)\n    se nota >= 7 entao\n        escreva(\"A\")\n    senao\n        se nota >= 5 entao\n            escreva(\"B\")\n        senao\n            escreva(\"C\")\n        fim_se\n    fim_se\n    leia(nota)\n    se nota >= 7 entao\n        escreva(\"A\")\n    senao\n        se nota >= 5 entao\n            escreva(\"B\")\n        senao\n            escreva(\"C\")\n        fim_se\n    fim_se\n    leia(nota)\n    se nota >= 7 entao\n        escreva(\"A\")\n    senao\n        se nota >= 5 entao\n            escreva(\"B\")\n        senao\n            escreva(\"C\")\n        fim_se\n    fim_se\nfim_algoritmo\n",
+  "saidaEsperada": "A\nB\nC\n"
+}

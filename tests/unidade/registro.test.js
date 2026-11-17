@@ -81,6 +81,13 @@ describe('registro de blocos (RF-08)', () => {
     expect(() => r.variantesDe('inexistente')).toThrow('inexistente');
   });
 
+  it('o registro padrão contém o se da 004, com as áreas e as duas variantes', () => {
+    const se = registroPadrao.obter('se');
+    expect(se.categoria).toBe('comando');
+    expect(se.areas).toEqual(['ENTAO', 'SENAO']);
+    expect(registroPadrao.variantesDe('se').map((v) => v.nome)).toEqual(['sem senão', 'com senão']);
+  });
+
   it('o registro padrão contém o bloco programa', () => {
     const programa = registroPadrao.obter('programa');
     expect(programa.categoria).toBe('raiz');
@@ -89,7 +96,7 @@ describe('registro de blocos (RF-08)', () => {
   });
 
   it('o registro padrão tem o programa e os blocos de variável da 002, nessa ordem', () => {
-    expect(registroPadrao.tiposRegistrados()).toEqual(['programa', 'variavel_recebe', 'variavel', 'escreva', 'texto', 'numero', 'logico', 'aritmetico', 'negativo', 'relacional', 'e_ou', 'nao', 'leia']);
+    expect(registroPadrao.tiposRegistrados()).toEqual(['programa', 'variavel_recebe', 'variavel', 'escreva', 'texto', 'numero', 'logico', 'aritmetico', 'negativo', 'relacional', 'e_ou', 'nao', 'leia', 'se']);
     expect(registroPadrao.obter('variavel_recebe').categoria).toBe('comando');
     expect(registroPadrao.obter('variavel').categoria).toBe('valor');
   });

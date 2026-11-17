@@ -21,6 +21,9 @@ registrarBloco({
 })
 ```
 
+O bloco real está em `src/blocos/decisao.js` (spec 004,
+[bloco-se.md](../../004-blocos-se-senao/contracts/bloco-se.md)).
+
 ### Tipos dos encaixes (`check` e `tipoPelaVariavel`, spec 006)
 
 | Chave | Regra |

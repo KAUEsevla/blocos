@@ -15,6 +15,9 @@ import {
 } from '../blocos/caixa-blocos.js';
 import { registrarCampoVariavel } from './campo-variavel.js';
 import { registrarMutadorEscreva } from './mutador-escreva.js';
+import { registrarMutadorSe } from './mutador-se.js';
+import { confirmar } from './confirmacao.js';
+import { TEXTOS } from './textos.js';
 import { registrarValidadorNumero } from './validador-numero.js';
 import { registrarVerificadorEncaixe, NOME_VERIFICADOR } from './verificador-encaixe.js';
 import { criarVariavel } from './acoes-variavel.js';
@@ -50,6 +53,17 @@ function definirBlocos() {
   // definições que os citam (spec 002; spec 003, contracts/editor-entrada-saida.md).
   registrarCampoVariavel();
   registrarMutadorEscreva();
+  // Spec 004: o ícone do senão no bloco se, com o diálogo da 001 antes de apagar os blocos
+  // do senão (contracts/editor-se.md).
+  registrarMutadorSe({
+    confirmarTirarSenao: ({ mensagem }) =>
+      confirmar({
+        titulo: TEXTOS.tirarSenaoTitulo,
+        mensagem,
+        confirmar: TEXTOS.tirarSenaoConfirmar,
+        cancelar: TEXTOS.cancelar,
+      }),
+  });
   registrarValidadorNumero();
   // Tipos dos encaixes pelo tipo da variável (spec 006, research R-09).
   registrarVerificadorEncaixe();

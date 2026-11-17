@@ -131,4 +131,4 @@ O estudante usa blocos de número, de texto e de lógico (verdadeiro/falso).
   continuam abrindo iguais.
 - O bloco "se" é da spec 004. Até ela existir, o teste independente da História 2 usa
   comparações dentro de "escreva" e de "variável recebe valor"; o "se idade >= 18" é
-  conferido na 004.
+  conferido na 004 (✅ conferido na 004, [`se-maior-idade.json`](../../tests/aceitacao/casos/se-maior-idade.json); [tasks da 004](../004-blocos-se-senao/tasks.md)).

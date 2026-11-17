@@ -81,9 +81,13 @@ describe('caixa de blocos da spec 003', () => {
   it('categorias em ordem: Variáveis, Entrada e saída, Valores, Contas', async () => {
     const { CATEGORIA_ENTRADA_SAIDA } = await import('../../src/blocos/caixa-blocos.js');
     expect(CATEGORIA_ENTRADA_SAIDA).toBe('ENTRADA_SAIDA');
-    // A 006 acrescenta categorias depois destas quatro (ver o describe da spec 006).
-    expect(CAIXA_BLOCOS.contents.slice(0, 4).map((c) => c.name)).toEqual(['Variáveis', 'Entrada e saída', 'Valores', 'Contas']);
-    const [, es, valores, contas] = CAIXA_BLOCOS.contents;
+    // A 004 põe "Decisão" depois de Entrada e saída e a 006 acrescenta categorias depois
+    // destas (ver os describes da 004 e da 006): a ordem relativa das quatro continua.
+    const nomes = CAIXA_BLOCOS.contents.map((c) => c.name);
+    const daSpec003 = nomes.filter((n) => ['Variáveis', 'Entrada e saída', 'Valores', 'Contas'].includes(n));
+    expect(daSpec003).toEqual(['Variáveis', 'Entrada e saída', 'Valores', 'Contas']);
+    const categoria = (nome) => CAIXA_BLOCOS.contents.find((c) => c.name === nome);
+    const [es, valores, contas] = ['Entrada e saída', 'Valores', 'Contas'].map(categoria);
     expect(es).toMatchObject({ kind: 'category', custom: 'ENTRADA_SAIDA' });
     expect(valores.contents).toEqual([
       { kind: 'block', type: 'numero' },
@@ -179,6 +183,8 @@ describe('caixa de blocos da spec 006', () => {
     expect(CAIXA_BLOCOS.contents.map((c) => c.name)).toEqual([
       'Variáveis',
       'Entrada e saída',
+      // Spec 004 (research R-06): Decisão logo depois de Entrada e saída.
+      'Decisão',
       'Valores',
       'Contas',
       'Comparações',
@@ -192,6 +198,24 @@ describe('caixa de blocos da spec 006', () => {
         { kind: 'block', type: 'e_ou', fields: { OP: 'e' } },
         { kind: 'block', type: 'e_ou', fields: { OP: 'ou' } },
         { kind: 'block', type: 'nao' },
+      ],
+    });
+  });
+});
+
+// Spec 004 (research R-06; contracts/editor-se.md, "Caixa de blocos").
+describe('caixa de blocos da spec 004', () => {
+  it('Decisão vem logo depois de Entrada e saída, com o se e o se/senão', async () => {
+    const { COR_DECISAO } = await import('../../src/blocos/decisao.js');
+    const nomes = CAIXA_BLOCOS.contents.map((c) => c.name);
+    expect(nomes.indexOf('Decisão')).toBe(nomes.indexOf('Entrada e saída') + 1);
+    expect(CAIXA_BLOCOS.contents.find((c) => c.name === 'Decisão')).toEqual({
+      kind: 'category',
+      name: 'Decisão',
+      colour: COR_DECISAO,
+      contents: [
+        { kind: 'block', type: 'se' },
+        { kind: 'block', type: 'se', extraState: { senao: true } },
       ],
     });
   });
