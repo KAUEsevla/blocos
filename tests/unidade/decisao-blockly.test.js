@@ -211,3 +211,109 @@ describe('condição só lógica (P-1)', async () => {
     expect(ws.getBlockById('s1').getInputTargetBlock('CONDICAO')?.id).toBe('vok');
   });
 });
+
+// História 2, cenário 2 (research R-04; data-model "Confirmação"): tirar o senão com comandos.
+describe('tirar o senão com comandos (História 2)', () => {
+  let ws;
+
+  beforeAll(registrarTudo);
+
+  beforeEach(() => {
+    ws = novoWorkspace();
+    confirmarTirarSenao.mockReset();
+  });
+
+  const texto = (id, t) => ({ type: 'texto', id, fields: { TEXTO: t } });
+  const escreva = (id, valor, next) => ({
+    type: 'escreva',
+    id,
+    extraState: { valores: 1 },
+    inputs: { VALOR1: { block: valor } },
+    ...(next ? { next: { block: next } } : {}),
+  });
+
+  // se com o senão: escreva("Menor") e escreva(1) — 4 blocos dentro.
+  function seComSenao(senao = escreva('e1', texto('t1', 'Menor'), escreva('e2', { type: 'numero', id: 'n1', fields: { NUM: '1' } }))) {
+    return Blockly.serialization.blocks.append({ type: 'se', id: 's1', extraState: { senao: true }, inputs: { SENAO: { block: senao } } }, ws);
+  }
+
+  // Espera a promessa da confirmação e o que vem depois dela.
+  const esperar = () => new Promise((r) => setTimeout(r, 0));
+
+  it('pergunta com a quantidade e a mensagem certas', async () => {
+    const b = seComSenao();
+    confirmarTirarSenao.mockResolvedValue(false);
+    b.tirarSenao();
+    await esperar();
+    expect(confirmarTirarSenao).toHaveBeenCalledTimes(1);
+    expect(confirmarTirarSenao).toHaveBeenCalledWith({
+      quantidade: 4,
+      mensagem: 'Tirar o senão apaga 4 blocos que estão dentro dele.',
+    });
+  });
+
+  it('confirmar apaga os 4 blocos e tira a área; um desfazer volta tudo', async () => {
+    const b = seComSenao();
+    await esperar();
+    ws.clearUndo();
+    confirmarTirarSenao.mockResolvedValue(true);
+    b.tirarSenao();
+    await esperar();
+    expect(b.getInput('SENAO')).toBeNull();
+    expect(b.saveExtraState()).toBeNull();
+    expect(ws.getAllBlocks(false).map((x) => x.id)).toEqual(['s1']);
+
+    await desfazer(ws);
+    expect(b.getInput('SENAO')).not.toBeNull();
+    expect(b.getInputTargetBlock('SENAO')?.id).toBe('e1');
+    expect(ws.getBlockById('e1').getNextBlock()?.id).toBe('e2');
+    expect(ws.getBlockById('e2').getInputTargetBlock('VALOR1')?.id).toBe('n1');
+    expect(ws.getAllBlocks(false)).toHaveLength(5);
+  });
+
+  it('cancelar não muda nada', async () => {
+    const b = seComSenao();
+    confirmarTirarSenao.mockResolvedValue(false);
+    b.tirarSenao();
+    await esperar();
+    expect(b.getInput('SENAO')).not.toBeNull();
+    expect(ws.getAllBlocks(false)).toHaveLength(5);
+  });
+
+  it('bloco apagado antes da resposta: sem erro e sem mudança', async () => {
+    const b = seComSenao();
+    let responder;
+    confirmarTirarSenao.mockReturnValue(new Promise((r) => (responder = r)));
+    b.tirarSenao();
+    b.dispose();
+    responder(true);
+    await esperar();
+    expect(ws.getAllBlocks(false)).toHaveLength(0);
+  });
+
+  it('um se aninhado no senão entra na contagem com os filhos', async () => {
+    const interno = {
+      type: 'se',
+      id: 's2',
+      inputs: {
+        CONDICAO: { block: { type: 'logico', id: 'l1', fields: { VALOR: 'verdadeiro' } } },
+        ENTAO: { block: escreva('e3', texto('t3', 'x')) },
+      },
+    };
+    const b = seComSenao(interno);
+    confirmarTirarSenao.mockResolvedValue(false);
+    b.tirarSenao();
+    await esperar();
+    expect(confirmarTirarSenao.mock.calls[0][0].quantidade).toBe(4);
+  });
+
+  it('sem função de confirmação registrada, não apaga nada', async () => {
+    const { registrarMutadorSe: registrar } = await import('../../src/ui/mutador-se.js');
+    registrar({ confirmarTirarSenao: null });
+    const b = seComSenao();
+    b.tirarSenao();
+    await esperar();
+    expect(b.getInput('SENAO')).not.toBeNull();
+    registrar({ confirmarTirarSenao });
+  });
+});

@@ -6,6 +6,7 @@
 // condição: "+" liga o senão (cria a área SENAO) e "−" o desliga. Cada clique é um grupo de
 // eventos com um BlockChange de "mutation": um Ctrl+Z volta tudo, como no escreva da 003.
 import * as Blockly from 'blockly';
+import { mensagemTirarSenao } from '../blocos/decisao.js';
 import { TEXTOS } from './textos.js';
 import { ICONE_MAIS, ICONE_MENOS, TAMANHO_ICONE } from './mutador-escreva.js';
 
@@ -78,12 +79,25 @@ const MIXIN = {
     this.mudarSenao_(true);
   },
 
-  tirarSenao() {
+  // Com blocos no senão, pergunta antes (História 2, cenário 2). A quantidade conta todos os
+  // blocos que o Blockly apagaria: os descendentes do primeiro comando já incluem os comandos
+  // seguintes da cadeia (no Blockly, o próximo bloco é filho do anterior).
+  async tirarSenao() {
     if (this.isInFlyout || !this.temSenao_) return;
-    if (this.comandosDoSenao_().length === 0) {
+    const comandos = this.comandosDoSenao_();
+    if (comandos.length === 0) {
       this.mudarSenao_(false);
+      return;
     }
-    // Com blocos no senão: confirmação (spec 004, História 2; fase da US2).
+    if (!confirmarTirarSenao) return;
+    const quantidade = comandos[0].getDescendants(false).length;
+    const confirmou = await confirmarTirarSenao({ quantidade, mensagem: mensagemTirarSenao(quantidade) });
+    // O bloco pode ter sido apagado (ou o senão tirado) enquanto o diálogo estava aberto.
+    if (!confirmou || this.isDeadOrDying() || !this.temSenao_) return;
+    // Apaga os comandos e tira a área no mesmo grupo: um Ctrl+Z volta tudo.
+    this.mudarSenao_(false, () => {
+      for (const b of this.comandosDoSenao_().reverse()) b.dispose(false);
+    });
   },
 };
 
@@ -97,8 +111,8 @@ let registrado = false;
 
 // Idempotente: o registro de extensões do Blockly lança erro com nome repetido. A função de
 // confirmação pode ser trocada numa chamada seguinte.
-export function registrarMutadorSe({ confirmarTirarSenao: confirmar } = {}) {
-  if (confirmar) confirmarTirarSenao = confirmar;
+export function registrarMutadorSe(opcoes = {}) {
+  if ('confirmarTirarSenao' in opcoes) confirmarTirarSenao = opcoes.confirmarTirarSenao ?? null;
   if (registrado || Blockly.Extensions.isRegistered(NOME_MUTADOR)) {
     registrado = true;
     return;
