@@ -188,7 +188,8 @@ saída de cada faixa.
 
 **Objetivo**: cobertura, README e conferência de pt-BR.
 
-- [ ] T021 Percorrer o roteiro 11 do [quickstart.md](quickstart.md#b-no-navegador) (dica do bloco, ícones, diálogo e aviso em pt-BR) e conferir a categoria "Decisão" na caixa. Rodar `npm test` e `npm run cobertura`; confirmar linhas e branches ≥ 80% no núcleo, com `src/blocos/decisao.js` no relatório e `src/ui/mutador-se.js` fora dele; conferir que `tests/unidade/versao-unica.test.js` passa; versionar `cobertura/` e o `README.md` com a linha `**Testes:** N · **Cobertura:** X%` atualizada pelo script (depende das fases 2 a 4) (RNF-03, RNF-04, RNF-02)
+- [X] T021 Percorrer o roteiro 11 do [quickstart.md](quickstart.md#b-no-navegador) (dica do bloco, ícones, diálogo e aviso em pt-BR) e conferir a categoria "Decisão" na caixa. Rodar `npm test` e `npm run cobertura`; confirmar linhas e branches ≥ 80% no núcleo, com `src/blocos/decisao.js` no relatório e `src/ui/mutador-se.js` fora dele; conferir que `tests/unidade/versao-unica.test.js` passa; versionar `cobertura/` e o `README.md` com a linha `**Testes:** N · **Cobertura:** X%` atualizada pelo script (depende das fases 2 a 4) (RNF-03, RNF-04, RNF-02)
+  - Roteiro 11 no painel do navegador do Claude, 2026-11-16: rótulos `se`, `então`, `senão`, dicas dos ícones "Acrescentar senão"/"Tirar o senão", *tooltip* e diálogo em pt-BR; categoria "Decisão" entre "Entrada e saída" e "Valores". Cobertura do núcleo: 99,6% em linhas e 93,6% em branches, com `src/blocos/decisao.js` no relatório e `src/ui/mutador-se.js` fora; README com 943 testes.
 
 **Commit**: `004/T021 (RF-04, RNF-02, RNF-03, RNF-04): cobertura e README`
 
