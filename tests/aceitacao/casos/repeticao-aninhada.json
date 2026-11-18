@@ -1,0 +1,450 @@
+{
+  "descricao": "laços aninhados: para em para, enquanto em para e para em se em enquanto (FR-008 e casos de borda da spec 005)",
+  "requisitos": [
+    "RF-05",
+    "RNF-07"
+  ],
+  "projeto": {
+    "formato": "meupia-blocos",
+    "versao": 1,
+    "nome": "Aninhada",
+    "variaveis": [
+      {
+        "id": "v-i",
+        "nome": "i",
+        "tipo": "inteiro"
+      },
+      {
+        "id": "v-j",
+        "nome": "j",
+        "tipo": "inteiro"
+      },
+      {
+        "id": "v-n",
+        "nome": "n",
+        "tipo": "inteiro"
+      }
+    ],
+    "blocos": {
+      "blocks": {
+        "languageVersion": 0,
+        "blocks": [
+          {
+            "type": "programa",
+            "id": "programa",
+            "x": 24,
+            "y": 24,
+            "deletable": false,
+            "inputs": {
+              "COMANDOS": {
+                "block": {
+                  "type": "para",
+                  "id": "p87",
+                  "fields": {
+                    "VAR": {
+                      "id": "v-i"
+                    }
+                  },
+                  "inputs": {
+                    "DE": {
+                      "block": {
+                        "type": "numero",
+                        "id": "n79",
+                        "fields": {
+                          "NUM": "1"
+                        }
+                      }
+                    },
+                    "ATE": {
+                      "block": {
+                        "type": "numero",
+                        "id": "n80",
+                        "fields": {
+                          "NUM": "2"
+                        }
+                      }
+                    },
+                    "FACA": {
+                      "block": {
+                        "type": "para",
+                        "id": "p86",
+                        "fields": {
+                          "VAR": {
+                            "id": "v-j"
+                          }
+                        },
+                        "inputs": {
+                          "DE": {
+                            "block": {
+                              "type": "numero",
+                              "id": "n81",
+                              "fields": {
+                                "NUM": "1"
+                              }
+                            }
+                          },
+                          "ATE": {
+                            "block": {
+                              "type": "numero",
+                              "id": "n82",
+                              "fields": {
+                                "NUM": "2"
+                              }
+                            }
+                          },
+                          "FACA": {
+                            "block": {
+                              "type": "escreva",
+                              "id": "e85",
+                              "inputs": {
+                                "VALOR1": {
+                                  "block": {
+                                    "type": "variavel",
+                                    "id": "v83",
+                                    "fields": {
+                                      "VAR": {
+                                        "id": "v-i"
+                                      }
+                                    }
+                                  }
+                                },
+                                "VALOR2": {
+                                  "block": {
+                                    "type": "variavel",
+                                    "id": "v84",
+                                    "fields": {
+                                      "VAR": {
+                                        "id": "v-j"
+                                      }
+                                    }
+                                  }
+                                }
+                              },
+                              "extraState": {
+                                "valores": 2
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "next": {
+                    "block": {
+                      "type": "para",
+                      "id": "p102",
+                      "fields": {
+                        "VAR": {
+                          "id": "v-i"
+                        }
+                      },
+                      "inputs": {
+                        "DE": {
+                          "block": {
+                            "type": "numero",
+                            "id": "n88",
+                            "fields": {
+                              "NUM": "1"
+                            }
+                          }
+                        },
+                        "ATE": {
+                          "block": {
+                            "type": "numero",
+                            "id": "n89",
+                            "fields": {
+                              "NUM": "2"
+                            }
+                          }
+                        },
+                        "FACA": {
+                          "block": {
+                            "type": "variavel_recebe",
+                            "id": "rc91",
+                            "fields": {
+                              "VAR": {
+                                "id": "v-n"
+                              }
+                            },
+                            "inputs": {
+                              "VALOR": {
+                                "block": {
+                                  "type": "variavel",
+                                  "id": "v90",
+                                  "fields": {
+                                    "VAR": {
+                                      "id": "v-i"
+                                    }
+                                  }
+                                }
+                              }
+                            },
+                            "next": {
+                              "block": {
+                                "type": "enquanto",
+                                "id": "enq101",
+                                "inputs": {
+                                  "CONDICAO": {
+                                    "block": {
+                                      "type": "relacional",
+                                      "id": "r94",
+                                      "fields": {
+                                        "OP": ">"
+                                      },
+                                      "inputs": {
+                                        "A": {
+                                          "block": {
+                                            "type": "variavel",
+                                            "id": "v92",
+                                            "fields": {
+                                              "VAR": {
+                                                "id": "v-n"
+                                              }
+                                            }
+                                          }
+                                        },
+                                        "B": {
+                                          "block": {
+                                            "type": "numero",
+                                            "id": "n93",
+                                            "fields": {
+                                              "NUM": "0"
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  },
+                                  "FACA": {
+                                    "block": {
+                                      "type": "escreva",
+                                      "id": "e96",
+                                      "inputs": {
+                                        "VALOR1": {
+                                          "block": {
+                                            "type": "variavel",
+                                            "id": "v95",
+                                            "fields": {
+                                              "VAR": {
+                                                "id": "v-n"
+                                              }
+                                            }
+                                          }
+                                        }
+                                      },
+                                      "next": {
+                                        "block": {
+                                          "type": "variavel_recebe",
+                                          "id": "rc100",
+                                          "fields": {
+                                            "VAR": {
+                                              "id": "v-n"
+                                            }
+                                          },
+                                          "inputs": {
+                                            "VALOR": {
+                                              "block": {
+                                                "type": "aritmetico",
+                                                "id": "a99",
+                                                "fields": {
+                                                  "OP": "-"
+                                                },
+                                                "inputs": {
+                                                  "A": {
+                                                    "block": {
+                                                      "type": "variavel",
+                                                      "id": "v97",
+                                                      "fields": {
+                                                        "VAR": {
+                                                          "id": "v-n"
+                                                        }
+                                                      }
+                                                    }
+                                                  },
+                                                  "B": {
+                                                    "block": {
+                                                      "type": "numero",
+                                                      "id": "n98",
+                                                      "fields": {
+                                                        "NUM": "1"
+                                                      }
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "next": {
+                        "block": {
+                          "type": "variavel_recebe",
+                          "id": "rc104",
+                          "fields": {
+                            "VAR": {
+                              "id": "v-n"
+                            }
+                          },
+                          "inputs": {
+                            "VALOR": {
+                              "block": {
+                                "type": "numero",
+                                "id": "n103",
+                                "fields": {
+                                  "NUM": "1"
+                                }
+                              }
+                            }
+                          },
+                          "next": {
+                            "block": {
+                              "type": "enquanto",
+                              "id": "enq117",
+                              "inputs": {
+                                "CONDICAO": {
+                                  "block": {
+                                    "type": "relacional",
+                                    "id": "r107",
+                                    "fields": {
+                                      "OP": ">"
+                                    },
+                                    "inputs": {
+                                      "A": {
+                                        "block": {
+                                          "type": "variavel",
+                                          "id": "v105",
+                                          "fields": {
+                                            "VAR": {
+                                              "id": "v-n"
+                                            }
+                                          }
+                                        }
+                                      },
+                                      "B": {
+                                        "block": {
+                                          "type": "numero",
+                                          "id": "n106",
+                                          "fields": {
+                                            "NUM": "0"
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                },
+                                "FACA": {
+                                  "block": {
+                                    "type": "se",
+                                    "id": "se114",
+                                    "inputs": {
+                                      "CONDICAO": {
+                                        "block": {
+                                          "type": "logico",
+                                          "id": "l108",
+                                          "fields": {
+                                            "VALOR": "verdadeiro"
+                                          }
+                                        }
+                                      },
+                                      "ENTAO": {
+                                        "block": {
+                                          "type": "para",
+                                          "id": "p113",
+                                          "fields": {
+                                            "VAR": {
+                                              "id": "v-i"
+                                            }
+                                          },
+                                          "inputs": {
+                                            "DE": {
+                                              "block": {
+                                                "type": "numero",
+                                                "id": "n109",
+                                                "fields": {
+                                                  "NUM": "1"
+                                                }
+                                              }
+                                            },
+                                            "ATE": {
+                                              "block": {
+                                                "type": "numero",
+                                                "id": "n110",
+                                                "fields": {
+                                                  "NUM": "2"
+                                                }
+                                              }
+                                            },
+                                            "FACA": {
+                                              "block": {
+                                                "type": "escreva",
+                                                "id": "e112",
+                                                "inputs": {
+                                                  "VALOR1": {
+                                                    "block": {
+                                                      "type": "variavel",
+                                                      "id": "v111",
+                                                      "fields": {
+                                                        "VAR": {
+                                                          "id": "v-i"
+                                                        }
+                                                      }
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    },
+                                    "next": {
+                                      "block": {
+                                        "type": "variavel_recebe",
+                                        "id": "rc116",
+                                        "fields": {
+                                          "VAR": {
+                                            "id": "v-n"
+                                          }
+                                        },
+                                        "inputs": {
+                                          "VALOR": {
+                                            "block": {
+                                              "type": "numero",
+                                              "id": "n115",
+                                              "fields": {
+                                                "NUM": "0"
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "entrada": [],
+  "portugolEsperado": "algoritmo \"Aninhada\"\n\nvar\n    i: inteiro\n    j: inteiro\n    n: inteiro\n\ninicio\n    para i de 1 ate 2 faca\n        para j de 1 ate 2 faca\n            escreva(i, j)\n        fim_para\n    fim_para\n    para i de 1 ate 2 faca\n        n <- i\n        enquanto n > 0 faca\n            escreva(n)\n            n <- n - 1\n        fim_enquanto\n    fim_para\n    n <- 1\n    enquanto n > 0 faca\n        se verdadeiro entao\n            para i de 1 ate 2 faca\n                escreva(i)\n            fim_para\n        fim_se\n        n <- 0\n    fim_enquanto\nfim_algoritmo\n",
+  "saidaEsperada": "11\n12\n21\n22\n1\n2\n1\n1\n2\n"
+}

@@ -164,7 +164,9 @@ não mudam: o `se` só se pluga no registro.
 
 ## Pendências para outras specs
 
-- **005**: `enquanto` e `para` seguem o mesmo modelo (`check: ['Logico']` na condição,
+- **005** (✅ resolvida pela 005:
+  [repeticao-se-par-impar.json](../../tests/aceitacao/casos/repeticao-se-par-impar.json) e os testes
+  headless de aninhamento, [tasks da 005](../005-blocos-repeticao/tasks.md)): `enquanto` e `para` seguem o mesmo modelo (`check: ['Logico']` na condição,
   `ctx.comandos` no corpo). O `se` dentro deles (FR-004 desta spec) é conferido com os
   blocos de repetição.
 - **012**: um arquivo com `se` cuja condição não é lógica (editado à mão) cai no

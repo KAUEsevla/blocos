@@ -1,0 +1,105 @@
+{
+  "descricao": "para i de 5 ate 1 sem passo não roda nenhuma vez (História 1, cenário 3, da spec 005: regra do Core, research R-02)",
+  "requisitos": [
+    "RF-05",
+    "RNF-07"
+  ],
+  "projeto": {
+    "formato": "meupia-blocos",
+    "versao": 1,
+    "nome": "IntervaloVazio",
+    "variaveis": [
+      {
+        "id": "v-i",
+        "nome": "i",
+        "tipo": "inteiro"
+      }
+    ],
+    "blocos": {
+      "blocks": {
+        "languageVersion": 0,
+        "blocks": [
+          {
+            "type": "programa",
+            "id": "programa",
+            "x": 24,
+            "y": 24,
+            "deletable": false,
+            "inputs": {
+              "COMANDOS": {
+                "block": {
+                  "type": "para",
+                  "id": "p23",
+                  "fields": {
+                    "VAR": {
+                      "id": "v-i"
+                    }
+                  },
+                  "inputs": {
+                    "DE": {
+                      "block": {
+                        "type": "numero",
+                        "id": "n19",
+                        "fields": {
+                          "NUM": "5"
+                        }
+                      }
+                    },
+                    "ATE": {
+                      "block": {
+                        "type": "numero",
+                        "id": "n20",
+                        "fields": {
+                          "NUM": "1"
+                        }
+                      }
+                    },
+                    "FACA": {
+                      "block": {
+                        "type": "escreva",
+                        "id": "e22",
+                        "inputs": {
+                          "VALOR1": {
+                            "block": {
+                              "type": "variavel",
+                              "id": "v21",
+                              "fields": {
+                                "VAR": {
+                                  "id": "v-i"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "next": {
+                    "block": {
+                      "type": "escreva",
+                      "id": "e25",
+                      "inputs": {
+                        "VALOR1": {
+                          "block": {
+                            "type": "texto",
+                            "id": "t24",
+                            "fields": {
+                              "TEXTO": "fim"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "entrada": [],
+  "portugolEsperado": "algoritmo \"IntervaloVazio\"\n\nvar\n    i: inteiro\n\ninicio\n    para i de 5 ate 1 faca\n        escreva(i)\n    fim_para\n    escreva(\"fim\")\nfim_algoritmo\n",
+  "saidaEsperada": "fim\n"
+}

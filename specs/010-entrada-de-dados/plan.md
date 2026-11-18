@@ -178,8 +178,10 @@ campo e devolve o valor.
 
 Registradas no R-12. Não são tasks de implementação desta spec:
 
-- **005**: conferir, com os blocos de repetição, um `leia` dentro de um laço pedindo o
-  valor a cada volta.
+- **005** (✅ resolvida pela 005:
+  [repeticao-leia-soma.json](../../tests/aceitacao/casos/repeticao-leia-soma.json) e o `leia` num
+  `para` em `executar.test.js`, [tasks da 005](../005-blocos-repeticao/tasks.md)): conferir, com
+  os blocos de repetição, um `leia` dentro de um laço pedindo o valor a cada volta.
 - **Specs futuras com blocos não determinísticos** (aleatório, data, hora): rever a
   reexecução do R-02.
 

@@ -1,0 +1,97 @@
+{
+  "descricao": "para i de 1 ate 10 passo 2 mostra os ímpares (spec 005, passo positivo; SC-001)",
+  "requisitos": [
+    "RF-05",
+    "RNF-07"
+  ],
+  "projeto": {
+    "formato": "meupia-blocos",
+    "versao": 1,
+    "nome": "PassoDois",
+    "variaveis": [
+      {
+        "id": "v-i",
+        "nome": "i",
+        "tipo": "inteiro"
+      }
+    ],
+    "blocos": {
+      "blocks": {
+        "languageVersion": 0,
+        "blocks": [
+          {
+            "type": "programa",
+            "id": "programa",
+            "x": 24,
+            "y": 24,
+            "deletable": false,
+            "inputs": {
+              "COMANDOS": {
+                "block": {
+                  "type": "para",
+                  "id": "p18",
+                  "fields": {
+                    "VAR": {
+                      "id": "v-i"
+                    }
+                  },
+                  "inputs": {
+                    "DE": {
+                      "block": {
+                        "type": "numero",
+                        "id": "n13",
+                        "fields": {
+                          "NUM": "1"
+                        }
+                      }
+                    },
+                    "ATE": {
+                      "block": {
+                        "type": "numero",
+                        "id": "n14",
+                        "fields": {
+                          "NUM": "10"
+                        }
+                      }
+                    },
+                    "PASSO": {
+                      "block": {
+                        "type": "numero",
+                        "id": "n15",
+                        "fields": {
+                          "NUM": "2"
+                        }
+                      }
+                    },
+                    "FACA": {
+                      "block": {
+                        "type": "escreva",
+                        "id": "e17",
+                        "inputs": {
+                          "VALOR1": {
+                            "block": {
+                              "type": "variavel",
+                              "id": "v16",
+                              "fields": {
+                                "VAR": {
+                                  "id": "v-i"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "entrada": [],
+  "portugolEsperado": "algoritmo \"PassoDois\"\n\nvar\n    i: inteiro\n\ninicio\n    para i de 1 ate 10 passo 2 faca\n        escreva(i)\n    fim_para\nfim_algoritmo\n",
+  "saidaEsperada": "1\n3\n5\n7\n9\n"
+}

@@ -185,6 +185,8 @@ describe('caixa de blocos da spec 006', () => {
       'Entrada e saída',
       // Spec 004 (research R-06): Decisão logo depois de Entrada e saída.
       'Decisão',
+      // Spec 005 (research R-09): Repetição logo depois de Decisão.
+      'Repetição',
       'Valores',
       'Contas',
       'Comparações',
@@ -218,5 +220,70 @@ describe('caixa de blocos da spec 004', () => {
         { kind: 'block', type: 'se', extraState: { senao: true } },
       ],
     });
+  });
+});
+
+// Spec 005 (research R-09; contracts/editor-repeticao.md, "Categoria Repetição").
+describe('caixa de blocos da spec 005', () => {
+  const PARA_SEM_INTEIRO = [
+    { kind: 'label', text: 'Para usar o para, crie uma variável do tipo inteiro.' },
+    { kind: 'button', text: 'Criar variável…', callbackKey: BOTAO_CRIAR_VARIAVEL },
+  ];
+
+  it('Repetição vem logo depois de Decisão e é dinâmica', async () => {
+    const { CATEGORIA_REPETICAO } = await import('../../src/blocos/caixa-blocos.js');
+    const { COR_REPETICAO } = await import('../../src/blocos/repeticao.js');
+    const nomes = CAIXA_BLOCOS.contents.map((c) => c.name);
+    expect(nomes.indexOf('Repetição')).toBe(nomes.indexOf('Decisão') + 1);
+    expect(CAIXA_BLOCOS.contents.find((c) => c.name === 'Repetição')).toEqual({
+      kind: 'category',
+      name: 'Repetição',
+      custom: CATEGORIA_REPETICAO,
+      colour: COR_REPETICAO,
+    });
+    expect(CATEGORIA_REPETICAO).toBe('REPETICAO');
+  });
+
+  it('sem variável inteira: a orientação e o botão no lugar do para', async () => {
+    const { conteudoCategoriaRepeticao, TEXTO_PARA_SEM_INTEIRO } = await import('../../src/blocos/caixa-blocos.js');
+    expect(TEXTO_PARA_SEM_INTEIRO).toBe('Para usar o para, crie uma variável do tipo inteiro.');
+    const semPara = (itens) => itens.filter((i) => i.type !== 'enquanto');
+    expect(semPara(conteudoCategoriaRepeticao([]))).toEqual(PARA_SEM_INTEIRO);
+    expect(semPara(conteudoCategoriaRepeticao(undefined))).toEqual(PARA_SEM_INTEIRO);
+    const outros = [
+      { id: 'v-x', nome: 'x', tipo: 'real' },
+      { id: 'v-c', nome: 'c', tipo: 'cadeia' },
+      { id: 'v-l', nome: 'l', tipo: 'logico' },
+    ];
+    expect(semPara(conteudoCategoriaRepeticao(outros))).toEqual(PARA_SEM_INTEIRO);
+  });
+
+  it('o enquanto vem sempre primeiro, com e sem variável inteira', async () => {
+    const { conteudoCategoriaRepeticao } = await import('../../src/blocos/caixa-blocos.js');
+    const ENQUANTO = { kind: 'block', type: 'enquanto' };
+    expect(conteudoCategoriaRepeticao([])[0]).toEqual(ENQUANTO);
+    expect(conteudoCategoriaRepeticao([{ id: 'v-i', nome: 'i', tipo: 'inteiro' }])[0]).toEqual(ENQUANTO);
+    expect(conteudoCategoriaRepeticao([])).toHaveLength(3);
+    expect(conteudoCategoriaRepeticao([{ id: 'v-i', nome: 'i', tipo: 'inteiro' }])).toHaveLength(2);
+  });
+
+  it('com variável inteira: o para com a última inteira, de 1 até 5 e sem passo', async () => {
+    const { conteudoCategoriaRepeticao } = await import('../../src/blocos/caixa-blocos.js');
+    const lista = [
+      { id: 'v-a', nome: 'a', tipo: 'inteiro' },
+      { id: 'v-x', nome: 'x', tipo: 'real' },
+      { id: 'v-b', nome: 'b', tipo: 'inteiro' },
+    ];
+    expect(conteudoCategoriaRepeticao(lista).filter((i) => i.type !== 'enquanto')).toEqual([
+      {
+        kind: 'block',
+        type: 'para',
+        fields: { VAR: { id: 'v-b' } },
+        inputs: {
+          DE: { block: { type: 'numero', fields: { NUM: '1' } } },
+          ATE: { block: { type: 'numero', fields: { NUM: '5' } } },
+        },
+      },
+    ]);
   });
 });

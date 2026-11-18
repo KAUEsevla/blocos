@@ -1,0 +1,88 @@
+{
+  "descricao": "para i de 1 ate 5 sem passo mostra 1 a 5 (História 1, cenário 1, da spec 005; variante \"sem passo\"; FR-005: o Portugol não tem passo)",
+  "requisitos": [
+    "RF-05",
+    "RNF-07"
+  ],
+  "projeto": {
+    "formato": "meupia-blocos",
+    "versao": 1,
+    "nome": "Contagem",
+    "variaveis": [
+      {
+        "id": "v-i",
+        "nome": "i",
+        "tipo": "inteiro"
+      }
+    ],
+    "blocos": {
+      "blocks": {
+        "languageVersion": 0,
+        "blocks": [
+          {
+            "type": "programa",
+            "id": "programa",
+            "x": 24,
+            "y": 24,
+            "deletable": false,
+            "inputs": {
+              "COMANDOS": {
+                "block": {
+                  "type": "para",
+                  "id": "p5",
+                  "fields": {
+                    "VAR": {
+                      "id": "v-i"
+                    }
+                  },
+                  "inputs": {
+                    "DE": {
+                      "block": {
+                        "type": "numero",
+                        "id": "n1",
+                        "fields": {
+                          "NUM": "1"
+                        }
+                      }
+                    },
+                    "ATE": {
+                      "block": {
+                        "type": "numero",
+                        "id": "n2",
+                        "fields": {
+                          "NUM": "5"
+                        }
+                      }
+                    },
+                    "FACA": {
+                      "block": {
+                        "type": "escreva",
+                        "id": "e4",
+                        "inputs": {
+                          "VALOR1": {
+                            "block": {
+                              "type": "variavel",
+                              "id": "v3",
+                              "fields": {
+                                "VAR": {
+                                  "id": "v-i"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "entrada": [],
+  "portugolEsperado": "algoritmo \"Contagem\"\n\nvar\n    i: inteiro\n\ninicio\n    para i de 1 ate 5 faca\n        escreva(i)\n    fim_para\nfim_algoritmo\n",
+  "saidaEsperada": "1\n2\n3\n4\n5\n"
+}

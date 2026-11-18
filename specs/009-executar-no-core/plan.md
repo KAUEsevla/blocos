@@ -205,8 +205,10 @@ Registradas no R-14. Não são tasks desta spec:
   `SharedArrayBuffer`; [tasks](../010-entrada-de-dados/tasks.md)): entrada interativa do `leia` dentro do worker (decidir entre
   `SharedArrayBuffer` com isolamento entre origens ou recolher a entrada antes). O
   protocolo já leva `entrada`.
-- **005**: repetir no quickstart, com blocos, o Parar num laço infinito e as mais de
-  1.000 linhas.
+- **005** (✅ resolvida pela 005: Parar num `enquanto verdadeiro` e 1.500 linhas de um `para`,
+  montados com blocos em [executar.test.js](../../tests/aceitacao/executar.test.js) e no
+  quickstart da 005, [tasks da 005](../005-blocos-repeticao/tasks.md)): repetir no quickstart,
+  com blocos, o Parar num laço infinito e as mais de 1.000 linhas.
 
 ## Complexity Tracking
 

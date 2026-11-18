@@ -1,0 +1,242 @@
+{
+  "descricao": "casos de borda da spec 005: enquanto falso e para sem comandos dentro, expressão no até e variável no passo (FR-004)",
+  "requisitos": [
+    "RF-05",
+    "RNF-07"
+  ],
+  "projeto": {
+    "formato": "meupia-blocos",
+    "versao": 1,
+    "nome": "BordaRepeticao",
+    "variaveis": [
+      {
+        "id": "v-i",
+        "nome": "i",
+        "tipo": "inteiro"
+      },
+      {
+        "id": "v-n",
+        "nome": "n",
+        "tipo": "inteiro"
+      },
+      {
+        "id": "v-k",
+        "nome": "k",
+        "tipo": "inteiro"
+      }
+    ],
+    "blocos": {
+      "blocks": {
+        "languageVersion": 0,
+        "blocks": [
+          {
+            "type": "programa",
+            "id": "programa",
+            "x": 24,
+            "y": 24,
+            "deletable": false,
+            "inputs": {
+              "COMANDOS": {
+                "block": {
+                  "type": "enquanto",
+                  "id": "enq119",
+                  "inputs": {
+                    "CONDICAO": {
+                      "block": {
+                        "type": "logico",
+                        "id": "l118",
+                        "fields": {
+                          "VALOR": "falso"
+                        }
+                      }
+                    }
+                  },
+                  "next": {
+                    "block": {
+                      "type": "para",
+                      "id": "p122",
+                      "fields": {
+                        "VAR": {
+                          "id": "v-i"
+                        }
+                      },
+                      "inputs": {
+                        "DE": {
+                          "block": {
+                            "type": "numero",
+                            "id": "n120",
+                            "fields": {
+                              "NUM": "1"
+                            }
+                          }
+                        },
+                        "ATE": {
+                          "block": {
+                            "type": "numero",
+                            "id": "n121",
+                            "fields": {
+                              "NUM": "3"
+                            }
+                          }
+                        }
+                      },
+                      "next": {
+                        "block": {
+                          "type": "escreva",
+                          "id": "e124",
+                          "inputs": {
+                            "VALOR1": {
+                              "block": {
+                                "type": "variavel",
+                                "id": "v123",
+                                "fields": {
+                                  "VAR": {
+                                    "id": "v-i"
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "next": {
+                            "block": {
+                              "type": "variavel_recebe",
+                              "id": "rc126",
+                              "fields": {
+                                "VAR": {
+                                  "id": "v-n"
+                                }
+                              },
+                              "inputs": {
+                                "VALOR": {
+                                  "block": {
+                                    "type": "numero",
+                                    "id": "n125",
+                                    "fields": {
+                                      "NUM": "2"
+                                    }
+                                  }
+                                }
+                              },
+                              "next": {
+                                "block": {
+                                  "type": "variavel_recebe",
+                                  "id": "rc128",
+                                  "fields": {
+                                    "VAR": {
+                                      "id": "v-k"
+                                    }
+                                  },
+                                  "inputs": {
+                                    "VALOR": {
+                                      "block": {
+                                        "type": "numero",
+                                        "id": "n127",
+                                        "fields": {
+                                          "NUM": "2"
+                                        }
+                                      }
+                                    }
+                                  },
+                                  "next": {
+                                    "block": {
+                                      "type": "para",
+                                      "id": "p136",
+                                      "fields": {
+                                        "VAR": {
+                                          "id": "v-i"
+                                        }
+                                      },
+                                      "inputs": {
+                                        "DE": {
+                                          "block": {
+                                            "type": "numero",
+                                            "id": "n129",
+                                            "fields": {
+                                              "NUM": "1"
+                                            }
+                                          }
+                                        },
+                                        "ATE": {
+                                          "block": {
+                                            "type": "aritmetico",
+                                            "id": "a132",
+                                            "fields": {
+                                              "OP": "*"
+                                            },
+                                            "inputs": {
+                                              "A": {
+                                                "block": {
+                                                  "type": "variavel",
+                                                  "id": "v130",
+                                                  "fields": {
+                                                    "VAR": {
+                                                      "id": "v-n"
+                                                    }
+                                                  }
+                                                }
+                                              },
+                                              "B": {
+                                                "block": {
+                                                  "type": "numero",
+                                                  "id": "n131",
+                                                  "fields": {
+                                                    "NUM": "2"
+                                                  }
+                                                }
+                                              }
+                                            }
+                                          }
+                                        },
+                                        "PASSO": {
+                                          "block": {
+                                            "type": "variavel",
+                                            "id": "v133",
+                                            "fields": {
+                                              "VAR": {
+                                                "id": "v-k"
+                                              }
+                                            }
+                                          }
+                                        },
+                                        "FACA": {
+                                          "block": {
+                                            "type": "escreva",
+                                            "id": "e135",
+                                            "inputs": {
+                                              "VALOR1": {
+                                                "block": {
+                                                  "type": "variavel",
+                                                  "id": "v134",
+                                                  "fields": {
+                                                    "VAR": {
+                                                      "id": "v-i"
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "entrada": [],
+  "portugolEsperado": "algoritmo \"BordaRepeticao\"\n\nvar\n    i: inteiro\n    n: inteiro\n    k: inteiro\n\ninicio\n    enquanto falso faca\n    fim_enquanto\n    para i de 1 ate 3 faca\n    fim_para\n    escreva(i)\n    n <- 2\n    k <- 2\n    para i de 1 ate n * 2 passo k faca\n        escreva(i)\n    fim_para\nfim_algoritmo\n",
+  "saidaEsperada": "3\n1\n3\n"
+}

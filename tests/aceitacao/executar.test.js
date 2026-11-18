@@ -9,6 +9,22 @@ import { criarDivisorLinhas } from '../../src/execucao/linhas.js';
 import { relatoDoResultado } from '../../src/execucao/mensagens.js';
 import { gerarPortugol } from '../../src/portugol/gerador.js';
 import { criarWorkerNode } from './suporte/worker-node.js';
+import { criarControladorExecucao } from '../../src/execucao/controlador.js';
+import {
+  projetoMilEQuinhentas,
+  projetoInfinito,
+  projetoLeiaInfinito,
+  projetoLeiaNoPara,
+  projetoPassoVariavelZero,
+  projetoPassoFixoZero,
+} from './suporte/projetos-repeticao.js';
+
+// Portugol de um projeto em blocos montável no editor: sem avisos (spec 005, research R-11).
+function semAvisos(projeto) {
+  const { codigo, avisos } = gerarPortugol(projeto);
+  expect(avisos).toEqual([]);
+  return codigo;
+}
 
 const PASTA = join(import.meta.dirname, 'casos');
 const casos = readdirSync(PASTA)
@@ -95,11 +111,10 @@ describe('execução pela tela no Core real (worker_threads)', () => {
     expect(itens.some((i) => i.texto?.startsWith(`Linha ${resultado.erro.linha}: `))).toBe(true);
   });
 
-  // US3 (FR-007): o bloco enquanto é da 005, então o laço é escrito à mão (research R-11, R-14).
+  // US3 (FR-007) da 009; pendência P-2 conferida com os blocos da 005 (research R-11).
   it('Parar interrompe um enquanto infinito, e a execução seguinte funciona', async () => {
-    const infinito =
-      'algoritmo "Infinito"\n\nvar\n    i: inteiro\n\ninicio\n    i <- 0\n' +
-      '    enquanto verdadeiro faca\n        i <- i + 1\n        escreva(i)\n    fim_enquanto\nfim_algoritmo\n';
+    const infinito = semAvisos(projetoInfinito());
+    expect(infinito).toContain('    enquanto verdadeiro faca\n');
     const pedacos = [];
     let aoSegundoLote;
     const doisLotes = new Promise((resolver) => {
@@ -123,9 +138,10 @@ describe('execução pela tela no Core real (worker_threads)', () => {
     expect(depois.join('')).toBe('Olá, mundo!\n');
   });
 
+  // Pendência P-2 da 009, conferida com os blocos da 005 (research R-11): um para de 1 a 1500.
   it('mais de 1.000 linhas chegam inteiras e na ordem', async () => {
-    const corpo = Array.from({ length: 1500 }, (_, i) => `    escreva(${i + 1})`).join('\n');
-    const codigo = `algoritmo "MuitasLinhas"\n\ninicio\n${corpo}\nfim_algoritmo\n`;
+    const codigo = semAvisos(projetoMilEQuinhentas());
+    expect(codigo).toContain('    para i de 1 ate 1500 faca\n');
     const { resultado, pedacos } = await executarColetando(executor, codigo);
     expect(resultado.status).toBe('ok');
     expect(linhasDe(pedacos)).toEqual(Array.from({ length: 1500 }, (_, i) => String(i + 1)));
@@ -173,12 +189,9 @@ describe('execução pela tela no Core real (worker_threads)', () => {
     expect(linhasDe(pedacos)).toEqual(['Ana', '15', '1.72']);
   });
 
-  it('um leia num enquanto pede a cada volta, sem repetir linhas', async () => {
-    // Portugol em texto: os blocos de repetição são da spec 005.
-    const codigo = programa(
-      '    escreva("antes")\n    enquanto i < 2 faca\n        leia(nome)\n        escreva("Oi, ", nome)\n        i <- i + 1\n    fim_enquanto',
-      '    nome: cadeia\n    i: inteiro',
-    );
+  // Pendência P-3 da 010, conferida com os blocos da 005 (research R-11).
+  it('um leia num para pede a cada volta, sem repetir linhas', async () => {
+    const codigo = semAvisos(projetoLeiaNoPara());
     const fila = ['Ana', 'Bia'];
     const pedidos = [];
     const pedacos = [];
@@ -191,7 +204,75 @@ describe('execução pela tela no Core real (worker_threads)', () => {
     });
     expect(resultado.status).toBe('ok');
     expect(pedidos).toEqual(['nome', 'nome']);
-    expect(linhasDe(pedacos)).toEqual(['antes', 'Oi, Ana', 'Oi, Bia']);
+    expect(linhasDe(pedacos)).toEqual(['Oi, Ana', 'Oi, Bia']);
+  });
+
+  // Pendência P-3 da 010, conferida com os blocos da 005 (research R-11): Parar com o pedido
+  // aberto dentro de um laço infinito.
+  it('Parar com o pedido aberto num enquanto interrompe, e a execução seguinte funciona', async () => {
+    const codigo = semAvisos(projetoLeiaInfinito());
+    const pedidos = [];
+    let avisarSegundo;
+    const segundoPedido = new Promise((r) => (avisarSegundo = r));
+    const execucao = executor.executar(codigo, {
+      aoPedirEntrada: ({ variavel }) => {
+        pedidos.push(variavel);
+        if (pedidos.length === 1) return Promise.resolve('Ana');
+        avisarSegundo();
+        return new Promise(() => {}); // o estudante nunca confirma o segundo
+      },
+    });
+    await segundoPedido;
+    executor.parar();
+    await expect(execucao).resolves.toEqual({ status: 'interrompido', saida: '', erro: null });
+    expect(pedidos).toEqual(['nome', 'nome']);
+
+    const { resultado, pedacos } = await executarColetando(executor, OLA_MUNDO);
+    expect(resultado.status).toBe('ok');
+    expect(pedacos.join('')).toBe('Olá, mundo!\n');
+  });
+
+  // Spec 005 (research R-08): passo numa variável que vale 0, que o editor não vê antes.
+  it('passo numa variável que vale 0 dá erro de execução em pt-BR', async () => {
+    const { resultado } = await executarColetando(executor, semAvisos(projetoPassoVariavelZero()));
+    expect(resultado.status).toBe('erro_execucao');
+    expect(resultado.erro.mensagem).toBe('O passo do para ficou zero: o laço nunca terminaria.');
+  });
+
+  // SC-002 da 005 (analyze C1): passo fixo zero nunca chega ao Core; o controlador da 009 bloqueia.
+  it('passo fixo zero: o controlador bloqueia Executar e não chama o executor', async () => {
+    const programaGerado = gerarPortugol(projetoPassoFixoZero());
+    expect(programaGerado.avisos.map((a) => a.mensagem)).toEqual([
+      'O passo do bloco para não pode ser zero: o laço nunca terminaria',
+    ]);
+    const chamadas = [];
+    const saida = {
+      limpar: () => chamadas.push('limpar'),
+      escrever: (texto, tipo) => chamadas.push([tipo, texto]),
+      escreverVarias: () => chamadas.push('linhas'),
+      escreverDetalhe: () => chamadas.push('detalhe'),
+      mostrarAvisos: (avisos) => chamadas.push(['avisos', avisos.map((a) => a.mensagem)]),
+    };
+    let chamouExecutor = false;
+    const espiao = {
+      pronto: () => true,
+      executar: () => {
+        chamouExecutor = true;
+        return Promise.resolve({ status: 'ok', saida: '', erro: null });
+      },
+      parar: () => {},
+    };
+    const controlador = criarControladorExecucao({
+      obterPrograma: () => ({ codigo: programaGerado.codigo, avisos: programaGerado.avisos }),
+      executor: espiao,
+      saida,
+      destacar: () => {},
+    });
+    await controlador.executar();
+    expect(chamouExecutor).toBe(false);
+    expect(chamadas[0]).toBe('limpar');
+    expect(chamadas[1][0]).toBe('erro');
+    expect(chamadas[2]).toEqual(['avisos', ['O passo do bloco para não pode ser zero: o laço nunca terminaria']]);
   });
 
   it('Parar com o pedido aberto interrompe, e a execução seguinte funciona', async () => {

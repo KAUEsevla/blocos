@@ -1,0 +1,182 @@
+{
+  "descricao": "leia dentro de um para pede um valor a cada volta e soma 4, 5 e 6 (pendência P-3 da spec 010, conferida na 005; a suíte interativa da 010 em executar.test.js confere um pedido por volta)",
+  "requisitos": [
+    "RF-05",
+    "RF-10",
+    "RNF-07"
+  ],
+  "projeto": {
+    "formato": "meupia-blocos",
+    "versao": 1,
+    "nome": "SomaTres",
+    "variaveis": [
+      {
+        "id": "v-i",
+        "nome": "i",
+        "tipo": "inteiro"
+      },
+      {
+        "id": "v-x",
+        "nome": "x",
+        "tipo": "inteiro"
+      },
+      {
+        "id": "v-soma",
+        "nome": "soma",
+        "tipo": "inteiro"
+      }
+    ],
+    "blocos": {
+      "blocks": {
+        "languageVersion": 0,
+        "blocks": [
+          {
+            "type": "programa",
+            "id": "programa",
+            "x": 24,
+            "y": 24,
+            "deletable": false,
+            "inputs": {
+              "COMANDOS": {
+                "block": {
+                  "type": "variavel_recebe",
+                  "id": "rc27",
+                  "fields": {
+                    "VAR": {
+                      "id": "v-soma"
+                    }
+                  },
+                  "inputs": {
+                    "VALOR": {
+                      "block": {
+                        "type": "numero",
+                        "id": "n26",
+                        "fields": {
+                          "NUM": "0"
+                        }
+                      }
+                    }
+                  },
+                  "next": {
+                    "block": {
+                      "type": "para",
+                      "id": "p35",
+                      "fields": {
+                        "VAR": {
+                          "id": "v-i"
+                        }
+                      },
+                      "inputs": {
+                        "DE": {
+                          "block": {
+                            "type": "numero",
+                            "id": "n28",
+                            "fields": {
+                              "NUM": "1"
+                            }
+                          }
+                        },
+                        "ATE": {
+                          "block": {
+                            "type": "numero",
+                            "id": "n29",
+                            "fields": {
+                              "NUM": "3"
+                            }
+                          }
+                        },
+                        "FACA": {
+                          "block": {
+                            "type": "leia",
+                            "id": "le30",
+                            "fields": {
+                              "VAR": {
+                                "id": "v-x"
+                              }
+                            },
+                            "next": {
+                              "block": {
+                                "type": "variavel_recebe",
+                                "id": "rc34",
+                                "fields": {
+                                  "VAR": {
+                                    "id": "v-soma"
+                                  }
+                                },
+                                "inputs": {
+                                  "VALOR": {
+                                    "block": {
+                                      "type": "aritmetico",
+                                      "id": "a33",
+                                      "fields": {
+                                        "OP": "+"
+                                      },
+                                      "inputs": {
+                                        "A": {
+                                          "block": {
+                                            "type": "variavel",
+                                            "id": "v31",
+                                            "fields": {
+                                              "VAR": {
+                                                "id": "v-soma"
+                                              }
+                                            }
+                                          }
+                                        },
+                                        "B": {
+                                          "block": {
+                                            "type": "variavel",
+                                            "id": "v32",
+                                            "fields": {
+                                              "VAR": {
+                                                "id": "v-x"
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "next": {
+                        "block": {
+                          "type": "escreva",
+                          "id": "e37",
+                          "inputs": {
+                            "VALOR1": {
+                              "block": {
+                                "type": "variavel",
+                                "id": "v36",
+                                "fields": {
+                                  "VAR": {
+                                    "id": "v-soma"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "entrada": [
+    "4",
+    "5",
+    "6"
+  ],
+  "portugolEsperado": "algoritmo \"SomaTres\"\n\nvar\n    i: inteiro\n    x: inteiro\n    soma: inteiro\n\ninicio\n    soma <- 0\n    para i de 1 ate 3 faca\n        leia(x)\n        soma <- soma + x\n    fim_para\n    escreva(soma)\nfim_algoritmo\n",
+  "saidaEsperada": "15\n"
+}

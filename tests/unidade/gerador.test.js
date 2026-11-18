@@ -165,3 +165,49 @@ describe('ctx.valor com precedenciaMinima (RF-06; spec 003, R-06)', () => {
     expect(linha(mostra(undefined, bloco('t_prec', { campos: { P: 0 } })))).toBe('    mostra(x)');
   });
 });
+
+// Spec 005, research R-06 (contracts/blocos-repeticao.md): o tipo da variável do campo.
+describe('ctx.tipoVariavel (spec 005)', () => {
+  const reg = criarRegistroTeste();
+  reg.registrarBloco({
+    tipo: 't_tipo',
+    rotulo: 'tipo',
+    categoria: 'comando',
+    definicao: { type: 't_tipo' },
+    gerar: (b, ctx) => ctx.linha(`tipo ${String(ctx.tipoVariavel(b, 'VAR'))}`),
+  });
+  const variaveis = [
+    { id: 'v-i', nome: 'i', tipo: 'inteiro' },
+    { id: 'v-r', nome: 'r', tipo: 'real' },
+    { id: 'v-c', nome: 'c', tipo: 'cadeia' },
+    { id: 'v-l', nome: 'l', tipo: 'logico' },
+  ];
+  const gerarCom = (campos) =>
+    gerarPortugol(projetoDeTeste({ variaveis, comandos: [bloco('t_tipo', { campos })] }), reg);
+  const linhaDe = (r) => r.codigo.split('\n').find((l) => l.includes('tipo '));
+
+  it.each([
+    ['v-i', 'inteiro'],
+    ['v-r', 'real'],
+    ['v-c', 'cadeia'],
+    ['v-l', 'logico'],
+  ])('devolve o tipo de %s', (idVar, tipo) => {
+    const r = gerarCom({ VAR: { id: idVar } });
+    expect(linhaDe(r)).toBe(`    tipo ${tipo}`);
+    expect(r.avisos).toEqual([]);
+  });
+
+  it('aceita o id em texto', () => {
+    expect(linhaDe(gerarCom({ VAR: 'v-r' }))).toBe('    tipo real');
+  });
+
+  it.each([
+    ['campo vazio', { VAR: null }],
+    ['id inexistente', { VAR: { id: 'v-x' } }],
+    ['campo ausente', undefined],
+  ])('%s → undefined, sem aviso', (_nome, campos) => {
+    const r = gerarCom(campos);
+    expect(linhaDe(r)).toBe('    tipo undefined');
+    expect(r.avisos).toEqual([]);
+  });
+});

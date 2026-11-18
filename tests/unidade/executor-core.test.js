@@ -75,7 +75,8 @@ describe('traduzirErroExecucao (RF-09)', () => {
     ],
     ['OverflowError', 'int too large to convert to float', 'O número ficou grande demais para ser calculado.'],
     ['MemoryError', '', 'O programa usou memória demais.'],
-    ['ValueError', 'passo do laço para não pode ser zero', 'O programa parou com um erro durante a execução.'],
+    // Spec 005 (research R-08): o passo zero ganhou mensagem própria.
+    ['ValueError', 'passo do laço para não pode ser zero', 'O passo do para ficou zero: o laço nunca terminaria.'],
     ['NameError', "name 'x' is not defined", 'O programa parou com um erro durante a execução.'],
   ])('%s: %s', (tipo, mensagem, esperada) => {
     const traduzido = traduzirErroExecucao(tipo, mensagem);
@@ -110,5 +111,35 @@ describe('traduzirErroExecucao: vírgula no leia de real (spec 010)', () => {
     expect(erro.mensagem).toBe(esperada);
     expect(erro.mensagem).not.toContain('could not');
     expect(erro.detalhe).toContain(mensagemPython);
+  });
+});
+
+// Spec 005 (research R-08; contracts/editor-repeticao.md): erros de contagem do para.
+describe('traduções do para (spec 005)', () => {
+  const rastro = 'Traceback (most recent call last):\n  ...';
+
+  it('passo zero', () => {
+    const erro = traduzirErroExecucao('ValueError', 'passo do laço para não pode ser zero', rastro);
+    expect(erro.mensagem).toBe('O passo do para ficou zero: o laço nunca terminaria.');
+    expect(erro.detalhe).toBe(rastro);
+  });
+
+  it('casas decimais em de, até ou passo', () => {
+    const erro = traduzirErroExecucao('TypeError', "'float' object cannot be interpreted as an integer", rastro);
+    expect(erro.mensagem).toBe('O para só conta com números inteiros: de, até e passo não podem ter casas decimais.');
+    expect(erro.detalhe).toBe(rastro);
+  });
+
+  it('os outros TypeError e ValueError não mudam', () => {
+    expect(traduzirErroExecucao('TypeError', "'<' not supported between instances of 'str' and 'int'").mensagem).toBe(
+      'Essa operação não funciona com esses tipos de valor (por exemplo, comparar texto com número).',
+    );
+    expect(traduzirErroExecucao('TypeError', "'_S' object cannot be interpreted as an integer").mensagem).toBe(
+      'Essa operação não funciona com esses tipos de valor (por exemplo, comparar texto com número).',
+    );
+    expect(traduzirErroExecucao('ValueError', "could not convert string to float: '1,72'").mensagem).toBe(
+      'O valor digitado não é um número. Use ponto para separar as casas decimais, por exemplo 1.72.',
+    );
+    expect(traduzirErroExecucao('ValueError', 'math domain error').mensagem).toBe('O programa parou com um erro durante a execução.');
   });
 });

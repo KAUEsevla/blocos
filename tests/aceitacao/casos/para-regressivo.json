@@ -1,0 +1,105 @@
+{
+  "descricao": "para i de 5 ate 1 passo -1 mostra 5 a 1 (História 1, cenário 2, da spec 005; variante \"com passo\", passo negativo)",
+  "requisitos": [
+    "RF-05",
+    "RNF-07"
+  ],
+  "projeto": {
+    "formato": "meupia-blocos",
+    "versao": 1,
+    "nome": "Regressivo",
+    "variaveis": [
+      {
+        "id": "v-i",
+        "nome": "i",
+        "tipo": "inteiro"
+      }
+    ],
+    "blocos": {
+      "blocks": {
+        "languageVersion": 0,
+        "blocks": [
+          {
+            "type": "programa",
+            "id": "programa",
+            "x": 24,
+            "y": 24,
+            "deletable": false,
+            "inputs": {
+              "COMANDOS": {
+                "block": {
+                  "type": "para",
+                  "id": "p12",
+                  "fields": {
+                    "VAR": {
+                      "id": "v-i"
+                    }
+                  },
+                  "inputs": {
+                    "DE": {
+                      "block": {
+                        "type": "numero",
+                        "id": "n6",
+                        "fields": {
+                          "NUM": "5"
+                        }
+                      }
+                    },
+                    "ATE": {
+                      "block": {
+                        "type": "numero",
+                        "id": "n7",
+                        "fields": {
+                          "NUM": "1"
+                        }
+                      }
+                    },
+                    "PASSO": {
+                      "block": {
+                        "type": "negativo",
+                        "id": "neg9",
+                        "inputs": {
+                          "X": {
+                            "block": {
+                              "type": "numero",
+                              "id": "n8",
+                              "fields": {
+                                "NUM": "1"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "FACA": {
+                      "block": {
+                        "type": "escreva",
+                        "id": "e11",
+                        "inputs": {
+                          "VALOR1": {
+                            "block": {
+                              "type": "variavel",
+                              "id": "v10",
+                              "fields": {
+                                "VAR": {
+                                  "id": "v-i"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "entrada": [],
+  "portugolEsperado": "algoritmo \"Regressivo\"\n\nvar\n    i: inteiro\n\ninicio\n    para i de 5 ate 1 passo -1 faca\n        escreva(i)\n    fim_para\nfim_algoritmo\n",
+  "saidaEsperada": "5\n4\n3\n2\n1\n"
+}

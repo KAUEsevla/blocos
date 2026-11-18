@@ -40,8 +40,17 @@ const REAL_COM_VIRGULA = /could not convert string to float: '[^']*,[^']*'/;
 const MENSAGEM_VALOR_NAO_NUMERICO = 'O valor digitado não é um número.';
 const MENSAGEM_REAL_COM_VIRGULA = `${MENSAGEM_VALOR_NAO_NUMERICO} Use ponto para separar as casas decimais, por exemplo 1.72.`;
 
+// Spec 005 (research R-08): o Core conta o para com range. Passo zero e casas decimais em de,
+// até ou passo só aparecem na execução quando vêm de uma variável ou de uma conta.
+const PASSO_ZERO = /passo do laço para não pode ser zero/;
+const PARA_COM_REAL = /'float' object cannot be interpreted as an integer/;
+const MENSAGEM_PASSO_ZERO = 'O passo do para ficou zero: o laço nunca terminaria.';
+const MENSAGEM_PARA_COM_REAL = 'O para só conta com números inteiros: de, até e passo não podem ter casas decimais.';
+
 export function traduzirErroExecucao(tipo, mensagem, rastro) {
   let amigavel = Object.hasOwn(TRADUCOES_EXECUCAO, tipo) ? TRADUCOES_EXECUCAO[tipo] : MENSAGEM_GENERICA_EXECUCAO;
+  if (tipo === 'ValueError' && PASSO_ZERO.test(mensagem)) amigavel = MENSAGEM_PASSO_ZERO;
+  if (tipo === 'TypeError' && PARA_COM_REAL.test(mensagem)) amigavel = MENSAGEM_PARA_COM_REAL;
   if (tipo === 'ValueError' && VALOR_NAO_NUMERICO.test(mensagem)) {
     amigavel = REAL_COM_VIRGULA.test(mensagem) ? MENSAGEM_REAL_COM_VIRGULA : MENSAGEM_VALOR_NAO_NUMERICO;
   }

@@ -157,6 +157,17 @@ describe('campoVariavel (spec 003, P-3)', () => {
     });
     expect(BLOCO_VARIAVEL.definicao.args0[0]).toEqual(a);
   });
+
+  // Spec 005, research R-06: o para aceita só variáveis inteiras.
+  it('aceita a lista de tipos (spec 005)', async () => {
+    const { campoVariavel } = await import('../../src/blocos/campo-variavel.js');
+    const tipos = ['inteiro'];
+    const so = campoVariavel(tipos);
+    expect(so.variableTypes).toEqual(['inteiro']);
+    expect(so.variableTypes).not.toBe(tipos);
+    expect(so.defaultType).toBe('inteiro');
+    expect(campoVariavel(['real', 'cadeia'])).toMatchObject({ variableTypes: ['real', 'cadeia'], defaultType: 'real' });
+  });
 });
 
 describe('tipo pela variável (006, pendência P-2 da 002; research R-09)', () => {

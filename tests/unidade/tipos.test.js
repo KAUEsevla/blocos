@@ -192,24 +192,30 @@ describe('matriz do SC-002', () => {
     'escreva VALOR1': encaixe('escreva', 'VALOR1'),
     // Spec 004 (research R-05; P-1): a condição do se só aceita lógico.
     'se CONDICAO': encaixe('se', 'CONDICAO'),
+    // Spec 005 (research R-07; P-1): condição do enquanto só lógica; de, até e passo do para
+    // só números.
+    'enquanto CONDICAO': encaixe('enquanto', 'CONDICAO'),
+    'para DE': encaixe('para', 'DE'),
+    'para ATE': encaixe('para', 'ATE'),
+    'para PASSO': encaixe('para', 'PASSO'),
   };
 
   // Uma linha por filho; colunas na ordem de ENCAIXES. 1 = encaixa, 0 = não encaixa.
-  //              ari ari neg rel rel eou eou nao  int real cad log sem  esc se
+  //              ari ari neg rel rel eou eou nao  int real cad log sem  esc se  enq de  ate pas
   const TABELA = {
-    numero:                  [1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 0, 0, 1, 1, 0],
-    texto:                   [1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 1, 1, 0],
-    logico:                  [0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1],
-    aritmetico:              [1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0],
-    negativo:                [1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 0, 0, 1, 1, 0],
-    relacional:              [0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1],
-    e_ou:                    [0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1],
-    nao:                     [0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1],
-    'variavel inteiro':      [1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 0, 0, 1, 1, 0],
-    'variavel real':         [1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 0, 0, 1, 1, 0],
-    'variavel cadeia':       [1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 1, 1, 0],
-    'variavel logico':       [0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1],
-    'variavel sem variável': [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    numero:                  [1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 1],
+    texto:                   [1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0],
+    logico:                  [0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0],
+    aritmetico:              [1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 0, 1, 1, 1],
+    negativo:                [1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 1],
+    relacional:              [0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0],
+    e_ou:                    [0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0],
+    nao:                     [0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0],
+    'variavel inteiro':      [1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 1],
+    'variavel real':         [1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 1],
+    'variavel cadeia':       [1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0],
+    'variavel logico':       [0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0],
+    'variavel sem variável': [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
   };
 
   const nomesEncaixes = Object.keys(ENCAIXES);
