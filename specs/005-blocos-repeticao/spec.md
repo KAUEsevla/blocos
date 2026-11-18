@@ -50,8 +50,12 @@ saída.
 
 - para sem variável de controle, ou com de/até vazios: sinalizado como incompleto.
 - Variável de controle que não é do tipo inteiro: não pode ser escolhida no para.
+- Mudar o tipo da variável de controle para não inteiro: o bloco é sinalizado como
+  incompleto.
 - Passo igual a 0 (valor fixo): sinalizado como incompleto, com a explicação de que
   o laço nunca terminaria.
+- De, até e passo com casas decimais: sinalizado como incompleto (o Core só conta com
+  inteiros).
 - enquanto com condição sempre verdadeira: permitido; o estudante pode parar a
   execução (feature 009).
 - Laços sem comandos dentro: permitidos.
