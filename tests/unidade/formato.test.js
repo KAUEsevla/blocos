@@ -61,6 +61,13 @@ describe('montarArquivo e textoArquivo (RF-11)', () => {
   it('campos ausentes viram valores neutros', () => {
     expect(montarArquivo({})).toEqual({ formato: FORMATO, versao: VERSAO_FORMATO, nome: '', variaveis: [], blocos: {} });
     expect(montarArquivo()).toEqual({ formato: FORMATO, versao: VERSAO_FORMATO, nome: '', variaveis: [], blocos: {} });
+    expect(montarArquivo({ nome: null, variaveis: null, blocos: null })).toEqual({
+      formato: FORMATO,
+      versao: VERSAO_FORMATO,
+      nome: '',
+      variaveis: [],
+      blocos: {},
+    });
   });
 
   it('tira blocos.variables', () => {
