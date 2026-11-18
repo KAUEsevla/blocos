@@ -116,10 +116,30 @@ ver tudo sumir (quickstart, passos 2, 3, 7–9).
 
 ## Fase 6: Documentação das outras specs
 
-- [ ] T015 [P] Em `specs/001-tela-tres-paineis/contracts/tela.md` e `specs/001-tela-tres-paineis/data-model.md`, registrar que o `#botao-salvar` foi habilitado pela 011 (sem `disabled`, `title="Salvar o projeto num arquivo .json"`) e que a barra ganhou `#indicador-alteracoes`; na linha "Projeto salvo" da tabela de referência, apontar para `specs/011-salvar-projeto/data-model.md` (RF-01, RF-11)
-- [ ] T016 [P] Em `specs/012-carregar-projeto/spec.md`, na seção de premissas, registrar o que a 011 deixa pronto para a 012: `montarArquivo`/`textoArquivo` em `src/projeto/formato.js`; `se` sem senão gravado **sem** `extraState` (ausente = desligado); `nome` gravado bruto; `assinaturaProjeto(JSON.parse(texto)) === referencia`; o indicador e o `beforeunload` passam a valer também depois de Carregar ao marcar a referência (RF-12, RF-11)
+- [X] T015 [P] Em `specs/001-tela-tres-paineis/contracts/tela.md` e `specs/001-tela-tres-paineis/data-model.md`, registrar que o `#botao-salvar` foi habilitado pela 011 (sem `disabled`, `title="Salvar o projeto num arquivo .json"`) e que a barra ganhou `#indicador-alteracoes`; na linha "Projeto salvo" da tabela de referência, apontar para `specs/011-salvar-projeto/data-model.md` (RF-01, RF-11)
+- [X] T016 [P] Em `specs/012-carregar-projeto/spec.md`, na seção de premissas, registrar o que a 011 deixa pronto para a 012: `montarArquivo`/`textoArquivo` em `src/projeto/formato.js`; `se` sem senão gravado **sem** `extraState` (ausente = desligado); `nome` gravado bruto; `assinaturaProjeto(JSON.parse(texto)) === referencia`; o indicador e o `beforeunload` passam a valer também depois de Carregar ao marcar a referência (RF-12, RF-11)
 
 **Commit**: `docs(011) (RF-11, RF-01, RF-12): Salvar registrado nas specs 001 e 012`
+
+## Conferências manuais pendentes
+
+Os roteiros do quickstart foram percorridos no painel do navegador do Claude com o painel
+oculto. Os blocos foram montados pelo Blockly da própria página e o download foi capturado na
+página (o `Blob` e o clique do `<a>`), sem gravar arquivo no disco. Fica com a dupla repetir
+num navegador comum (Chrome, Firefox ou Edge) e anotar o resultado no PR. Nenhuma lacuna do
+Core: o Salvar não usa o Core, e a aceitação roda os casos salvos no `meupia-core` 1.4.1 sem
+mudança.
+
+**Registro (2026-11-17)**: quem conferir troca a situação para "Conferido", com o navegador e
+a data.
+
+| Conferência | O que fazer | Task | Situação |
+| --- | --- | --- | --- |
+| Arquivo gravado no disco | Montar um programa, clicar em Salvar, achar `Media.json` na pasta de downloads e abri-lo num editor de texto (quickstart, passos 4 e 5). | T010, T014 | Pendente: navegador comum |
+| Confirmação real ao fechar | Com alterações, apertar F5 e tentar fechar a aba: o navegador pergunta; depois de salvar, não pergunta (passos 7 e 8). | T013, T014 | Pendente: navegador comum |
+| Indicação com o desfazer | Depois de salvar, mover um bloco com o mouse (a indicação aparece) e apertar Ctrl+Z (a indicação some) (passo 9). | T013, T014 | Pendente: navegador comum |
+| Sem rede | DevTools → Rede, clicar em Salvar e ver que nenhuma requisição sai (passo 13). | T007, T014 | Pendente: navegador comum |
+| Perguntar onde salvar | Com o navegador configurado para perguntar onde salvar, cancelar o diálogo e ver que o projeto fica marcado como salvo (Premissas da spec). | T010 | Pendente: navegador comum |
 
 ---
 

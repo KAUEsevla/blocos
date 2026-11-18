@@ -31,7 +31,7 @@ O projeto que está no editor. Mesmo formato do arquivo v1:
 | --- | --- | --- |
 | Página aberta | 001 (`main.js`) | assinatura do projeto novo **depois** de carregado no workspace |
 | Novo confirmado (ou sem alterações) | 001 (`main.js`) | idem |
-| Projeto salvo | 011 | assinatura do projeto gravado |
+| Projeto salvo | 011 | assinatura do projeto gravado ([data-model da 011](../011-salvar-projeto/data-model.md#referência-de-salvo-estado-em-mainjs)) |
 | Projeto carregado | 012 | assinatura do projeto carregado, depois de carregado no workspace |
 
 **Derivado**: `alterado = haAlteracoes(projetoAberto, referencia)`. Não é guardado;
@@ -44,7 +44,8 @@ Estado só de interface, sem persistência:
 | Elemento | Estados nesta spec | Quem muda depois |
 | --- | --- | --- |
 | Botão Executar | `disabled` | 009: habilitado; desabilitado durante a execução |
-| Botões Salvar e Carregar | `disabled` | 011 e 012: habilitados |
+| Botões Salvar e Carregar | `disabled` | 011: Salvar habilitado; 012: Carregar habilitado |
+| Indicação "alterações não salvas" | não existe | 011: ao lado do nome, visível quando `haAlteracoes` |
 | Botão Novo | habilitado | — |
 | Botão "Copiar código" | habilitado | — |
 | Mensagem de cópia | vazia → "Código copiado!" ou mensagem de falha → vazia após 3 s | — |

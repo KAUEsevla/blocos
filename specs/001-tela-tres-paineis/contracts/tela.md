@@ -17,9 +17,10 @@ Ordem da esquerda para a direita:
 | --- | --- | --- | --- |
 | `<label for="nome-programa">` | — | `Nome do programa` | — |
 | `<input type="text">` | `nome-programa` | `value="MeuPrograma"`, `maxlength="40"`, `spellcheck="false"`, `autocomplete="off"` | habilitado; cada `input` atualiza `projeto.nome` e regenera o Portugol |
+| `<span>` | `indicador-alteracoes` | `class="indicador-alteracoes"`, `aria-live="polite"`, texto "alterações não salvas" quando há alterações | criado pela 011, logo depois do campo do nome; `hidden` sem alterações ([tela-salvar.md](../../011-salvar-projeto/contracts/tela-salvar.md)) |
 | `<button>` | `botao-executar` | `Executar` | habilitado desde a 009 ([tela-execucao.md](../../009-executar-no-core/contracts/tela-execucao.md)) |
 | `<button>` | `botao-parar` | `Parar` | criado pela 009, logo depois do Executar; `disabled` no estado ocioso ([tela-execucao.md](../../009-executar-no-core/contracts/tela-execucao.md)) |
-| `<button>` | `botao-salvar` | `Salvar` | `disabled`, `title="Disponível em breve"` (011) |
+| `<button>` | `botao-salvar` | `Salvar` | habilitado desde a 011, `title="Salvar o projeto num arquivo .json"` ([tela-salvar.md](../../011-salvar-projeto/contracts/tela-salvar.md)) |
 | `<button>` | `botao-carregar` | `Carregar` | `disabled`, `title="Disponível em breve"` (012) |
 | `<button>` | `botao-novo` | `Novo` | habilitado (fluxo no [data-model](../data-model.md)) |
 
