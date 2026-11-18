@@ -118,7 +118,7 @@ Percorre todos os blocos (topo, `inputs[*].block`, `next.block`, inclusive solto
 | `id` string não vazia e única no arquivo | há dois blocos com a mesma identificação |
 | exatamente um bloco `programa`, de topo, `id: 'programa'` | falta o bloco programa / há mais de um bloco programa |
 | bloco de topo com `x` e `y` numéricos (encaixados não precisam) | a posição de um bloco está faltando |
-| chave de `inputs` é um `input_value`/`input_statement` da `definicao`, ou uma área dinâmica: `VALOR0…VALOR{n-1}` do escreva, `SENAO` do se com senão ligado | o bloco "leia" tem um encaixe que não existe |
+| chave de `inputs` é um `input_value`/`input_statement` da `definicao`, ou uma área dinâmica: `VALOR1…VALOR{n}` do escreva, `SENAO` do se com senão ligado | o bloco "leia" tem um encaixe que não existe |
 | `fields`: `field_dropdown` com valor entre as opções da `definicao`; `NUM` do `numero` aceito pela regra pura do validador (`normalizarNumero(NUM) !== null`, `src/blocos/valores.js`, 003 R-07): só número inválido é recusado; `"007"` ou `"3,5"` (casos de aceitação escritos à mão) são aceitos e o validador do Blockly normaliza ao carregar; `VAR` com `id` presente em `variaveis` | um campo do bloco "…" tem um valor inválido / um bloco usa uma variável que não está no projeto |
 | `extraState` do escreva: `valores` inteiro de 1 a `MAX_VALORES` | o bloco escreva tem uma quantidade de valores inválida |
 | `extraState` do se: ausente (senão desligado) ou `{ senao: true/false }` | o bloco se tem dados inválidos |

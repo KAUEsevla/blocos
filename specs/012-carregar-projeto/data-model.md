@@ -28,7 +28,7 @@ Ordem das verificações e detalhes: [research.md](research.md), R-04.
 | `id` não vazio e único | sondagem R-03 (o Blockly trocaria em silêncio) |
 | exatamente um `programa`, de topo, `id: "programa"` | 001 (bloco raiz, não apagável) |
 | blocos de topo com `x`, `y` numéricos | 011 data-model ("Posições") |
-| `inputs` só com encaixes do bloco (inclui `VALOR0…VALOR{n-1}` do escreva e `SENAO` do se com senão) | sondagem R-03 (`MissingConnection`) |
+| `inputs` só com encaixes do bloco (inclui `VALOR1…VALOR{n}` do escreva e `SENAO` do se com senão) | sondagem R-03 (`MissingConnection`) |
 | filho de encaixe de valor tem saída; de encaixe de comandos e de `next`, conexão anterior | idem |
 | `field_dropdown` com valor das opções; `NUM` com `normalizarNumero(NUM) !== null` (só número inválido é recusado) | sondagem R-03 (correção calada) |
 | `fields.VAR`: ausente/`null` = variável não escolhida (incompleto, aceito); `{ id }` precisa existir em `variaveis` | 002, 008 |

@@ -9,10 +9,13 @@
 // (contracts/tela-entrada.md, seção "Ligação").
 // Spec 011: Salvar baixa o projeto em .json e marca a referência de "salvo" com a assinatura
 // do mesmo objeto gravado; o Novo não pergunta até a próxima alteração (contracts/tela-salvar.md).
+// Spec 012: Carregar lê e valida o arquivo inteiro antes de mexer no projeto aberto, pede
+// confirmação como o Novo e gera o Portugol junto com os blocos (contracts/tela-carregar.md).
 import './estilos.css';
 import { projetoVazio } from './projeto/formato.js';
 import { assinaturaProjeto, haAlteracoes } from './projeto/alteracoes.js';
 import { prepararSalvamento } from './projeto/salvar.js';
+import { prepararCarregamento, mensagemRecusa } from './projeto/carregar.js';
 import { gerarPortugol } from './portugol/gerador.js';
 import { criarAtualizacaoTempoReal } from './portugol/tempo-real.js';
 import { blocosForaDoPrograma } from './portugol/fora-do-programa.js';
@@ -35,6 +38,7 @@ import { criarExecutor } from './execucao/executor.js';
 import { criarControladorExecucao } from './execucao/controlador.js';
 import { confirmar } from './ui/confirmacao.js';
 import { baixarArquivo } from './ui/download.js';
+import { escolherArquivo, lerTexto } from './ui/arquivo.js';
 import { TEXTOS } from './ui/textos.js';
 
 const preCodigo = document.getElementById('codigo-portugol');
@@ -107,6 +111,52 @@ function salvarProjeto() {
   mostrarAlteracoes(false);
 }
 
+// Carregar (spec 012, contracts/tela-carregar.md; research R-07, R-08). Nada antes de
+// "anterior = projetoAtual()" muda o projeto aberto, o nome, a Saída, a execução, o desfazer ou
+// a referência (FR-004).
+async function carregarProjeto() {
+  const arquivo = await escolherArquivo(document.getElementById('arquivo-carregar'));
+  if (!arquivo) return;
+  const lido = await lerTexto(arquivo);
+  const preparado = lido.ok ? prepararCarregamento(lido.texto) : { ok: false, mensagem: mensagemRecusa(lido) };
+  if (!preparado.ok) {
+    console.warn(preparado.mensagem);
+    return;
+  }
+  tempoReal.atualizarAgora();
+  if (haAlteracoes(projetoAtual(), referencia)) {
+    const descartar = await confirmar({
+      titulo: TEXTOS.carregarTitulo,
+      mensagem: TEXTOS.carregarMensagem,
+      confirmar: TEXTOS.carregarConfirmar,
+      cancelar: TEXTOS.cancelar,
+    });
+    if (!descartar) return;
+  }
+  const anterior = projetoAtual();
+  // Um projeto carregado não herda uma execução em andamento (contracts/tela-execucao.md).
+  await controlador.parar();
+  projeto = { ...preparado.projeto };
+  definirNome(projeto.nome);
+  try {
+    recarregarBlocos(ws, projeto);
+  } catch (erro) {
+    // Última defesa (research R-08): volta ao projeto que estava aberto.
+    console.warn(erro);
+    projeto = anterior;
+    definirNome(anterior.nome);
+    recarregarBlocos(ws, anterior);
+    tempoReal.atualizarAgora();
+    console.warn(mensagemRecusa({ motivo: 'dados-invalidos', detalhe: 'o editor não conseguiu montar os blocos' }));
+    return;
+  }
+  // O Portugol aparece junto com os blocos (spec 007).
+  tempoReal.atualizarAgora();
+  saida.mostrarOrientacao();
+  referencia = assinaturaProjeto(projetoAtual());
+  mostrarAlteracoes(false);
+}
+
 // O worker é criado no primeiro clique em Executar (research R-02, R-06).
 const executor = criarExecutor({
   criarWorker: () => new Worker(new URL('./execucao/worker.js', import.meta.url), { type: 'module' }),
@@ -134,6 +184,7 @@ ligarBarra({
   aoExecutar: () => controlador.executar(),
   aoParar: () => controlador.parar(),
   aoSalvar: salvarProjeto,
+  aoCarregar: carregarProjeto,
 });
 
 document.getElementById('botao-copiar').addEventListener('click', () => {
