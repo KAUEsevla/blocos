@@ -201,7 +201,7 @@ provadas com blocos.
 **Objetivo**: registrar nas specs de origem que as pendências foram resolvidas (research
 R-13).
 
-- [ ] T028 [P] Atualizar as specs de origem, com link para este `tasks.md` e para o caso ou teste de cada pendência:
+- [X] T028 [P] Atualizar as specs de origem, com link para este `tasks.md` e para o caso ou teste de cada pendência:
   - `specs/006-blocos-operadores/contracts/tipos-encaixe.md`: na "Matriz do SC-002", as colunas "`enquanto` condição" e "`para` de/até/passo" (valores do research R-07); em "Regra para as specs 004 e 005", as linhas do `enquanto` e do `para`: "aplicada na 005 ([blocos-repeticao.md](../../005-blocos-repeticao/contracts/blocos-repeticao.md))" (**P-1**);
   - `specs/006-blocos-operadores/plan.md`, "Pendências para outras specs", linha da 004 e 005: "005 ✅" (**P-1**);
   - `specs/009-executar-no-core/plan.md`, "Pendências para outras specs", linha da 005: "✅ resolvida pela 005" com link para `tests/aceitacao/executar.test.js` (**P-2**);
@@ -209,20 +209,29 @@ R-13).
   - `specs/004-blocos-se-senao/plan.md`, "Pendências para outras specs", linha da 005: o mesmo, com link para `repeticao-se-par-impar.json` (**P-4**);
   - `specs/005-blocos-repeticao/spec.md`, Premissas: "(✅ conferido)" nas quatro linhas das pendências; `**Status**: Rascunho` → `**Status**: Implementada`.
   (RF-05, RF-04, RF-06, RF-09, RF-10)
-- [ ] T029 [P] Em `specs/008-portugol-valido/contracts/registro-blocos.md`, "Contexto de geração (`ctx`)": acrescentar a linha `ctx.tipoVariavel(bloco, campo) → string | undefined` (tipo da variável do campo em `projeto.variaveis`, sem aviso; spec 005, research R-06) e, na linha do `ctx.aviso`, trocar "(ex.: passo 0 na 005)" por um link para o `para` real em `src/blocos/repeticao.js` ([blocos-repeticao.md](../../005-blocos-repeticao/contracts/blocos-repeticao.md)) (RF-08, RF-05)
-- [ ] T030 Rodar `npm test` uma vez antes do commit e, na descrição do PR, registrar: as quatro pendências fechadas (P-1 a P-4, com origem), o comportamento do Core com `enquanto 1`, passo zero e reais (research R-02), o aviso de casas decimais além do texto do FR-004 (plan, ponto de atenção 3) e os navegadores usados nos roteiros (depende de T028, T029) (RNF-05)
+- [X] T029 [P] Em `specs/008-portugol-valido/contracts/registro-blocos.md`, "Contexto de geração (`ctx`)": acrescentar a linha `ctx.tipoVariavel(bloco, campo) → string | undefined` (tipo da variável do campo em `projeto.variaveis`, sem aviso; spec 005, research R-06) e, na linha do `ctx.aviso`, trocar "(ex.: passo 0 na 005)" por um link para o `para` real em `src/blocos/repeticao.js` ([blocos-repeticao.md](../../005-blocos-repeticao/contracts/blocos-repeticao.md)) (RF-08, RF-05)
+- [X] T030 Rodar `npm test` uma vez antes do commit e, na descrição do PR, registrar: as quatro pendências fechadas (P-1 a P-4, com origem), o comportamento do Core com `enquanto 1`, passo zero e reais (research R-02), o aviso de casas decimais além do texto do FR-004 (plan, ponto de atenção 3) e os navegadores usados nos roteiros (depende de T028, T029) (RNF-05)
+  - `npm test` rodado antes do commit (1097 testes passando). Nenhuma lacuna nova do Core: aceitar `enquanto 1` e variável de controle não inteira é a conversão do Python, e o passo zero e os reais quebram pela contagem com `range` do Core (research R-02); o editor bloqueia o valor fixo e o adapter traduz o resto (R-05, R-08). O texto do PR ficou no resumo da implementação.
 
 **Commit**: `docs(005) (RF-05, RF-04, RF-06, RF-08, RF-09, RF-10): pendências resolvidas nas specs de origem`
 
 ## Conferências manuais pendentes
 
-Preenchido durante a implementação com o que os roteiros do navegador não conseguirem
-conferir (por exemplo, arrastar com o mouse e o Parar no botão com o painel oculto). Quem
-conferir num navegador comum troca a situação para "Conferido", com o navegador e a data.
+Os roteiros do quickstart foram percorridos no painel do navegador do Claude com o painel
+visível (Portugol em tempo real, Executar, Parar pelo botão, entrada interativa). Os blocos
+foram montados pelo Blockly da própria página (serialização e conexões) e os encaixes
+conferidos pelo verificador da página, não por arrastar com o mouse. Fica com a dupla repetir
+num navegador comum (Chrome, Firefox ou Edge) e anotar o resultado no PR.
+
+**Registro (2026-11-17)**: quem conferir troca a situação para "Conferido", com o navegador e
+a data.
 
 | Conferência | O que fazer | Task | Situação |
 | --- | --- | --- | --- |
-| — | — | — | — |
+| Arrastar da categoria Repetição | Abrir "Repetição", arrastar o `enquanto` e o `para` para o programa e ver o Portugol aparecer enquanto monta (roteiros 1, 2 e 11). | T018, T026 (registro) | Pendente: navegador comum |
+| Arrastar para os encaixes | Arrastar `verdadeiro`, um texto e `ok` para de, até e passo do `para`, e um número e `i` para a condição do `enquanto`, e ver que não encaixam; arrastar números, contas e comparações e ver que encaixam (roteiro 10). | T018, T026 (registro) | Pendente: navegador comum |
+| Mudar o tipo pelo menu e Ctrl+Z | No menu do campo do `para`, "Mudar o tipo…" de `i` para real (o diálogo), ver o aviso e apertar Ctrl+Z (roteiro 9). | T018 (registro) | Pendente: navegador comum |
+| Arrastar o `se` para dentro dos laços | Arrastar um `se` (com senão) para dentro do `para` e do `enquanto` e montar o par/ímpar (roteiro 15). | T026 (registro) | Pendente: navegador comum |
 
 ---
 

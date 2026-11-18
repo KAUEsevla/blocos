@@ -80,7 +80,8 @@ desse tipo para o qual `presente(bloco)` seja `true`. Blocos soltos não contam.
 | `ctx.linha(texto)` | Emite uma linha no nível atual (só para blocos `comando`). |
 | `ctx.variavel(bloco, campo, parte) → string` | Resolve o `{ id }` do campo para o nome em `projeto.variaveis`. Se faltar ou não existir, registra o aviso e devolve `???`. |
 | `ctx.campo(bloco, nome) → any` | Valor bruto de um campo. |
-| `ctx.aviso(bloco, encaixe, mensagem)` | Aviso com mensagem própria (ex.: passo 0 na 005). |
+| `ctx.aviso(bloco, encaixe, mensagem)` | Aviso com mensagem própria (ex.: o passo zero do `para`, em `src/blocos/repeticao.js`; spec 005, [blocos-repeticao.md](../../005-blocos-repeticao/contracts/blocos-repeticao.md)). |
+| `ctx.tipoVariavel(bloco, campo) → string \| undefined` | Tipo da variável do campo em `projeto.variaveis`, sem aviso (spec 005, research R-06: o `para` confere se a variável de controle é inteira). |
 
 ## Regras
 

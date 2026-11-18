@@ -4,7 +4,7 @@
 
 **Criada em**: 2026-11-08
 
-**Status**: Rascunho
+**Status**: Implementada
 
 **Rastreia**: RF-05
 
@@ -91,10 +91,10 @@ saída.
 - `continue` e `interrompa` estão fora do escopo mínimo.
 - O bloco "repita ... ate" não existe no Portugol do Core e não será oferecido.
 - A condição do enquanto só aceita valores lógicos, e os limites e o passo do para só
-  aceitam números, regra dos blocos de operadores da spec 006.
+  aceitam números, regra dos blocos de operadores da spec 006. (✅ conferido)
 - Parar um laço infinito e a Saída com mais de 1.000 linhas são conferidos com os blocos
-  de repetição (spec 009).
+  de repetição (spec 009). (✅ conferido)
 - Um `leia` dentro de um laço pede o valor a cada volta (spec 010); conferido com os
-  blocos de repetição.
+  blocos de repetição. (✅ conferido)
 - Um `se` encaixa dentro de `enquanto` e `para` (spec 004); conferido com os blocos de
-  repetição.
+  repetição. (✅ conferido)
