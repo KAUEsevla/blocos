@@ -1,0 +1,162 @@
+{
+  "descricao": "contagem regressiva com enquanto n > 0 (História 2 da spec 005, cenário 1 e teste independente)",
+  "requisitos": [
+    "RF-05",
+    "RNF-07"
+  ],
+  "projeto": {
+    "formato": "meupia-blocos",
+    "versao": 1,
+    "nome": "Regressiva",
+    "variaveis": [
+      {
+        "id": "v-n",
+        "nome": "n",
+        "tipo": "inteiro"
+      }
+    ],
+    "blocos": {
+      "blocks": {
+        "languageVersion": 0,
+        "blocks": [
+          {
+            "type": "programa",
+            "id": "programa",
+            "x": 24,
+            "y": 24,
+            "deletable": false,
+            "inputs": {
+              "COMANDOS": {
+                "block": {
+                  "type": "variavel_recebe",
+                  "id": "rc39",
+                  "fields": {
+                    "VAR": {
+                      "id": "v-n"
+                    }
+                  },
+                  "inputs": {
+                    "VALOR": {
+                      "block": {
+                        "type": "numero",
+                        "id": "n38",
+                        "fields": {
+                          "NUM": "3"
+                        }
+                      }
+                    }
+                  },
+                  "next": {
+                    "block": {
+                      "type": "enquanto",
+                      "id": "enq49",
+                      "inputs": {
+                        "CONDICAO": {
+                          "block": {
+                            "type": "relacional",
+                            "id": "r42",
+                            "fields": {
+                              "OP": ">"
+                            },
+                            "inputs": {
+                              "A": {
+                                "block": {
+                                  "type": "variavel",
+                                  "id": "v40",
+                                  "fields": {
+                                    "VAR": {
+                                      "id": "v-n"
+                                    }
+                                  }
+                                }
+                              },
+                              "B": {
+                                "block": {
+                                  "type": "numero",
+                                  "id": "n41",
+                                  "fields": {
+                                    "NUM": "0"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        },
+                        "FACA": {
+                          "block": {
+                            "type": "escreva",
+                            "id": "e44",
+                            "inputs": {
+                              "VALOR1": {
+                                "block": {
+                                  "type": "variavel",
+                                  "id": "v43",
+                                  "fields": {
+                                    "VAR": {
+                                      "id": "v-n"
+                                    }
+                                  }
+                                }
+                              }
+                            },
+                            "next": {
+                              "block": {
+                                "type": "variavel_recebe",
+                                "id": "rc48",
+                                "fields": {
+                                  "VAR": {
+                                    "id": "v-n"
+                                  }
+                                },
+                                "inputs": {
+                                  "VALOR": {
+                                    "block": {
+                                      "type": "aritmetico",
+                                      "id": "a47",
+                                      "fields": {
+                                        "OP": "-"
+                                      },
+                                      "inputs": {
+                                        "A": {
+                                          "block": {
+                                            "type": "variavel",
+                                            "id": "v45",
+                                            "fields": {
+                                              "VAR": {
+                                                "id": "v-n"
+                                              }
+                                            }
+                                          }
+                                        },
+                                        "B": {
+                                          "block": {
+                                            "type": "numero",
+                                            "id": "n46",
+                                            "fields": {
+                                              "NUM": "1"
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "entrada": [],
+  "portugolEsperado": "algoritmo \"Regressiva\"\n\nvar\n    n: inteiro\n\ninicio\n    n <- 3\n    enquanto n > 0 faca\n        escreva(n)\n        n <- n - 1\n    fim_enquanto\nfim_algoritmo\n",
+  "saidaEsperada": "3\n2\n1\n"
+}

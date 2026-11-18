@@ -258,6 +258,15 @@ describe('caixa de blocos da spec 005', () => {
     expect(semPara(conteudoCategoriaRepeticao(outros))).toEqual(PARA_SEM_INTEIRO);
   });
 
+  it('o enquanto vem sempre primeiro, com e sem variável inteira', async () => {
+    const { conteudoCategoriaRepeticao } = await import('../../src/blocos/caixa-blocos.js');
+    const ENQUANTO = { kind: 'block', type: 'enquanto' };
+    expect(conteudoCategoriaRepeticao([])[0]).toEqual(ENQUANTO);
+    expect(conteudoCategoriaRepeticao([{ id: 'v-i', nome: 'i', tipo: 'inteiro' }])[0]).toEqual(ENQUANTO);
+    expect(conteudoCategoriaRepeticao([])).toHaveLength(3);
+    expect(conteudoCategoriaRepeticao([{ id: 'v-i', nome: 'i', tipo: 'inteiro' }])).toHaveLength(2);
+  });
+
   it('com variável inteira: o para com a última inteira, de 1 até 5 e sem passo', async () => {
     const { conteudoCategoriaRepeticao } = await import('../../src/blocos/caixa-blocos.js');
     const lista = [

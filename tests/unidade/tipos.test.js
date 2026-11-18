@@ -8,7 +8,6 @@ import {
   encaixesIncompativeis,
 } from '../../src/blocos/tipos.js';
 import { registroPadrao } from '../../src/blocos/registro.js';
-import { BLOCO_ENQUANTO } from '../../src/blocos/repeticao.js';
 
 // Entradas de registro mínimas, montadas aqui: os blocos novos ainda não existem.
 const entrada = (tipo, definicao, extra = {}) => ({ tipo, definicao: { type: tipo, ...definicao }, ...extra });
@@ -195,7 +194,7 @@ describe('matriz do SC-002', () => {
     'se CONDICAO': encaixe('se', 'CONDICAO'),
     // Spec 005 (research R-07; P-1): condição do enquanto só lógica; de, até e passo do para
     // só números.
-    'enquanto CONDICAO': checkEfetivo(BLOCO_ENQUANTO, 'CONDICAO'),
+    'enquanto CONDICAO': encaixe('enquanto', 'CONDICAO'),
     'para DE': encaixe('para', 'DE'),
     'para ATE': encaixe('para', 'ATE'),
     'para PASSO': encaixe('para', 'PASSO'),

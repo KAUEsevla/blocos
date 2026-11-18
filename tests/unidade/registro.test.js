@@ -88,6 +88,14 @@ describe('registro de blocos (RF-08)', () => {
     expect(registroPadrao.variantesDe('se').map((v) => v.nome)).toEqual(['sem senão', 'com senão']);
   });
 
+  // Spec 005 (research R-03): o enquanto, sem variantes próprias.
+  it('o registro padrão contém o enquanto', () => {
+    const enquanto = registroPadrao.obter('enquanto');
+    expect(enquanto.categoria).toBe('comando');
+    expect(enquanto.areas).toEqual(['FACA']);
+    expect(registroPadrao.variantesDe('enquanto').map((v) => v.nome)).toEqual(['padrão']);
+  });
+
   // Spec 005 (research R-04): o para, com as variantes do passo.
   it('o registro padrão contém o para', () => {
     const para = registroPadrao.obter('para');
@@ -104,7 +112,7 @@ describe('registro de blocos (RF-08)', () => {
   });
 
   it('o registro padrão tem o programa e os blocos de variável da 002, nessa ordem', () => {
-    expect(registroPadrao.tiposRegistrados()).toEqual(['programa', 'variavel_recebe', 'variavel', 'escreva', 'texto', 'numero', 'logico', 'aritmetico', 'negativo', 'relacional', 'e_ou', 'nao', 'leia', 'se', 'para']);
+    expect(registroPadrao.tiposRegistrados()).toEqual(['programa', 'variavel_recebe', 'variavel', 'escreva', 'texto', 'numero', 'logico', 'aritmetico', 'negativo', 'relacional', 'e_ou', 'nao', 'leia', 'se', 'enquanto', 'para']);
     expect(registroPadrao.obter('variavel_recebe').categoria).toBe('comando');
     expect(registroPadrao.obter('variavel').categoria).toBe('valor');
   });

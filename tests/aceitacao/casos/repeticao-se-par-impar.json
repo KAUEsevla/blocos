@@ -1,0 +1,334 @@
+{
+  "descricao": "se/senão dentro de um para e se dentro de um enquanto (pendência P-4 da spec 004, conferida na 005; FR-008)",
+  "requisitos": [
+    "RF-05",
+    "RF-04",
+    "RNF-07"
+  ],
+  "projeto": {
+    "formato": "meupia-blocos",
+    "versao": 1,
+    "nome": "ParImpar",
+    "variaveis": [
+      {
+        "id": "v-i",
+        "nome": "i",
+        "tipo": "inteiro"
+      },
+      {
+        "id": "v-n",
+        "nome": "n",
+        "tipo": "inteiro"
+      }
+    ],
+    "blocos": {
+      "blocks": {
+        "languageVersion": 0,
+        "blocks": [
+          {
+            "type": "programa",
+            "id": "programa",
+            "x": 24,
+            "y": 24,
+            "deletable": false,
+            "inputs": {
+              "COMANDOS": {
+                "block": {
+                  "type": "para",
+                  "id": "p62",
+                  "fields": {
+                    "VAR": {
+                      "id": "v-i"
+                    }
+                  },
+                  "inputs": {
+                    "DE": {
+                      "block": {
+                        "type": "numero",
+                        "id": "n50",
+                        "fields": {
+                          "NUM": "1"
+                        }
+                      }
+                    },
+                    "ATE": {
+                      "block": {
+                        "type": "numero",
+                        "id": "n51",
+                        "fields": {
+                          "NUM": "4"
+                        }
+                      }
+                    },
+                    "FACA": {
+                      "block": {
+                        "type": "se",
+                        "id": "se61",
+                        "inputs": {
+                          "CONDICAO": {
+                            "block": {
+                              "type": "relacional",
+                              "id": "r56",
+                              "fields": {
+                                "OP": "="
+                              },
+                              "inputs": {
+                                "A": {
+                                  "block": {
+                                    "type": "aritmetico",
+                                    "id": "a54",
+                                    "fields": {
+                                      "OP": "%"
+                                    },
+                                    "inputs": {
+                                      "A": {
+                                        "block": {
+                                          "type": "variavel",
+                                          "id": "v52",
+                                          "fields": {
+                                            "VAR": {
+                                              "id": "v-i"
+                                            }
+                                          }
+                                        }
+                                      },
+                                      "B": {
+                                        "block": {
+                                          "type": "numero",
+                                          "id": "n53",
+                                          "fields": {
+                                            "NUM": "2"
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                },
+                                "B": {
+                                  "block": {
+                                    "type": "numero",
+                                    "id": "n55",
+                                    "fields": {
+                                      "NUM": "0"
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "ENTAO": {
+                            "block": {
+                              "type": "escreva",
+                              "id": "e58",
+                              "inputs": {
+                                "VALOR1": {
+                                  "block": {
+                                    "type": "variavel",
+                                    "id": "v57",
+                                    "fields": {
+                                      "VAR": {
+                                        "id": "v-i"
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "SENAO": {
+                            "block": {
+                              "type": "escreva",
+                              "id": "e60",
+                              "inputs": {
+                                "VALOR1": {
+                                  "block": {
+                                    "type": "texto",
+                                    "id": "t59",
+                                    "fields": {
+                                      "TEXTO": "impar"
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        },
+                        "extraState": {
+                          "senao": true
+                        }
+                      }
+                    }
+                  },
+                  "next": {
+                    "block": {
+                      "type": "variavel_recebe",
+                      "id": "rc64",
+                      "fields": {
+                        "VAR": {
+                          "id": "v-n"
+                        }
+                      },
+                      "inputs": {
+                        "VALOR": {
+                          "block": {
+                            "type": "numero",
+                            "id": "n63",
+                            "fields": {
+                              "NUM": "3"
+                            }
+                          }
+                        }
+                      },
+                      "next": {
+                        "block": {
+                          "type": "enquanto",
+                          "id": "enq78",
+                          "inputs": {
+                            "CONDICAO": {
+                              "block": {
+                                "type": "relacional",
+                                "id": "r67",
+                                "fields": {
+                                  "OP": ">"
+                                },
+                                "inputs": {
+                                  "A": {
+                                    "block": {
+                                      "type": "variavel",
+                                      "id": "v65",
+                                      "fields": {
+                                        "VAR": {
+                                          "id": "v-n"
+                                        }
+                                      }
+                                    }
+                                  },
+                                  "B": {
+                                    "block": {
+                                      "type": "numero",
+                                      "id": "n66",
+                                      "fields": {
+                                        "NUM": "0"
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            },
+                            "FACA": {
+                              "block": {
+                                "type": "se",
+                                "id": "se73",
+                                "inputs": {
+                                  "CONDICAO": {
+                                    "block": {
+                                      "type": "relacional",
+                                      "id": "r70",
+                                      "fields": {
+                                        "OP": "="
+                                      },
+                                      "inputs": {
+                                        "A": {
+                                          "block": {
+                                            "type": "variavel",
+                                            "id": "v68",
+                                            "fields": {
+                                              "VAR": {
+                                                "id": "v-n"
+                                              }
+                                            }
+                                          }
+                                        },
+                                        "B": {
+                                          "block": {
+                                            "type": "numero",
+                                            "id": "n69",
+                                            "fields": {
+                                              "NUM": "2"
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  },
+                                  "ENTAO": {
+                                    "block": {
+                                      "type": "escreva",
+                                      "id": "e72",
+                                      "inputs": {
+                                        "VALOR1": {
+                                          "block": {
+                                            "type": "texto",
+                                            "id": "t71",
+                                            "fields": {
+                                              "TEXTO": "dois"
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                },
+                                "next": {
+                                  "block": {
+                                    "type": "variavel_recebe",
+                                    "id": "rc77",
+                                    "fields": {
+                                      "VAR": {
+                                        "id": "v-n"
+                                      }
+                                    },
+                                    "inputs": {
+                                      "VALOR": {
+                                        "block": {
+                                          "type": "aritmetico",
+                                          "id": "a76",
+                                          "fields": {
+                                            "OP": "-"
+                                          },
+                                          "inputs": {
+                                            "A": {
+                                              "block": {
+                                                "type": "variavel",
+                                                "id": "v74",
+                                                "fields": {
+                                                  "VAR": {
+                                                    "id": "v-n"
+                                                  }
+                                                }
+                                              }
+                                            },
+                                            "B": {
+                                              "block": {
+                                                "type": "numero",
+                                                "id": "n75",
+                                                "fields": {
+                                                  "NUM": "1"
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "entrada": [],
+  "portugolEsperado": "algoritmo \"ParImpar\"\n\nvar\n    i: inteiro\n    n: inteiro\n\ninicio\n    para i de 1 ate 4 faca\n        se i % 2 = 0 entao\n            escreva(i)\n        senao\n            escreva(\"impar\")\n        fim_se\n    fim_para\n    n <- 3\n    enquanto n > 0 faca\n        se n = 2 entao\n            escreva(\"dois\")\n        fim_se\n        n <- n - 1\n    fim_enquanto\nfim_algoritmo\n",
+  "saidaEsperada": "impar\n2\nimpar\n4\ndois\n"
+}

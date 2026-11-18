@@ -12,6 +12,8 @@ import { criarWorkerNode } from './suporte/worker-node.js';
 import { criarControladorExecucao } from '../../src/execucao/controlador.js';
 import {
   projetoMilEQuinhentas,
+  projetoInfinito,
+  projetoLeiaInfinito,
   projetoLeiaNoPara,
   projetoPassoVariavelZero,
   projetoPassoFixoZero,
@@ -109,11 +111,10 @@ describe('execução pela tela no Core real (worker_threads)', () => {
     expect(itens.some((i) => i.texto?.startsWith(`Linha ${resultado.erro.linha}: `))).toBe(true);
   });
 
-  // US3 (FR-007): o bloco enquanto é da 005, então o laço é escrito à mão (research R-11, R-14).
+  // US3 (FR-007) da 009; pendência P-2 conferida com os blocos da 005 (research R-11).
   it('Parar interrompe um enquanto infinito, e a execução seguinte funciona', async () => {
-    const infinito =
-      'algoritmo "Infinito"\n\nvar\n    i: inteiro\n\ninicio\n    i <- 0\n' +
-      '    enquanto verdadeiro faca\n        i <- i + 1\n        escreva(i)\n    fim_enquanto\nfim_algoritmo\n';
+    const infinito = semAvisos(projetoInfinito());
+    expect(infinito).toContain('    enquanto verdadeiro faca\n');
     const pedacos = [];
     let aoSegundoLote;
     const doisLotes = new Promise((resolver) => {
@@ -204,6 +205,31 @@ describe('execução pela tela no Core real (worker_threads)', () => {
     expect(resultado.status).toBe('ok');
     expect(pedidos).toEqual(['nome', 'nome']);
     expect(linhasDe(pedacos)).toEqual(['Oi, Ana', 'Oi, Bia']);
+  });
+
+  // Pendência P-3 da 010, conferida com os blocos da 005 (research R-11): Parar com o pedido
+  // aberto dentro de um laço infinito.
+  it('Parar com o pedido aberto num enquanto interrompe, e a execução seguinte funciona', async () => {
+    const codigo = semAvisos(projetoLeiaInfinito());
+    const pedidos = [];
+    let avisarSegundo;
+    const segundoPedido = new Promise((r) => (avisarSegundo = r));
+    const execucao = executor.executar(codigo, {
+      aoPedirEntrada: ({ variavel }) => {
+        pedidos.push(variavel);
+        if (pedidos.length === 1) return Promise.resolve('Ana');
+        avisarSegundo();
+        return new Promise(() => {}); // o estudante nunca confirma o segundo
+      },
+    });
+    await segundoPedido;
+    executor.parar();
+    await expect(execucao).resolves.toEqual({ status: 'interrompido', saida: '', erro: null });
+    expect(pedidos).toEqual(['nome', 'nome']);
+
+    const { resultado, pedacos } = await executarColetando(executor, OLA_MUNDO);
+    expect(resultado.status).toBe('ok');
+    expect(pedacos.join('')).toBe('Olá, mundo!\n');
   });
 
   // Spec 005 (research R-08): passo numa variável que vale 0, que o editor não vê antes.

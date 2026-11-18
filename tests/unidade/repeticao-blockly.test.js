@@ -160,3 +160,135 @@ describe('para (História 1)', () => {
     expect(Blockly.serialization.blocks.save(semPasso).inputs.PASSO).toBeUndefined();
   });
 });
+
+describe('enquanto (História 2)', () => {
+  let ws;
+
+  beforeAll(registrarTudo);
+  beforeEach(() => {
+    ws = novoWorkspace();
+  });
+
+  it.each([
+    ['numero', {}],
+    ['texto', {}],
+    ['aritmetico', {}],
+    ['negativo', {}],
+    ['variavel', { variavel: 'v-i' }],
+    ['variavel', { variavel: 'v-x' }],
+    ['variavel', { variavel: 'v-nome' }],
+  ])('%s %j não encaixa na condição (P-1)', (tipo, opcoes) => {
+    expect(podeEncaixar(ws, criar(ws, tipo, opcoes), criar(ws, 'enquanto'), 'CONDICAO')).toBe(false);
+  });
+
+  it.each([
+    ['relacional', {}],
+    ['e_ou', {}],
+    ['nao', {}],
+    ['logico', {}],
+    ['variavel', { variavel: 'v-ok' }],
+  ])('%s %j encaixa na condição (P-1)', (tipo, opcoes) => {
+    expect(podeEncaixar(ws, criar(ws, tipo, opcoes), criar(ws, 'enquanto'), 'CONDICAO')).toBe(true);
+  });
+
+  it('mudar ok para inteiro solta ok da condição; um Ctrl+Z volta', async () => {
+    Blockly.serialization.workspaces.load(
+      programaCom({
+        type: 'enquanto',
+        id: 'e1',
+        inputs: { CONDICAO: { block: { type: 'variavel', id: 'vok', fields: { VAR: { id: 'v-ok' } } } } },
+      }),
+      ws,
+    );
+    await new Promise((r) => setTimeout(r, 0));
+    ws.clearUndo();
+    aplicarTipoVariavel(ws, 'v-ok', 'inteiro');
+    expect(ws.getBlockById('vok').getParent()).toBeNull();
+    const { codigo, avisos } = gerarDo(ws);
+    expect(codigo).toContain('    enquanto ??? faca\n');
+    expect(avisos.map((a) => a.mensagem)).toContain('Falta a condição do bloco enquanto');
+
+    await desfazer(ws);
+    expect(ws.getVariableMap().getVariableById('v-ok').getType()).toBe('logico');
+    expect(ws.getBlockById('e1').getInputTargetBlock('CONDICAO')?.id).toBe('vok');
+  });
+});
+
+describe('aninhar (FR-008, P-4)', () => {
+  let ws;
+
+  beforeAll(registrarTudo);
+  beforeEach(() => {
+    ws = novoWorkspace();
+  });
+
+  const podeEncaixarComando = (filho, conexao) => ws.connectionChecker.canConnect(filho.previousConnection, conexao, false);
+  const area = (b, nome) => b.getInput(nome).connection;
+  const seComSenao = () => {
+    const b = ws.newBlock('se');
+    b.ligarSenao();
+    return b;
+  };
+
+  it('um se, com e sem senão, encaixa no corpo do para e do enquanto (P-4)', () => {
+    for (const pai of ['para', 'enquanto']) {
+      expect(podeEncaixarComando(ws.newBlock('se'), area(ws.newBlock(pai), 'FACA')), pai).toBe(true);
+      expect(podeEncaixarComando(seComSenao(), area(ws.newBlock(pai), 'FACA')), pai).toBe(true);
+    }
+  });
+
+  it('laços encaixam uns nos outros e nas áreas do se', () => {
+    expect(podeEncaixarComando(ws.newBlock('para'), area(ws.newBlock('enquanto'), 'FACA'))).toBe(true);
+    expect(podeEncaixarComando(ws.newBlock('para'), area(ws.newBlock('para'), 'FACA'))).toBe(true);
+    expect(podeEncaixarComando(ws.newBlock('enquanto'), area(ws.newBlock('para'), 'FACA'))).toBe(true);
+    expect(podeEncaixarComando(ws.newBlock('enquanto'), area(ws.newBlock('se'), 'ENTAO'))).toBe(true);
+    expect(podeEncaixarComando(ws.newBlock('enquanto'), area(seComSenao(), 'SENAO'))).toBe(true);
+  });
+
+  it('se dentro de para dentro de enquanto gera a indentação do contrato', () => {
+    Blockly.serialization.workspaces.load(
+      programaCom({
+        type: 'enquanto',
+        id: 'e1',
+        inputs: {
+          CONDICAO: { block: { type: 'logico', id: 'l1', fields: { VALOR: 'verdadeiro' } } },
+          FACA: {
+            block: {
+              type: 'para',
+              id: 'p1',
+              fields: { VAR: { id: 'v-i' } },
+              inputs: {
+                DE: { block: numero('n1', 1) },
+                ATE: { block: numero('n2', 2) },
+                FACA: {
+                  block: {
+                    type: 'se',
+                    id: 's1',
+                    inputs: {
+                      CONDICAO: { block: { type: 'logico', id: 'l2', fields: { VALOR: 'verdadeiro' } } },
+                      ENTAO: { block: { type: 'escreva', id: 'w1', inputs: { VALOR1: { block: { type: 'texto', id: 't1', fields: { TEXTO: 'x' } } } } } },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      }),
+      ws,
+    );
+    const { codigo, avisos } = gerarDo(ws);
+    expect(avisos).toEqual([]);
+    expect(codigo).toContain(
+      [
+        '    enquanto verdadeiro faca',
+        '        para i de 1 ate 2 faca',
+        '            se verdadeiro entao',
+        '                escreva("x")',
+        '            fim_se',
+        '        fim_para',
+        '    fim_enquanto',
+      ].join('\n'),
+    );
+  });
+});

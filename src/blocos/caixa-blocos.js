@@ -135,13 +135,13 @@ export const TEXTO_PARA_SEM_INTEIRO = 'Para usar o para, crie uma variável do t
 
 const numeroFixo = (n) => ({ block: { type: 'numero', fields: { NUM: n } } });
 
-// Itens da categoria Repetição (spec 005, research R-09). Com alguma variável inteira, o para
+// Itens da categoria Repetição (spec 005, research R-09). Sempre o enquanto; com alguma variável inteira, o para
 // com a última inteira da lista do mapa (mesma regra do leia), de 1 até 5 e sem passo; sem
 // nenhuma, a orientação e o botão "Criar variável…" no lugar dele.
 export function conteudoCategoriaRepeticao(variaveis) {
   const lista = Array.isArray(variaveis) ? variaveis : [];
   const inteiras = lista.filter((v) => v.tipo === 'inteiro');
-  const itens = [];
+  const itens = [{ kind: 'block', type: 'enquanto' }];
   if (inteiras.length === 0) {
     itens.push({ kind: 'label', text: TEXTO_PARA_SEM_INTEIRO });
     itens.push({ kind: 'button', text: 'Criar variável…', callbackKey: BOTAO_CRIAR_VARIAVEL });
