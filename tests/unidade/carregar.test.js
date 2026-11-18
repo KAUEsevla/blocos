@@ -196,3 +196,62 @@ describe('recusaDoEnsaio (research R-06)', () => {
     });
   });
 });
+
+// Entrega (T017): ramos de dados corrompidos e entradas fora do comum.
+describe('Carregar: formas corrompidas e limites', () => {
+  const comMudanca = (mudar) => {
+    const p = projetoCompleto();
+    mudar(p);
+    return validarBlocos(p);
+  };
+  const corrompido = { ok: false, motivo: 'dados-invalidos', detalhe: 'os blocos do projeto estão corrompidos' };
+
+  it.each([
+    ['topo nulo', (p) => p.blocos.blocks.blocks.push(null)],
+    ['inputs em lista', (p) => (porId(p, 'leia-nome').inputs = [])],
+    ['conteúdo de encaixe que não é objeto', (p) => (porId(p, 'soma').inputs.A = 5)],
+    ['next que não é objeto', (p) => (porId(p, 'leia-nome').next = 5)],
+  ])('%s', (_, mudar) => {
+    expect(comMudanca(mudar)).toEqual(corrompido);
+  });
+
+  it.each([
+    ['encaixe sem bloco', (p) => (porId(p, 'soma').inputs.A = {})],
+    ['next sem bloco', (p) => (porId(p, 'para').next = {})],
+    ['NUM numérico', (p) => (porId(p, 'n1').fields.NUM = 3)],
+    ['extraState nulo no se', (p) => (porId(p, 'se-sem-senao').extraState = null)],
+  ])('%s é aceito', (_, mudar) => {
+    expect(comMudanca(mudar)).toEqual({ ok: true });
+  });
+
+  it('VAR que não é objeto', () => {
+    expect(comMudanca((p) => (porId(p, 'leia-nome').fields.VAR = 'v-nome')).detalhe).toBe(
+      'um bloco usa uma variável que não está no projeto',
+    );
+  });
+
+  it('extraState do escreva que não é objeto', () => {
+    expect(comMudanca((p) => (porId(p, 'escreva-3').extraState = 'x')).detalhe).toBe(
+      'o bloco escreva tem uma quantidade de valores inválida',
+    );
+  });
+
+  it('projeto sem blocos: falta o programa', () => {
+    expect(validarBlocos(undefined).detalhe).toBe('falta o bloco programa');
+  });
+
+  it('erro inesperado do registro não vira recusa', () => {
+    const registro = {
+      obter() {
+        throw new RangeError('registro quebrado');
+      },
+    };
+    expect(() => validarBlocos(projetoCompleto(), registro)).toThrow(RangeError);
+  });
+
+  it('motivo desconhecido e ensaio sem erro caem nas mensagens genéricas', () => {
+    expect(mensagemRecusa()).toBe('Este arquivo não é um projeto do meuPiá Blocos.');
+    expect(mensagemRecusa({ motivo: 'outro' })).toBe('Este arquivo não é um projeto do meuPiá Blocos.');
+    expect(recusaDoEnsaio().detalhe).toBe('o editor não conseguiu montar os blocos');
+  });
+});

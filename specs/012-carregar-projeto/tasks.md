@@ -116,7 +116,9 @@ mensagem e que nada mudou (quickstart, passos 6–9 e 11).
 
 ## Fase 5: Entrega
 
-- [ ] T017 Rodar `npm run cobertura`: cobertura ≥ 80% em linhas e branches com `src/projeto/carregar.js` e os acréscimos de `formato.js` medidos (se algum ramo ficar sem teste, acrescentar o caso em `carregar.test.js` ou `formato.test.js`); relatório em `cobertura/` e linha `**Testes:** N · **Cobertura:** X%` do `README.md` atualizados pelo script. Percorrer o [quickstart.md](quickstart.md) inteiro no navegador e registrar o resultado aqui; o que não der para conferir no painel do navegador vai para "Conferências manuais pendentes" (RNF-04, RNF-07) (RF-12)
+- [X] T017 Rodar `npm run cobertura`: cobertura ≥ 80% em linhas e branches com `src/projeto/carregar.js` e os acréscimos de `formato.js` medidos (se algum ramo ficar sem teste, acrescentar o caso em `carregar.test.js` ou `formato.test.js`); relatório em `cobertura/` e linha `**Testes:** N · **Cobertura:** X%` do `README.md` atualizados pelo script. Percorrer o [quickstart.md](quickstart.md) inteiro no navegador e registrar o resultado aqui; o que não der para conferir no painel do navegador vai para "Conferências manuais pendentes" (RNF-04, RNF-07) (RF-12)
+  - `npm run cobertura`: 1335 testes passando, cobertura 99,52% em linhas e 94,9% em branches (99,7% no README); `src/projeto/formato.js` 100%/100% e `src/projeto/carregar.js` 100% em linhas e 96,4% em branches (um bloco de casos de formas corrompidas foi acrescentado ao `carregar.test.js` para cobrir os ramos de objeto inválido e o erro inesperado do registro). README atualizado pelo script.
+  - Feito no painel do navegador do Claude (Chromium, servidor do Vite, painel oculto), 2026-11-17. O arquivo foi entregue ao `#arquivo-carregar` por `DataTransfer` + evento `change` (a janela de arquivos do sistema não abre sem gesto real), e o Salvar foi capturado no `URL.createObjectURL`. Resultados: com nome `Média "final" 2`, variáveis dos quatro tipos e um bloco solto, Salvar → Novo (não perguntou, projeto salvo) → Carregar devolveu o nome exato, o mesmo Portugol, Saída com a orientação, indicação oculta e Desfazer desabilitado (1, 2); com alterações, Carregar abriu "Carregar outro projeto?" com foco em Cancelar; Cancelar não mudou nada e "Descartar e carregar" trocou o projeto (3); sem alterações não perguntou (4); `.txt`, JSON de outro programa, `versao: 2`, bloco `xyz`, número na condição do `se` e arquivo de 1,1 MB abriram "Não foi possível carregar" com a mensagem certa, botão "Entendi", Cancelar escondido, e nome, Portugol, Saída e indicação iguais; Cancelar voltou no diálogo seguinte (6–9, 11); com o `leia` esperando, carregar parou a execução, limpou a Saída e mostrou o projeto novo (10); depois de carregar, o `beforeunload` não foi cancelado (12, pelo evento disparado na página). Na Fase 3, antes do aviso existir, um arquivo com bloco `xyz` fez o `recarregarBlocos` lançar e o projeto anterior voltou (defesa da T010). Sem erros no console além do aviso do Chrome sobre `beforeunload` sem gesto, da automação. O passo 5 (cancelar a janela) e a janela real ficam no quadro "Conferências manuais pendentes".
 
 **Commit**: `012/T017 (RF-12, RNF-04, RNF-07): cobertura e README`
 
@@ -132,13 +134,22 @@ mensagem e que nada mudou (quickstart, passos 6–9 e 11).
 
 ## Conferências manuais pendentes
 
-Preenchida na T017 com o que o painel do navegador do Claude não consegue provar (por
-exemplo, a janela de arquivos do sistema operacional e um arquivo real escolhido no disco).
-Quem conferir troca a situação para "Conferido", com o navegador e a data.
+Os roteiros do quickstart foram percorridos no painel do navegador do Claude com o painel
+oculto, entregando o arquivo ao campo por `DataTransfer` (T017). Fica com a dupla repetir num
+navegador comum (Chrome, Firefox ou Edge) e anotar o resultado no PR. Nenhuma lacuna do Core:
+o Carregar não usa o Core, e a aceitação roda todos os casos carregados no `meupia-core` 1.4.1
+sem mudança, então não há issue a abrir.
+
+**Registro (2026-11-17)**: quem conferir troca a situação para "Conferido", com o navegador e
+a data.
 
 | Conferência | O que fazer | Task | Situação |
 | --- | --- | --- | --- |
-| Janela de arquivos real | Clicar em Carregar, escolher um `.json` salvo no disco e ver o projeto voltar; repetir cancelando a janela (quickstart, passos 1 e 5). | T009, T010 | Pendente: navegador comum |
+| Janela de arquivos real | Clicar em Carregar, escolher na janela do sistema um `.json` baixado pelo Salvar e ver o projeto voltar (quickstart, passo 1). | T009, T010 | Pendente: navegador comum |
+| Cancelar a janela | Clicar em Carregar e fechar a janela sem escolher: nada acontece, nenhum diálogo (passo 5). | T009 | Pendente: navegador comum |
+| Mesmo arquivo duas vezes | Carregar um arquivo, mexer num bloco e carregar o mesmo arquivo de novo: a confirmação aparece (o `value` do campo é zerado a cada escolha). | T009 | Pendente: navegador comum |
+| Arquivo editado à mão | Abrir um `.json` salvo num editor de texto, trocar um `type` por `xyz` e carregar: aviso em pt-BR, nada muda (passo 8). | T016 | Pendente: navegador comum |
+| Esc no aviso | Com o aviso "Não foi possível carregar" aberto, apertar Esc: o aviso fecha e o próximo Novo mostra Cancelar normalmente. | T015 | Pendente: navegador comum |
 
 ---
 
