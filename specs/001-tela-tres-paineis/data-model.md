@@ -44,13 +44,13 @@ Estado só de interface, sem persistência:
 | Elemento | Estados nesta spec | Quem muda depois |
 | --- | --- | --- |
 | Botão Executar | `disabled` | 009: habilitado; desabilitado durante a execução |
-| Botões Salvar e Carregar | `disabled` | 011: Salvar habilitado; 012: Carregar habilitado |
+| Botões Salvar e Carregar | `disabled` | 011: Salvar habilitado; 012: Carregar habilitado, com o `#arquivo-carregar` oculto ao lado ([data-model da 012](../012-carregar-projeto/data-model.md)) |
 | Indicação "alterações não salvas" | não existe | 011: ao lado do nome, visível quando `haAlteracoes` |
 | Botão Novo | habilitado | — |
 | Botão "Copiar código" | habilitado | — |
 | Mensagem de cópia | vazia → "Código copiado!" ou mensagem de falha → vazia após 3 s | — |
 | Painel Saída | orientação inicial | 009 e 010 (contrato [painel-saida.md](contracts/painel-saida.md)) |
-| Diálogo de confirmação | fechado → aberto → fechado (`true`/`false`) | 012 pode reaproveitar |
+| Diálogo de confirmação | fechado → aberto → fechado (`true`/`false`) | 012: confirmação "Carregar outro projeto?" e aviso de um botão (`avisar`) no mesmo diálogo |
 
 ## Transições do Novo
 

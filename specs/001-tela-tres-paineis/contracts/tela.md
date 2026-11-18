@@ -21,7 +21,8 @@ Ordem da esquerda para a direita:
 | `<button>` | `botao-executar` | `Executar` | habilitado desde a 009 ([tela-execucao.md](../../009-executar-no-core/contracts/tela-execucao.md)) |
 | `<button>` | `botao-parar` | `Parar` | criado pela 009, logo depois do Executar; `disabled` no estado ocioso ([tela-execucao.md](../../009-executar-no-core/contracts/tela-execucao.md)) |
 | `<button>` | `botao-salvar` | `Salvar` | habilitado desde a 011, `title="Salvar o projeto num arquivo .json"` ([tela-salvar.md](../../011-salvar-projeto/contracts/tela-salvar.md)) |
-| `<button>` | `botao-carregar` | `Carregar` | `disabled`, `title="Disponível em breve"` (012) |
+| `<button>` | `botao-carregar` | `Carregar` | habilitado desde a 012, `title="Carregar um projeto salvo (.json)"` ([tela-carregar.md](../../012-carregar-projeto/contracts/tela-carregar.md)) |
+| `<input type="file">` | `arquivo-carregar` | — | criado pela 012, logo depois do Carregar; `accept=".json,application/json"`, `hidden` ([tela-carregar.md](../../012-carregar-projeto/contracts/tela-carregar.md)) |
 | `<button>` | `botao-novo` | `Novo` | habilitado (fluxo no [data-model](../data-model.md)) |
 
 `maxlength="40"` é o mesmo limite de `sanearNomePrograma` (008, R-11).

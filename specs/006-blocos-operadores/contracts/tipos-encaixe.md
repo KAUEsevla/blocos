@@ -103,3 +103,9 @@ Carregar um arquivo com um encaixe incompatível (por exemplo, feito à mão) fa
 `meupia` recusa o encaixe. A 012 trata esse erro e mostra uma mensagem amigável em pt-BR,
 sem stack trace (princípio V). `encaixesIncompativeis` pode ser usada antes da carga para
 apontar quais blocos estão no lugar errado (research R-15).
+
+**Resolvida pela 012** ([contracts/carregar.md](../../012-carregar-projeto/contracts/carregar.md)):
+`validarBlocos` chama `encaixesIncompativeis` antes da carga e recusa o arquivo com a
+mensagem "um valor lógico está encaixado onde só cabe número" (os nomes vêm do check dos dois
+lados); se o Blockly ainda lançar `BadConnectionCheck` no ensaio, `classificarErroCarga` o
+traduz para "um bloco está encaixado num lugar onde não cabe". O projeto aberto não muda.

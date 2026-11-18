@@ -413,4 +413,4 @@ os rótulos usam caracteres Unicode (`≠ ≤ ≥ −`), sem imagens.
 | --- | --- |
 | 004 | ✅ Resolvida pela 004 ([tasks da 004](../004-blocos-se-senao/tasks.md); [`se-maior-idade.json`](../../tests/aceitacao/casos/se-maior-idade.json)). Condição do `se` com `check: 'Logico'` (contrato [tipos-encaixe.md](contracts/tipos-encaixe.md)). O teste independente da História 2 desta spec ("montar `se idade >= 18`") é feito com `escreva`/`recebe` aqui; o `se` em si é da 004. |
 | 005 | Condição do `enquanto` com `Logico`; limites e passo do `para` com `Numero`. |
-| 012 | Mensagem amigável quando o arquivo carregado tem um encaixe incompatível (o Blockly lança `BadConnectionCheck`). Hoje nenhum projeto salvo existe (a 011 ainda não foi feita), então nada quebra. |
+| 012 | ✅ Resolvida pela 012 ([contracts/carregar.md](../012-carregar-projeto/contracts/carregar.md)): `encaixesIncompativeis` antes da carga ("um valor lógico está encaixado onde só cabe número") e `BadConnectionCheck` classificado no ensaio, sem mexer no projeto aberto. |
