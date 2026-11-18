@@ -30,7 +30,7 @@ import { ligarBotoesDesfazer, atualizarBotoesDesfazer } from './ui/barra-blocos.
 import { aplicarAvisos, destacarBloco } from './ui/avisos-ui.js';
 import { criarPainelSaida } from './ui/painel-saida.js';
 import { mostrarCodigo, copiarCodigo } from './ui/painel-portugol.js';
-import { ligarBarra, definirNome, mostrarEstadoExecucao } from './ui/barra.js';
+import { ligarBarra, definirNome, mostrarEstadoExecucao, mostrarAlteracoes } from './ui/barra.js';
 import { criarExecutor } from './execucao/executor.js';
 import { criarControladorExecucao } from './execucao/controlador.js';
 import { confirmar } from './ui/confirmacao.js';
@@ -67,6 +67,8 @@ function atualizarPortugol() {
   // A marca de pilha solta não entra em resultado.avisos: não bloqueia Executar (R-04).
   aplicarAvisos(ws, blocosForaDoPrograma(projetoGerado.blocos), 'fora-do-programa');
   atualizarBotoesDesfazer(estadoDesfazer(ws));
+  // Spec 011 (FR-006): toda geração reavalia as alterações não salvas.
+  mostrarAlteracoes(haAlteracoes(projetoGerado, referencia));
 }
 
 const tempoReal = criarAtualizacaoTempoReal({
@@ -92,6 +94,7 @@ async function novoProjeto() {
   tempoReal.atualizarAgora();
   saida.mostrarOrientacao();
   referencia = assinaturaProjeto(projetoAtual());
+  mostrarAlteracoes(false);
 }
 
 // Salvar não muda o projeto aberto (FR-005): nem workspace, nem desfazer, nem nome, nem Saída,
@@ -101,6 +104,7 @@ function salvarProjeto() {
   const { nomeArquivo, texto, referencia: salvo } = prepararSalvamento(projetoAtual());
   baixarArquivo(nomeArquivo, texto);
   referencia = salvo;
+  mostrarAlteracoes(false);
 }
 
 // O worker é criado no primeiro clique em Executar (research R-02, R-06).
@@ -139,6 +143,14 @@ document.getElementById('botao-copiar').addEventListener('click', () => {
 ligarBotoesDesfazer({
   aoDesfazer: () => desfazer(ws),
   aoRefazer: () => refazer(ws),
+});
+
+// Confirmação ao fechar ou recarregar com alterações não salvas (spec 011, FR-006). O texto do
+// diálogo é do navegador e não pode ser trocado (plan, acompanhamento de complexidade).
+window.addEventListener('beforeunload', (evento) => {
+  if (!haAlteracoes(projetoAtual(), referencia)) return;
+  evento.preventDefault();
+  evento.returnValue = '';
 });
 
 ouvirEventos(ws, tempoReal.notificar);

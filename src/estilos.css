@@ -54,6 +54,14 @@ body {
   border-radius: 4px;
 }
 
+/* Alterações não salvas (spec 011, História 2): discreta, ao lado do nome. */
+.indicador-alteracoes {
+  font-size: 0.85em;
+  font-style: italic;
+  color: var(--cor-texto-suave);
+}
+.indicador-alteracoes[hidden] { display: none; }
+
 .barra-acoes { display: flex; gap: 8px; margin-left: 8px; }
 
 button {

@@ -4,6 +4,8 @@
 // Salvar ligado a aoSalvar. Carregar continua desabilitado até a spec 012 (index.html).
 // Interface, fora da cobertura.
 
+import { TEXTOS } from './textos.js';
+
 export function ligarBarra({ aoMudarNome, aoNovo, aoExecutar, aoParar, aoSalvar }) {
   document.getElementById('nome-programa').addEventListener('input', (evento) => {
     aoMudarNome(evento.target.value);
@@ -24,4 +26,11 @@ export function mostrarEstadoExecucao(estado) {
 // Escreve no campo sem disparar aoMudarNome (atribuir value não gera o evento input).
 export function definirNome(nome) {
   document.getElementById('nome-programa').value = nome;
+}
+
+// Indicação "alterações não salvas" ao lado do nome (spec 011, FR-006).
+export function mostrarAlteracoes(alterado) {
+  const indicador = document.getElementById('indicador-alteracoes');
+  indicador.textContent = alterado ? TEXTOS.alteracoesNaoSalvas : '';
+  indicador.hidden = !alterado;
 }
