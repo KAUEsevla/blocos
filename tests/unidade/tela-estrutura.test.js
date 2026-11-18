@@ -25,6 +25,8 @@ const CHAVES_TEXTOS = [
   'carregarTitulo',
   'carregarMensagem',
   'carregarConfirmar',
+  'carregarFalhouTitulo',
+  'entendi',
 ];
 
 // Trecho do elemento com o id dado, da abertura da tag até o fechamento correspondente

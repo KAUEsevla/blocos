@@ -9,6 +9,7 @@ import {
   mensagemRecusa,
   validarBlocos,
   classificarErroCarga,
+  recusaDoEnsaio,
 } from '../../src/projeto/carregar.js';
 import { projetoCompleto, projetoCemBlocos, todosOsBlocos } from '../auxiliares/projetos-carregar.js';
 
@@ -117,5 +118,81 @@ describe('classificarErroCarga (research R-06)', () => {
 
   it('sem as classes do Blockly, tudo é desconhecido', () => {
     expect(classificarErroCarga(new BadConnectionCheck('x'), {})).toEqual({ ok: false, erro: 'desconhecido' });
+  });
+});
+
+// História 2 (T011): cada arquivo parte do projeto completo com uma só mudança.
+describe('Carregar: arquivos recusados por inteiro (FR-002, FR-004, SC-002)', () => {
+  const COMANDO = 'leia-nome';
+  const num9 = { type: 'numero', id: 'n9', fields: { NUM: '1' } };
+  const casos = [
+    ['tipo desconhecido de topo', (p) => p.blocos.blocks.blocks.push({ type: 'xyz', id: 'x1', x: 0, y: 0 }), 'o bloco "xyz" não existe no meuPiá Blocos'],
+    ['tipo desconhecido encaixado', (p) => { porId(p, 'soma').inputs.A.block = { type: 'xyz', id: 'x1' }; }, 'o bloco "xyz" não existe no meuPiá Blocos'],
+    ['bloco sem id', (p) => { delete porId(p, 'n1').id; }, 'há blocos sem identificação ou com a mesma identificação'],
+    ['ids repetidos', (p) => { porId(p, 'n2').id = 'n1'; }, 'há blocos sem identificação ou com a mesma identificação'],
+    ['sem programa', (p) => { p.blocos.blocks.blocks.shift(); }, 'falta o bloco programa'],
+    ['dois programas', (p) => { p.blocos.blocks.blocks.push({ type: 'programa', id: 'programa2', x: 0, y: 0 }); }, 'o bloco programa está duplicado ou fora do lugar'],
+    ['programa encaixado', (p) => { porId(p, 'se-sem-senao').inputs = { ENTAO: { block: { type: 'programa', id: 'p2' } } }; }, 'o bloco programa está duplicado ou fora do lugar'],
+    ['programa com outro id', (p) => { p.blocos.blocks.blocks[0].id = 'p2'; }, 'o bloco programa está duplicado ou fora do lugar'],
+    ['topo sem x', (p) => { delete p.blocos.blocks.blocks[1].x; }, 'a posição de um bloco está faltando'],
+    ['encaixe que não existe', (p) => { porId(p, COMANDO).inputs = { FOO: { block: { ...num9 } } }; }, 'o bloco "leia" tem um encaixe que não existe'],
+    ['VALOR além do número de valores', (p) => { porId(p, 'escreva-3').inputs.VALOR5 = { block: { ...num9 } }; }, 'o bloco "escreva" tem um encaixe que não existe'],
+    ['SENAO com o senão desligado', (p) => { porId(p, 'se-sem-senao').inputs = { SENAO: { block: { type: 'leia', id: 'l9' } } }; }, 'o bloco "se" tem um encaixe que não existe'],
+    ['número como comando', (p) => { porId(p, 'se-sem-senao').inputs = { ENTAO: { block: { ...num9 } } }; }, 'um bloco está encaixado num lugar onde não cabe'],
+    ['comando num encaixe de valor', (p) => { porId(p, 'soma').inputs.A.block = { type: 'leia', id: 'l9' }; }, 'um bloco está encaixado num lugar onde não cabe'],
+    ['next num bloco de valor', (p) => { porId(p, 'n1').next = { block: { type: 'leia', id: 'l9' } }; }, 'um bloco está encaixado num lugar onde não cabe'],
+    ['operador fora das opções', (p) => { porId(p, 'rel').fields.OP = 'XX'; }, 'um campo do bloco "relacional" tem um valor inválido'],
+    ['lógico fora das opções', (p) => { porId(p, 'log').fields.VALOR = 'TRUE'; }, 'um campo do bloco "logico" tem um valor inválido'],
+    ['número inválido', (p) => { porId(p, 'n1').fields.NUM = 'abc'; }, 'um campo do bloco "numero" tem um valor inválido'],
+    ['número vazio', (p) => { porId(p, 'n1').fields.NUM = ''; }, 'um campo do bloco "numero" tem um valor inválido'],
+    ['variável fora do projeto', (p) => { porId(p, COMANDO).fields.VAR = { id: 'zz' }; }, 'um bloco usa uma variável que não está no projeto'],
+    ['escreva com 0 valores', (p) => { porId(p, 'escreva-3').extraState = { valores: 0 }; }, 'o bloco escreva tem uma quantidade de valores inválida'],
+    ['escreva com 11 valores', (p) => { porId(p, 'escreva-3').extraState = { valores: 11 }; }, 'o bloco escreva tem uma quantidade de valores inválida'],
+    ['escreva com 2.5 valores', (p) => { porId(p, 'escreva-3').extraState = { valores: 2.5 }; }, 'o bloco escreva tem uma quantidade de valores inválida'],
+    ['se com senão "sim"', (p) => { porId(p, 'se-sem-senao').extraState = { senao: 'sim' }; }, 'o bloco se tem dados inválidos'],
+    ['lógico onde só cabe número (006)', (p) => { porId(p, 'recebe').inputs.VALOR.block = { type: 'logico', id: 'l9', fields: { VALOR: 'verdadeiro' } }; }, 'um valor lógico está encaixado onde só cabe número'],
+    ['número onde só cabe texto (006)', (p) => {
+      Object.assign(porId(p, COMANDO), { type: 'variavel_recebe', fields: { VAR: { id: 'v-nome' } }, inputs: { VALOR: { block: { ...num9 } } } });
+    }, 'um número está encaixado onde só cabe texto'],
+    ['conta onde só cabe valor lógico (006)', (p) => { porId(p, 'enquanto').inputs.CONDICAO.block = { type: 'aritmetico', id: 'a9', fields: { OP: '+' } }; }, 'um número ou texto está encaixado onde só cabe valor lógico'],
+  ];
+
+  it.each(casos)('%s', (_, mudar, detalhe) => {
+    const p = projetoCompleto();
+    mudar(p);
+    expect(prepararCarregamento(textoArquivo(p))).toEqual({
+      ok: false,
+      motivo: 'dados-invalidos',
+      detalhe,
+      mensagem: `Este projeto tem dados inválidos e não foi carregado: ${detalhe}.`,
+    });
+  });
+
+  it('escreva sem extraState é um escreva de um valor', () => {
+    const p = projetoCompleto();
+    delete porId(p, 'escreva-entao').extraState;
+    expect(prepararCarregamento(textoArquivo(p)).ok).toBe(true);
+  });
+
+  it('nenhuma mensagem tem texto em inglês do Blockly', () => {
+    for (const [, mudar] of casos) {
+      const p = projetoCompleto();
+      mudar(p);
+      expect(prepararCarregamento(textoArquivo(p)).mensagem).not.toMatch(/\b(block|connection|Invalid|check)\b/i);
+    }
+  });
+});
+
+describe('recusaDoEnsaio (research R-06)', () => {
+  it.each([
+    ['encaixe', 'um bloco está encaixado num lugar onde não cabe'],
+    ['desconhecido', 'o editor não conseguiu montar os blocos'],
+  ])('%s', (erro, detalhe) => {
+    expect(recusaDoEnsaio({ ok: false, erro })).toEqual({
+      ok: false,
+      motivo: 'dados-invalidos',
+      detalhe,
+      mensagem: `Este projeto tem dados inválidos e não foi carregado: ${detalhe}.`,
+    });
   });
 });

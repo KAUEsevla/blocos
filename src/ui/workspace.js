@@ -23,6 +23,7 @@ import { TEXTOS } from './textos.js';
 import { registrarValidadorNumero } from './validador-numero.js';
 import { registrarVerificadorEncaixe, NOME_VERIFICADOR } from './verificador-encaixe.js';
 import { criarVariavel } from './acoes-variavel.js';
+import { classificarErroCarga } from '../projeto/carregar.js';
 
 let blocosDefinidos = false;
 
@@ -106,6 +107,23 @@ export function criarWorkspace(container, projeto) {
 export function recarregarBlocos(ws, projeto) {
   Blockly.serialization.workspaces.load(blocosComVariaveis(projeto.blocos, projeto.variaveis), ws);
   ws.clearUndo();
+}
+
+// Carga de ensaio num workspace headless descartável, com o mesmo verificador de encaixe (spec
+// 012, contracts/tela-carregar.md; research R-03, R-06). Não toca o workspace da tela. A mensagem
+// do Blockly (em inglês) vai só para o console.
+export function ensaiarCarga(projeto) {
+  definirBlocos();
+  const ensaio = new Blockly.Workspace(new Blockly.Options({ plugins: { connectionChecker: NOME_VERIFICADOR } }));
+  try {
+    Blockly.serialization.workspaces.load(blocosComVariaveis(projeto.blocos, projeto.variaveis), ensaio);
+    return { ok: true };
+  } catch (erro) {
+    console.warn(erro);
+    return classificarErroCarga(erro, Blockly.serialization.exceptions);
+  } finally {
+    ensaio.dispose();
+  }
 }
 
 // Lista de variáveis do projeto, na ordem do mapa do Blockly (spec 002, research R-04).

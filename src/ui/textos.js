@@ -19,6 +19,9 @@ export const TEXTOS = Object.freeze({
   carregarTitulo: 'Carregar outro projeto?',
   carregarMensagem: 'As alterações que não foram salvas serão perdidas.',
   carregarConfirmar: 'Descartar e carregar',
+  // Aviso de arquivo recusado (spec 012, História 2); as mensagens vêm de src/projeto/carregar.js.
+  carregarFalhouTitulo: 'Não foi possível carregar',
+  entendi: 'Entendi',
   // Diálogo de variável (spec 002, contracts/editor-variaveis.md).
   criarVariavelTitulo: 'Criar variável',
   criarVariavelBotao: 'Criar',

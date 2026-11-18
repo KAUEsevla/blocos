@@ -15,13 +15,14 @@ import './estilos.css';
 import { projetoVazio } from './projeto/formato.js';
 import { assinaturaProjeto, haAlteracoes } from './projeto/alteracoes.js';
 import { prepararSalvamento } from './projeto/salvar.js';
-import { prepararCarregamento, mensagemRecusa } from './projeto/carregar.js';
+import { prepararCarregamento, mensagemRecusa, recusaDoEnsaio } from './projeto/carregar.js';
 import { gerarPortugol } from './portugol/gerador.js';
 import { criarAtualizacaoTempoReal } from './portugol/tempo-real.js';
 import { blocosForaDoPrograma } from './portugol/fora-do-programa.js';
 import {
   criarWorkspace,
   recarregarBlocos,
+  ensaiarCarga,
   serializarBlocos,
   variaveisDoWorkspace,
   ouvirEventos,
@@ -36,7 +37,7 @@ import { mostrarCodigo, copiarCodigo } from './ui/painel-portugol.js';
 import { ligarBarra, definirNome, mostrarEstadoExecucao, mostrarAlteracoes } from './ui/barra.js';
 import { criarExecutor } from './execucao/executor.js';
 import { criarControladorExecucao } from './execucao/controlador.js';
-import { confirmar } from './ui/confirmacao.js';
+import { confirmar, avisar } from './ui/confirmacao.js';
 import { baixarArquivo } from './ui/download.js';
 import { escolherArquivo, lerTexto } from './ui/arquivo.js';
 import { TEXTOS } from './ui/textos.js';
@@ -114,13 +115,21 @@ function salvarProjeto() {
 // Carregar (spec 012, contracts/tela-carregar.md; research R-07, R-08). Nada antes de
 // "anterior = projetoAtual()" muda o projeto aberto, o nome, a Saída, a execução, o desfazer ou
 // a referência (FR-004).
+function avisarRecusa(mensagem) {
+  return avisar({ titulo: TEXTOS.carregarFalhouTitulo, mensagem, ok: TEXTOS.entendi });
+}
+
 async function carregarProjeto() {
   const arquivo = await escolherArquivo(document.getElementById('arquivo-carregar'));
   if (!arquivo) return;
   const lido = await lerTexto(arquivo);
-  const preparado = lido.ok ? prepararCarregamento(lido.texto) : { ok: false, mensagem: mensagemRecusa(lido) };
+  let preparado = lido.ok ? prepararCarregamento(lido.texto) : { ok: false, mensagem: mensagemRecusa(lido) };
+  if (preparado.ok) {
+    const ensaio = ensaiarCarga(preparado.projeto);
+    if (!ensaio.ok) preparado = recusaDoEnsaio(ensaio);
+  }
   if (!preparado.ok) {
-    console.warn(preparado.mensagem);
+    await avisarRecusa(preparado.mensagem);
     return;
   }
   tempoReal.atualizarAgora();
@@ -147,7 +156,7 @@ async function carregarProjeto() {
     definirNome(anterior.nome);
     recarregarBlocos(ws, anterior);
     tempoReal.atualizarAgora();
-    console.warn(mensagemRecusa({ motivo: 'dados-invalidos', detalhe: 'o editor não conseguiu montar os blocos' }));
+    await avisarRecusa(mensagemRecusa({ motivo: 'dados-invalidos', detalhe: 'o editor não conseguiu montar os blocos' }));
     return;
   }
   // O Portugol aparece junto com os blocos (spec 007).
