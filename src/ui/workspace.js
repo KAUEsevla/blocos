@@ -12,6 +12,8 @@ import {
   conteudoCategoriaVariaveis,
   CATEGORIA_ENTRADA_SAIDA,
   conteudoCategoriaEntradaSaida,
+  CATEGORIA_REPETICAO,
+  conteudoCategoriaRepeticao,
 } from '../blocos/caixa-blocos.js';
 import { registrarCampoVariavel } from './campo-variavel.js';
 import { registrarMutadorEscreva } from './mutador-escreva.js';
@@ -89,6 +91,8 @@ export function criarWorkspace(container, projeto) {
   ws.registerToolboxCategoryCallback(CATEGORIA_ENTRADA_SAIDA, () =>
     conteudoCategoriaEntradaSaida(variaveisDoWorkspace(ws)),
   );
+  // Categoria dinâmica Repetição (spec 005, research R-09): o para precisa de uma variável inteira.
+  ws.registerToolboxCategoryCallback(CATEGORIA_REPETICAO, () => conteudoCategoriaRepeticao(variaveisDoWorkspace(ws)));
   Blockly.serialization.workspaces.load(blocosComVariaveis(projeto.blocos, projeto.variaveis), ws);
   // O Blockly só mede o contêiner na injeção; o painel muda de tamanho com a janela e com o
   // empilhamento abaixo de 1024 px (spec 001, research R-03).
