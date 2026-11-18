@@ -6,6 +6,12 @@ import { sanearNomePrograma } from './nome-programa.js';
 import { gerarSecaoVar } from './variaveis.js';
 import { registroPadrao } from '../blocos/registro.js';
 
+// O campo de variável guarda { id } (ou, num arquivo antigo, o id em texto).
+function idDoCampo(bloco, campo) {
+  const referencia = bloco.fields?.[campo];
+  return referencia && typeof referencia === 'object' ? referencia.id : referencia;
+}
+
 function encontrarRaiz(blocos) {
   const topo = blocos?.blocks?.blocks;
   return Array.isArray(topo) ? topo.find((b) => b?.type === 'programa') : undefined;
@@ -65,10 +71,13 @@ export function gerarPortugol(projeto, registro = registroPadrao) {
       return precedencia < precedenciaMinima ? `(${codigo})` : codigo;
     },
     variavel(bloco, campo, parte) {
-      const referencia = bloco.fields?.[campo];
-      const id = referencia && typeof referencia === 'object' ? referencia.id : referencia;
-      const variavel = variaveisPorId.get(id);
+      const variavel = variaveisPorId.get(idDoCampo(bloco, campo));
       return variavel ? variavel.nome : parteAusente(bloco, campo, parte);
+    },
+    // Tipo da variável do campo, sem aviso (spec 005, research R-06): o para confere se a
+    // variável de controle ainda é inteira.
+    tipoVariavel(bloco, campo) {
+      return variaveisPorId.get(idDoCampo(bloco, campo))?.tipo;
     },
     campo(bloco, nome) {
       return bloco.fields?.[nome];
