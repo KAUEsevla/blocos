@@ -4,7 +4,7 @@
 
 **Criada em**: 2026-11-08
 
-**Status**: Rascunho
+**Status**: Aprovada
 
 **Rastreia**: RF-11
 
@@ -36,12 +36,24 @@ contém o nome do programa, as variáveis e os blocos.
 
 ### História 2 - Saber se há alterações não salvas (Prioridade: P3)
 
+O estudante vê na barra quando há alterações que ainda não foram salvas, e o editor
+pergunta antes de perder esse trabalho ao fechar ou recarregar a página.
+
+**Por que esta prioridade**: protege o trabalho, mas o essencial (conseguir salvar) já
+vem da História 1; sem esta história o estudante ainda salva, só não é avisado.
+
+**Teste independente**: alterar o projeto, ver a indicação na barra, recarregar a página
+e ver a confirmação; salvar e ver que a indicação some e que o Novo e o recarregar não
+perguntam mais.
+
 **Cenários de aceitação**:
 
 1. **Dado** alterações feitas depois do último salvamento, **Quando** o estudante
    tenta fechar ou recarregar a página, **Então** o navegador pede confirmação.
 2. **Dado** alterações não salvas, **Quando** o estudante olha a barra, **Então** vê
    a indicação "alterações não salvas" ao lado do nome do programa.
+3. **Dado** um projeto salvo, sem alterações depois do salvamento, **Quando** o
+   estudante clica em Novo, **Então** o editor não pede confirmação.
 
 ### Casos de borda
 
@@ -84,3 +96,5 @@ contém o nome do programa, as variáveis e os blocos.
 
 - Salvamento automático no navegador e salvamento na nuvem estão fora desta entrega.
 - O mesmo formato de arquivo é usado pelos projetos de exemplo da suíte de aceitação.
+- Se o navegador perguntar onde salvar e o estudante cancelar, o editor não tem como
+  saber: o projeto fica marcado como salvo mesmo assim.
