@@ -189,7 +189,8 @@ provadas com blocos.
 
 **Objetivo**: cobertura, README e conferência de pt-BR.
 
-- [ ] T027 Conferir no navegador as dicas, os avisos e as mensagens dos laços em pt-BR (roteiros 5, 6 e 17) e a categoria "Repetição" entre "Decisão" e "Valores". Rodar `npm test` e `npm run cobertura`; confirmar linhas e branches ≥ 80% no núcleo, com `src/blocos/repeticao.js` no relatório; conferir que `tests/unidade/versao-unica.test.js` passa; versionar `cobertura/` e o `README.md` com a linha `**Testes:** N · **Cobertura:** X%` atualizada pelo script (depende das fases 2 e 3) (RNF-03, RNF-04, RNF-02)
+- [X] T027 Conferir no navegador as dicas, os avisos e as mensagens dos laços em pt-BR (roteiros 5, 6 e 17) e a categoria "Repetição" entre "Decisão" e "Valores". Rodar `npm test` e `npm run cobertura`; confirmar linhas e branches ≥ 80% no núcleo, com `src/blocos/repeticao.js` no relatório; conferir que `tests/unidade/versao-unica.test.js` passa; versionar `cobertura/` e o `README.md` com a linha `**Testes:** N · **Cobertura:** X%` atualizada pelo script (depende das fases 2 e 3) (RNF-03, RNF-04, RNF-02)
+  - Navegador (2026-11-17): dicas do `para` e do `enquanto`, os avisos de passo zero e casas decimais e a mensagem do passo numa variável zero em pt-BR (roteiros 5, 6 e 17, registrados no T018); categoria "Repetição" entre "Decisão" e "Valores". Cobertura do núcleo: 99,6% em linhas e 93,9% em branches, com `src/blocos/repeticao.js` no relatório (100% em linhas); `versao-unica.test.js` passa; README com 1097 testes.
 
 **Commit**: `005/T027 (RF-05, RNF-02, RNF-03, RNF-04): cobertura e README`
 
