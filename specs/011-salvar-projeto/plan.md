@@ -92,11 +92,13 @@ Constitution v2.0.0.
 2. O `beforeunload` mostra o texto padrão do navegador, no idioma dele (R-08); exceção ao
    princípio V registrada na tabela de complexidade.
 3. `nome` é gravado bruto (como digitado): o saneamento continua no gerador, e a 012
-   devolve ao campo o mesmo texto.
-4. O se sem senão é gravado sem `extraState` (o mutador devolve `null`); a 012 deve tratar
-   ausente como "desligado", como o `loadExtraState` e `temSenao` já fazem.
-5. A 012 ainda não existe: a ida e volta é provada com `workspaces.load` +
-   `blocosComVariaveis`, o mesmo caminho que o Novo já usa e que a 012 usará.
+   devolve ao campo o mesmo texto (feito: `lerArquivo` não apara nem saneia).
+4. O se sem senão é gravado sem `extraState` (o mutador devolve `null`); a 012 trata
+   ausente como "desligado" (feito: `validarBlocos` aceita ausente, `{ senao: true }` e
+   `{ senao: false }`).
+5. A ida e volta foi provada aqui com `workspaces.load` + `blocosComVariaveis`; a 012 usa o
+   mesmo caminho (`recarregarBlocos`), lê o arquivo com `lerArquivo` em `formato.js` e marca
+   a referência depois da carga ([plan da 012](../012-carregar-projeto/plan.md)).
 
 ## Estrutura do projeto
 

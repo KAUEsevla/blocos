@@ -43,6 +43,12 @@ function linhasDe(pedacos) {
 const programa = (corpo, variaveis = '') =>
   `algoritmo "Teste"\n\n${variaveis ? `var\n${variaveis}\n\n` : ''}inicio\n${corpo}\nfim_algoritmo\n`;
 
+// Parar encerra o worker: a execução seguinte cria outro e recarrega o Pyodide e o meupia-core
+// do zero. No runner do GitHub, com a cobertura ligada, essa recarga passou dos 120 s do
+// testTimeout da aceitação; só os testes que reiniciam o worker ganham mais tempo, e as
+// asserções continuam as mesmas.
+const TEMPO_COM_REINICIO = 300_000;
+
 async function executarColetando(executor, codigo, entrada = []) {
   const pedacos = [];
   const resultado = await executor.executar(codigo, { entrada, aoEscrever: (t) => pedacos.push(t) });
@@ -136,7 +142,7 @@ describe('execução pela tela no Core real (worker_threads)', () => {
     const { resultado, pedacos: depois } = await executarColetando(executor, OLA_MUNDO);
     expect(resultado.status).toBe('ok');
     expect(depois.join('')).toBe('Olá, mundo!\n');
-  });
+  }, TEMPO_COM_REINICIO);
 
   // Pendência P-2 da 009, conferida com os blocos da 005 (research R-11): um para de 1 a 1500.
   it('mais de 1.000 linhas chegam inteiras e na ordem', async () => {
@@ -230,7 +236,7 @@ describe('execução pela tela no Core real (worker_threads)', () => {
     const { resultado, pedacos } = await executarColetando(executor, OLA_MUNDO);
     expect(resultado.status).toBe('ok');
     expect(pedacos.join('')).toBe('Olá, mundo!\n');
-  });
+  }, TEMPO_COM_REINICIO);
 
   // Spec 005 (research R-08): passo numa variável que vale 0, que o editor não vê antes.
   it('passo numa variável que vale 0 dá erro de execução em pt-BR', async () => {
@@ -292,7 +298,7 @@ describe('execução pela tela no Core real (worker_threads)', () => {
     const { resultado, pedacos } = await executarColetando(executor, OLA_MUNDO);
     expect(resultado.status).toBe('ok');
     expect(pedacos.join('')).toBe('Olá, mundo!\n');
-  });
+  }, TEMPO_COM_REINICIO);
 
   // SC-001 da 010: os casos com leia, com as entradas fornecidas uma a uma no modo interativo.
   const casosComLeia = casos.filter(({ caso }) => caso.entrada.length > 0 && (caso.statusEsperado ?? 'ok') === 'ok');

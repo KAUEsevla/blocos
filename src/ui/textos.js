@@ -14,6 +14,14 @@ export const TEXTOS = Object.freeze({
   salvarDica: 'Salvar o projeto num arquivo .json',
   // Indicação ao lado do nome do programa (spec 011, História 2).
   alteracoesNaoSalvas: 'alterações não salvas',
+  // Botão Carregar e confirmação de descarte (spec 012, contracts/tela-carregar.md).
+  carregarDica: 'Carregar um projeto salvo (.json)',
+  carregarTitulo: 'Carregar outro projeto?',
+  carregarMensagem: 'As alterações que não foram salvas serão perdidas.',
+  carregarConfirmar: 'Descartar e carregar',
+  // Aviso de arquivo recusado (spec 012, História 2); as mensagens vêm de src/projeto/carregar.js.
+  carregarFalhouTitulo: 'Não foi possível carregar',
+  entendi: 'Entendi',
   // Diálogo de variável (spec 002, contracts/editor-variaveis.md).
   criarVariavelTitulo: 'Criar variável',
   criarVariavelBotao: 'Criar',

@@ -39,3 +39,40 @@ export function confirmar({ titulo, mensagem, confirmar: rotuloConfirmar, cancel
     botaoCancelar.focus();
   });
 }
+
+// Aviso com um botão só (spec 012, contracts/tela-carregar.md; research R-09): o mesmo diálogo,
+// com Cancelar escondido enquanto está aberto. Resolve no clique, no Esc ou ao fechar.
+export function avisar({ titulo, mensagem, ok }) {
+  const dialogo = document.getElementById('dialogo-confirmacao');
+  const botaoOk = document.getElementById('dialogo-confirmar');
+  const botaoCancelar = document.getElementById('dialogo-cancelar');
+  const rotuloAnterior = botaoOk.textContent;
+
+  document.getElementById('dialogo-titulo').textContent = titulo;
+  document.getElementById('dialogo-mensagem').textContent = mensagem;
+  botaoOk.textContent = ok;
+  botaoCancelar.hidden = true;
+
+  return new Promise((resolver) => {
+    function encerrar() {
+      botaoOk.removeEventListener('click', encerrar);
+      dialogo.removeEventListener('cancel', aoEsc);
+      dialogo.removeEventListener('close', encerrar);
+      botaoCancelar.hidden = false;
+      botaoOk.textContent = rotuloAnterior;
+      if (dialogo.open) dialogo.close();
+      resolver();
+    }
+    const aoEsc = (evento) => {
+      evento.preventDefault();
+      encerrar();
+    };
+
+    botaoOk.addEventListener('click', encerrar);
+    dialogo.addEventListener('cancel', aoEsc);
+    dialogo.addEventListener('close', encerrar);
+
+    dialogo.showModal();
+    botaoOk.focus();
+  });
+}

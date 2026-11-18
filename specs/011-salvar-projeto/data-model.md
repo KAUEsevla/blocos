@@ -88,7 +88,7 @@ Mesma variável `referencia` da 001. Esta spec preenche a linha "Projeto salvo":
 | --- | --- | --- |
 | Página aberta, Novo | 001 | assinatura do projeto novo depois de carregado |
 | **Salvar** | **011** | `prepararSalvamento(p).referencia`, com `p` o objeto gravado |
-| Carregar | 012 | assinatura do projeto carregado |
+| Carregar | 012 | `assinaturaProjeto(projetoAtual())` lida depois do `recarregarBlocos` ([data-model da 012](../012-carregar-projeto/data-model.md)) |
 
 **Derivado**: `alterado = haAlteracoes(projetoAtual(), referencia)`. Lido no Novo (001),
 no indicador e no `beforeunload` (011).

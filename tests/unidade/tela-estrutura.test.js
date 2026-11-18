@@ -21,6 +21,12 @@ const CHAVES_TEXTOS = [
   'emBreve',
   'salvarDica',
   'alteracoesNaoSalvas',
+  'carregarDica',
+  'carregarTitulo',
+  'carregarMensagem',
+  'carregarConfirmar',
+  'carregarFalhouTitulo',
+  'entendi',
 ];
 
 // Trecho do elemento com o id dado, da abertura da tag até o fechamento correspondente
@@ -83,13 +89,31 @@ describe('estrutura da tela (RF-01, RNF-03)', () => {
     expect(tagComId('botao-executar')).not.toMatch(/title=/);
     expect(tagComId('botao-parar')).toMatch(/type="button"/);
     expect(tagComId('botao-parar')).toMatch(/\bdisabled\b/);
-    // Spec 011 (contracts/tela-salvar.md): Salvar habilitado; Carregar continua para a 012.
+    // Spec 011 (contracts/tela-salvar.md): Salvar habilitado.
     expect(tagComId('botao-salvar')).not.toMatch(/\bdisabled\b/);
     expect(tagComId('botao-salvar')).not.toMatch(/Disponível em breve/);
     expect(tagComId('botao-salvar')).toMatch(/title="Salvar o projeto num arquivo \.json"/);
-    expect(tagComId('botao-carregar')).toMatch(/\bdisabled\b/);
-    expect(tagComId('botao-carregar')).toMatch(/title="Disponível em breve"/);
+    // Spec 012 (contracts/tela-carregar.md): Carregar habilitado.
+    expect(tagComId('botao-carregar')).not.toMatch(/\bdisabled\b/);
+    expect(tagComId('botao-carregar')).not.toMatch(/Disponível em breve/);
+    expect(tagComId('botao-carregar')).toMatch(/title="Carregar um projeto salvo \(\.json\)"/);
     expect(tagComId('botao-novo')).not.toMatch(/\bdisabled\b/);
+  });
+
+  it('campo de arquivo oculto logo depois do botão Carregar (spec 012, FR-001)', () => {
+    const acoes = html.slice(html.indexOf('class="barra-acoes"'));
+    const tag = tagComId('arquivo-carregar');
+    expect(tag).toMatch(/^<input\b/);
+    expect(tag).toMatch(/type="file"/);
+    expect(tag).toMatch(/accept="[^"]*\.json[^"]*"/);
+    expect(tag).toMatch(/\bhidden\b/);
+    const pos = posicao(acoes, 'id="arquivo-carregar"');
+    expect(pos).toBeGreaterThan(posicao(acoes, 'id="botao-carregar"'));
+    expect(pos).toBeLessThan(posicao(acoes, 'id="botao-novo"'));
+    expect(TEXTOS.carregarDica).toBe('Carregar um projeto salvo (.json)');
+    expect(TEXTOS.carregarTitulo).toBe('Carregar outro projeto?');
+    expect(TEXTOS.carregarMensagem).toBe('As alterações que não foram salvas serão perdidas.');
+    expect(TEXTOS.carregarConfirmar).toBe('Descartar e carregar');
   });
 
   it('indicação de alterações não salvas logo depois do nome (spec 011, FR-006)', () => {
