@@ -101,6 +101,18 @@ e verificar a mensagem e que nada mudou.
 
 - Projetos carregados também podem vir dos exemplos da suíte de aceitação ou de
   colegas; todos seguem o formato da feature 011.
+- O que a feature 011 deixa pronto (ver o
+  [data-model da 011](../011-salvar-projeto/data-model.md)):
+  - o arquivo é montado e escrito em `src/projeto/formato.js` (`montarArquivo`,
+    `textoArquivo`), onde a leitura também deve ficar;
+  - o bloco `se` sem senão é gravado **sem** `extraState`: ausente significa senão
+    desligado;
+  - o nome do programa é gravado como foi digitado (sem saneamento) e deve voltar assim
+    ao campo;
+  - um arquivo salvo, lido de volta, tem a mesma assinatura do projeto salvo, então
+    carregar e marcar a referência deixa o projeto "sem alterações";
+  - a indicação "alterações não salvas" e a confirmação ao fechar a aba usam a mesma
+    referência: depois de carregar, basta marcar a referência para as duas valerem.
 - Converter Portugol escrito em blocos (RF-B01) está fora desta entrega.
 - Um arquivo com um encaixe inválido (por exemplo, um valor lógico onde só cabe número,
   regra da spec 006) mostra uma mensagem amigável.

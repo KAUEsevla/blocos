@@ -7,9 +7,12 @@
 // (contracts/tela-execucao.md, seção "Ligação").
 // Spec 010: o programa a executar leva as variáveis (nome e tipo) para o pedido do leia
 // (contracts/tela-entrada.md, seção "Ligação").
+// Spec 011: Salvar baixa o projeto em .json e marca a referência de "salvo" com a assinatura
+// do mesmo objeto gravado; o Novo não pergunta até a próxima alteração (contracts/tela-salvar.md).
 import './estilos.css';
 import { projetoVazio } from './projeto/formato.js';
 import { assinaturaProjeto, haAlteracoes } from './projeto/alteracoes.js';
+import { prepararSalvamento } from './projeto/salvar.js';
 import { gerarPortugol } from './portugol/gerador.js';
 import { criarAtualizacaoTempoReal } from './portugol/tempo-real.js';
 import { blocosForaDoPrograma } from './portugol/fora-do-programa.js';
@@ -27,10 +30,11 @@ import { ligarBotoesDesfazer, atualizarBotoesDesfazer } from './ui/barra-blocos.
 import { aplicarAvisos, destacarBloco } from './ui/avisos-ui.js';
 import { criarPainelSaida } from './ui/painel-saida.js';
 import { mostrarCodigo, copiarCodigo } from './ui/painel-portugol.js';
-import { ligarBarra, definirNome, mostrarEstadoExecucao } from './ui/barra.js';
+import { ligarBarra, definirNome, mostrarEstadoExecucao, mostrarAlteracoes } from './ui/barra.js';
 import { criarExecutor } from './execucao/executor.js';
 import { criarControladorExecucao } from './execucao/controlador.js';
 import { confirmar } from './ui/confirmacao.js';
+import { baixarArquivo } from './ui/download.js';
 import { TEXTOS } from './ui/textos.js';
 
 const preCodigo = document.getElementById('codigo-portugol');
@@ -63,6 +67,8 @@ function atualizarPortugol() {
   // A marca de pilha solta não entra em resultado.avisos: não bloqueia Executar (R-04).
   aplicarAvisos(ws, blocosForaDoPrograma(projetoGerado.blocos), 'fora-do-programa');
   atualizarBotoesDesfazer(estadoDesfazer(ws));
+  // Spec 011 (FR-006): toda geração reavalia as alterações não salvas.
+  mostrarAlteracoes(haAlteracoes(projetoGerado, referencia));
 }
 
 const tempoReal = criarAtualizacaoTempoReal({
@@ -88,6 +94,17 @@ async function novoProjeto() {
   tempoReal.atualizarAgora();
   saida.mostrarOrientacao();
   referencia = assinaturaProjeto(projetoAtual());
+  mostrarAlteracoes(false);
+}
+
+// Salvar não muda o projeto aberto (FR-005): nem workspace, nem desfazer, nem nome, nem Saída,
+// nem a execução em andamento. Só a referência de "salvo".
+function salvarProjeto() {
+  tempoReal.atualizarAgora();
+  const { nomeArquivo, texto, referencia: salvo } = prepararSalvamento(projetoAtual());
+  baixarArquivo(nomeArquivo, texto);
+  referencia = salvo;
+  mostrarAlteracoes(false);
 }
 
 // O worker é criado no primeiro clique em Executar (research R-02, R-06).
@@ -116,6 +133,7 @@ ligarBarra({
   aoNovo: novoProjeto,
   aoExecutar: () => controlador.executar(),
   aoParar: () => controlador.parar(),
+  aoSalvar: salvarProjeto,
 });
 
 document.getElementById('botao-copiar').addEventListener('click', () => {
@@ -125,6 +143,14 @@ document.getElementById('botao-copiar').addEventListener('click', () => {
 ligarBotoesDesfazer({
   aoDesfazer: () => desfazer(ws),
   aoRefazer: () => refazer(ws),
+});
+
+// Confirmação ao fechar ou recarregar com alterações não salvas (spec 011, FR-006). O texto do
+// diálogo é do navegador e não pode ser trocado (plan, acompanhamento de complexidade).
+window.addEventListener('beforeunload', (evento) => {
+  if (!haAlteracoes(projetoAtual(), referencia)) return;
+  evento.preventDefault();
+  evento.returnValue = '';
 });
 
 ouvirEventos(ws, tempoReal.notificar);

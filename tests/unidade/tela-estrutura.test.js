@@ -19,6 +19,8 @@ const CHAVES_TEXTOS = [
   'novoConfirmar',
   'cancelar',
   'emBreve',
+  'salvarDica',
+  'alteracoesNaoSalvas',
 ];
 
 // Trecho do elemento com o id dado, da abertura da tag até o fechamento correspondente
@@ -81,11 +83,26 @@ describe('estrutura da tela (RF-01, RNF-03)', () => {
     expect(tagComId('botao-executar')).not.toMatch(/title=/);
     expect(tagComId('botao-parar')).toMatch(/type="button"/);
     expect(tagComId('botao-parar')).toMatch(/\bdisabled\b/);
-    for (const id of ['botao-salvar', 'botao-carregar']) {
-      expect(tagComId(id)).toMatch(/\bdisabled\b/);
-      expect(tagComId(id)).toMatch(/title="Disponível em breve"/);
-    }
+    // Spec 011 (contracts/tela-salvar.md): Salvar habilitado; Carregar continua para a 012.
+    expect(tagComId('botao-salvar')).not.toMatch(/\bdisabled\b/);
+    expect(tagComId('botao-salvar')).not.toMatch(/Disponível em breve/);
+    expect(tagComId('botao-salvar')).toMatch(/title="Salvar o projeto num arquivo \.json"/);
+    expect(tagComId('botao-carregar')).toMatch(/\bdisabled\b/);
+    expect(tagComId('botao-carregar')).toMatch(/title="Disponível em breve"/);
     expect(tagComId('botao-novo')).not.toMatch(/\bdisabled\b/);
+  });
+
+  it('indicação de alterações não salvas logo depois do nome (spec 011, FR-006)', () => {
+    const barra = trecho('header', 'barra');
+    const tag = tagComId('indicador-alteracoes');
+    expect(tag).toMatch(/^<span\b/);
+    expect(tag).toMatch(/class="indicador-alteracoes"/);
+    expect(tag).toMatch(/aria-live="polite"/);
+    expect(tag).toMatch(/\bhidden\b/);
+    const pos = posicao(barra, 'id="indicador-alteracoes"');
+    expect(pos).toBeGreaterThan(posicao(barra, 'id="nome-programa"'));
+    expect(pos).toBeLessThan(posicao(barra, 'class="barra-acoes"'));
+    expect(TEXTOS.alteracoesNaoSalvas).toBe('alterações não salvas');
   });
 
   it('três painéis na ordem Blocos → Portugol → Saída, cada um com o seu título', () => {
