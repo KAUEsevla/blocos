@@ -19,6 +19,7 @@ const CHAVES_TEXTOS = [
   'novoConfirmar',
   'cancelar',
   'emBreve',
+  'salvarDica',
 ];
 
 // Trecho do elemento com o id dado, da abertura da tag até o fechamento correspondente
@@ -81,10 +82,12 @@ describe('estrutura da tela (RF-01, RNF-03)', () => {
     expect(tagComId('botao-executar')).not.toMatch(/title=/);
     expect(tagComId('botao-parar')).toMatch(/type="button"/);
     expect(tagComId('botao-parar')).toMatch(/\bdisabled\b/);
-    for (const id of ['botao-salvar', 'botao-carregar']) {
-      expect(tagComId(id)).toMatch(/\bdisabled\b/);
-      expect(tagComId(id)).toMatch(/title="Disponível em breve"/);
-    }
+    // Spec 011 (contracts/tela-salvar.md): Salvar habilitado; Carregar continua para a 012.
+    expect(tagComId('botao-salvar')).not.toMatch(/\bdisabled\b/);
+    expect(tagComId('botao-salvar')).not.toMatch(/Disponível em breve/);
+    expect(tagComId('botao-salvar')).toMatch(/title="Salvar o projeto num arquivo \.json"/);
+    expect(tagComId('botao-carregar')).toMatch(/\bdisabled\b/);
+    expect(tagComId('botao-carregar')).toMatch(/title="Disponível em breve"/);
     expect(tagComId('botao-novo')).not.toMatch(/\bdisabled\b/);
   });
 

@@ -10,6 +10,8 @@ export const TEXTOS = Object.freeze({
   novoConfirmar: 'Descartar e começar',
   cancelar: 'Cancelar',
   emBreve: 'Disponível em breve',
+  // Botão Salvar (spec 011, contracts/tela-salvar.md); o mesmo texto do title no index.html.
+  salvarDica: 'Salvar o projeto num arquivo .json',
   // Diálogo de variável (spec 002, contracts/editor-variaveis.md).
   criarVariavelTitulo: 'Criar variável',
   criarVariavelBotao: 'Criar',

@@ -7,9 +7,12 @@
 // (contracts/tela-execucao.md, seção "Ligação").
 // Spec 010: o programa a executar leva as variáveis (nome e tipo) para o pedido do leia
 // (contracts/tela-entrada.md, seção "Ligação").
+// Spec 011: Salvar baixa o projeto em .json e marca a referência de "salvo" com a assinatura
+// do mesmo objeto gravado; o Novo não pergunta até a próxima alteração (contracts/tela-salvar.md).
 import './estilos.css';
 import { projetoVazio } from './projeto/formato.js';
 import { assinaturaProjeto, haAlteracoes } from './projeto/alteracoes.js';
+import { prepararSalvamento } from './projeto/salvar.js';
 import { gerarPortugol } from './portugol/gerador.js';
 import { criarAtualizacaoTempoReal } from './portugol/tempo-real.js';
 import { blocosForaDoPrograma } from './portugol/fora-do-programa.js';
@@ -31,6 +34,7 @@ import { ligarBarra, definirNome, mostrarEstadoExecucao } from './ui/barra.js';
 import { criarExecutor } from './execucao/executor.js';
 import { criarControladorExecucao } from './execucao/controlador.js';
 import { confirmar } from './ui/confirmacao.js';
+import { baixarArquivo } from './ui/download.js';
 import { TEXTOS } from './ui/textos.js';
 
 const preCodigo = document.getElementById('codigo-portugol');
@@ -90,6 +94,15 @@ async function novoProjeto() {
   referencia = assinaturaProjeto(projetoAtual());
 }
 
+// Salvar não muda o projeto aberto (FR-005): nem workspace, nem desfazer, nem nome, nem Saída,
+// nem a execução em andamento. Só a referência de "salvo".
+function salvarProjeto() {
+  tempoReal.atualizarAgora();
+  const { nomeArquivo, texto, referencia: salvo } = prepararSalvamento(projetoAtual());
+  baixarArquivo(nomeArquivo, texto);
+  referencia = salvo;
+}
+
 // O worker é criado no primeiro clique em Executar (research R-02, R-06).
 const executor = criarExecutor({
   criarWorker: () => new Worker(new URL('./execucao/worker.js', import.meta.url), { type: 'module' }),
@@ -116,6 +129,7 @@ ligarBarra({
   aoNovo: novoProjeto,
   aoExecutar: () => controlador.executar(),
   aoParar: () => controlador.parar(),
+  aoSalvar: salvarProjeto,
 });
 
 document.getElementById('botao-copiar').addEventListener('click', () => {
