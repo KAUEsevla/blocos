@@ -24,6 +24,7 @@ import { registrarValidadorNumero } from './validador-numero.js';
 import { registrarVerificadorEncaixe, NOME_VERIFICADOR } from './verificador-encaixe.js';
 import { criarVariavel } from './acoes-variavel.js';
 import { classificarErroCarga } from '../projeto/carregar.js';
+import { PASTA_MIDIA_BLOCKLY } from './midia-blockly.js';
 
 let blocosDefinidos = false;
 
@@ -78,6 +79,8 @@ function definirBlocos() {
 export function criarWorkspace(container, projeto) {
   definirBlocos();
   const ws = Blockly.inject(container, {
+    // Mídia local, não a do appspot (RNF-06; src/ui/midia-blockly.js).
+    media: PASTA_MIDIA_BLOCKLY,
     toolbox: CAIXA_BLOCOS,
     trashcan: true,
     zoom: { controls: true, wheel: true },
