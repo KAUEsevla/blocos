@@ -1,4 +1,5 @@
 import { defineConfig } from 'vite';
+import { midiaBlockly } from './scripts/midia-blockly.mjs';
 
 // Build estático (sem backend, RNF-06) e configuração do Vitest.
 // Dois projetos de teste: "unidade" (Node puro, rápido) e "aceitacao" (Pyodide + meupia-core real).
@@ -25,7 +26,8 @@ function pyodideSemNode() {
 }
 
 export default defineConfig({
-  plugins: [pyodideSemNode()],
+  // midiaBlockly: ícones, cursores e sons do Blockly servidos pelo app (RNF-06).
+  plugins: [pyodideSemNode(), midiaBlockly()],
   // O worker de execução importa módulos (pyodide, src/core/): formato ES (spec 009, research R-02).
   worker: {
     format: 'es',
